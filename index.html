@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>❤️ 晖晖 — 属于你的小宇宙 ❤️</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --pink: #ff6b9d;
+    --rose: #ff1493;
+    --light: #ffb3c6;
+    --gold: #ffd700;
+  }
+
+  body {
+    width: 100vw; height: 100vh; overflow: hidden;
+    font-family: 'Georgia', 'STKaiti', 'KaiTi', 'STSong', serif;
+    cursor: default; user-select: none; -webkit-user-select: none;
+    background: #050010;
+  }
+
+  /* ==================== 极光背景 ==================== */
+  .aurora {
+    position: fixed; inset: 0; z-index: 0;
+    opacity: 0.55;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 50%, rgba(180,70,140,0.4) 0%, transparent 70%),
+      radial-gradient(ellipse 60% 40% at 60% 20%, rgba(100,180,220,0.3) 0%, transparent 70%),
+      radial-gradient(ellipse 70% 50% at 50% 80%, rgba(200,100,160,0.35) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 40% at 80% 60%, rgba(140,200,180,0.25) 0%, transparent 60%);
+    animation: auroraShift 12s ease-in-out infinite;
+  }
+  @keyframes auroraShift {
+    0%,100% { transform: translate(0,0) rotate(0deg); opacity: 0.55; }
+    25%     { transform: translate(2%,1%) rotate(1deg); opacity: 0.7; }
+    50%     { transform: translate(-1%,-1%) rotate(-1deg); opacity: 0.5; }
+    75%     { transform: translate(-2%,2%) rotate(0.5deg); opacity: 0.65; }
+  }
+
+  /* 动态光晕 */
+  .aurora::after {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(ellipse 30% 30% at var(--mx,50%) var(--my,50%), rgba(255,150,200,0.15) 0%, transparent 100%);
+    transition: background 0.3s;
+  }
+
+  /* ==================== Canvas 层 ==================== */
+  canvas#bgCanvas  { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
+  canvas#fxCanvas  { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
+
+  /* ==================== 星星 ==================== */
+  .stars { position: fixed; inset: 0; z-index: 0; }
+  .star {
+    position: absolute; border-radius: 50%; background: white;
+    animation: twinkle var(--dur) ease-in-out infinite;
+    animation-delay: var(--delay); opacity: 0;
+  }
+  @keyframes twinkle {
+    0%,100% { opacity: 0.15; transform: scale(1); }
+    50%     { opacity: 1; transform: scale(1.8); }
+  }
+
+  /* ==================== 主内容 ==================== */
+  .content-layer { position: fixed; inset: 0; z-index: 10; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+  /* 大爱心 */
+  .giant-heart-wrap {
+    animation: heartFloat 3s ease-in-out infinite;
+  }
+  .giant-heart {
+    font-size: clamp(5rem, 15vw, 11rem);
+    display: block; text-align: center;
+    filter: drop-shadow(0 0 50px rgba(255,20,147,0.7))
+            drop-shadow(0 0 100px rgba(255,105,180,0.4))
+            drop-shadow(0 0 150px rgba(255,182,193,0.3));
+    animation: heartPulse 1.2s ease-in-out infinite;
+  }
+  @keyframes heartFloat {
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-12px); }
+  }
+  @keyframes heartPulse {
+    0%,100% { transform: scale(1); }
+    14%     { transform: scale(1.12); }
+    28%     { transform: scale(1); }
+    42%     { transform: scale(1.08); }
+    56%     { transform: scale(1); }
+  }
+
+  /* 名字标题 */
+  .names {
+    font-size: clamp(2rem, 6vw, 4.5rem);
+    font-weight: bold;
+    text-align: center;
+    letter-spacing: 0.12em;
+    background: linear-gradient(135deg, #ff6b9d, #ff1493, #ff69b4, #ffa0c5, #ff6b9d);
+    background-size: 400% 400%;
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientFlow 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 30px rgba(255,105,180,0.5));
+    margin-bottom: 0.15em;
+  }
+  @keyframes gradientFlow {
+    0%,100% { background-position: 0% 50%; }
+    50%     { background-position: 100% 50%; }
+  }
+
+  /* 副标题/情话 */
+  .love-quote {
+    font-size: clamp(1rem, 2.5vw, 1.6rem);
+    color: rgba(255,192,203,0.9);
+    text-align: center;
+    letter-spacing: 0.1em;
+    margin-top: 0.4em;
+    animation: quoteFade 4s ease-in-out infinite;
+  }
+  @keyframes quoteFade {
+    0%,100% { opacity: 0.7; text-shadow: 0 0 8px rgba(255,105,180,0.4); }
+    50%     { opacity: 1; text-shadow: 0 0 25px rgba(255,20,147,0.7), 0 0 50px rgba(255,105,180,0.4); }
+  }
+
+  /* 底部打字机 */
+  .typewriter-wrap {
+    position: fixed; bottom: 8%; left: 50%; transform: translateX(-50%);
+    z-index: 10; pointer-events: none; text-align: center;
+  }
+  .typewriter {
+    font-size: clamp(0.9rem, 2vw, 1.3rem);
+    color: rgba(255,218,185,0.85);
+    letter-spacing: 0.08em;
+    border-right: 2px solid rgba(255,105,180,0.7);
+    padding-right: 4px;
+    animation: blink 0.8s step-end infinite;
+    display: inline;
+  }
+  @keyframes blink {
+    0%,100% { border-color: rgba(255,105,180,0.7); }
+    50%     { border-color: transparent; }
+  }
+
+  /* ==================== 灯笼 ==================== */
+  .lantern {
+    position: fixed; z-index: 6; pointer-events: none;
+    animation: lanternRise var(--dur) linear infinite;
+    animation-delay: var(--delay);
+    opacity: 0;
+  }
+  .lantern-body {
+    width: var(--lw); height: calc(var(--lw) * 1.3);
+    background: radial-gradient(ellipse at 50% 40%, #ffb347, #ff6b35 60%, #cc3300);
+    border-radius: 50% 50% 45% 45%;
+    box-shadow: 0 0 calc(var(--lw) * 2) rgba(255,140,0,0.5),
+                0 0 calc(var(--lw) * 4) rgba(255,100,0,0.3),
+                inset 0 -10px 20px rgba(0,0,0,0.15);
+    position: relative;
+    animation: lanternGlow 2s ease-in-out infinite;
+  }
+  .lantern-body::after {
+    content: ''; position: absolute; bottom: -3px; left: 25%; width: 50%; height: 6px;
+    background: #8B4513; border-radius: 2px;
+  }
+  @keyframes lanternGlow {
+    0%,100% { box-shadow: 0 0 calc(var(--lw) * 2) rgba(255,140,0,0.5), 0 0 calc(var(--lw) * 4) rgba(255,100,0,0.3); }
+    50%     { box-shadow: 0 0 calc(var(--lw) * 3) rgba(255,160,0,0.7), 0 0 calc(var(--lw) * 6) rgba(255,120,0,0.45); }
+  }
+  @keyframes lanternRise {
+    0%   { transform: translateY(105vh) translateX(var(--drift)) rotate(var(--sway)); opacity: 0; }
+    15%  { opacity: 0.85; }
+    85%  { opacity: 0.7; }
+    100% { transform: translateY(-20vh) translateX(calc(var(--drift) + 30px)) rotate(calc(var(--sway) + 8deg)); opacity: 0; }
+  }
+
+  /* ==================== 蝴蝶 ==================== */
+  .butterfly {
+    position: fixed; z-index: 7; pointer-events: none;
+    animation: butterflyFly var(--dur) var(--delay) linear infinite;
+    opacity: 0;
+  }
+  @keyframes butterflyFly {
+    0%   { transform: translate(0, 0) rotate(0deg) scaleX(1); opacity: 0; }
+    5%   { opacity: 0.8; }
+    10%  { transform: translate(calc(var(--dx)*0.2), calc(var(--dy)*0.15)) rotate(calc(var(--rot)*0.3)) scaleX(var(--flip,1)); }
+    25%  { transform: translate(calc(var(--dx)*0.45), calc(var(--dy)*0.3)) rotate(calc(var(--rot)*0.5)) scaleX(var(--flip,1)); }
+    40%  { transform: translate(calc(var(--dx)*0.6), calc(var(--dy)*0.45)) rotate(calc(var(--rot)*0.7)) scaleX(var(--flip2,1)); }
+    55%  { transform: translate(calc(var(--dx)*0.75), calc(var(--dy)*0.65)) rotate(calc(var(--rot)*0.8)) scaleX(var(--flip,1)); }
+    70%  { transform: translate(calc(var(--dx)*0.9), calc(var(--dy)*0.8)) rotate(calc(var(--rot)*0.9)) scaleX(var(--flip2,1)); }
+    85%  { opacity: 0.7; transform: translate(calc(var(--dx)*0.95), calc(var(--dy)*0.9)) rotate(var(--rot)) scaleX(var(--flip,1)); }
+    95%  { opacity: 0; }
+    100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scaleX(var(--flip,1)); opacity: 0; }
+  }
+
+  /* ==================== 浮动心 ==================== */
+  .float-heart {
+    position: fixed; z-index: 5; pointer-events: none;
+    animation: heartUp var(--dur) linear infinite;
+    animation-delay: var(--delay); opacity: 0;
+    font-size: var(--size);
+    filter: drop-shadow(0 0 8px rgba(255,105,180,0.45));
+  }
+  @keyframes heartUp {
+    0%   { transform: translateY(105vh) rotate(0deg) scale(0.2); opacity: 0; }
+    8%   { opacity: 0.85; }
+    85%  { opacity: 0.7; }
+    100% { transform: translateY(-10vh) rotate(var(--rot)) scale(1.1); opacity: 0; }
+  }
+
+  /* ==================== 点击效果 ==================== */
+  .click-heart {
+    position: fixed; z-index: 20; pointer-events: none;
+    animation: clickBurst 1.2s ease-out forwards; font-size: var(--sz);
+  }
+  @keyframes clickBurst {
+    0%   { transform: translate(-50%,-50%) scale(0); opacity: 1; }
+    30%  { transform: translate(-50%,-50%) scale(1.5); opacity: 1; }
+    100% { transform: translate(-50%,-50%) scale(2.5); opacity: 0; }
+  }
+  .click-ring {
+    position: fixed; z-index: 19; pointer-events: none;
+    border-radius: 50%; border: 2px solid rgba(255,105,180,0.6);
+    animation: ringOut 1.5s ease-out forwards;
+    box-shadow: 0 0 20px rgba(255,20,147,0.3), inset 0 0 10px rgba(255,105,180,0.15);
+  }
+  @keyframes ringOut {
+    0%   { width: 0; height: 0; transform: translate(-50%,-50%) scale(0); opacity: 1; }
+    100% { width: 200px; height: 200px; transform: translate(-50%,-50%) scale(1); opacity: 0; }
+  }
+
+  /* ==================== 中部信息弹出 ==================== */
+  .popup-msg {
+    position: fixed; z-index: 15; pointer-events: none;
+    top: 60%; left: 50%; transform: translate(-50%,-50%);
+    font-size: clamp(1rem, 2.5vw, 1.8rem);
+    color: rgba(255,255,255,0.9);
+    text-align: center;
+    animation: msgPop 5s ease-in-out forwards;
+    text-shadow: 0 0 20px rgba(255,105,180,0.6);
+    white-space: nowrap;
+  }
+  @keyframes msgPop {
+    0%   { opacity: 0; transform: translate(-50%,-50%) translateY(20px); }
+    15%  { opacity: 1; transform: translate(-50%,-50%) translateY(0); }
+    75%  { opacity: 1; }
+    100% { opacity: 0; transform: translate(-50%,-50%) translateY(-30px); }
+  }
+
+  /* ==================== 响应式 ==================== */
+  @media (max-width: 600px) {
+    .giant-heart { font-size: 4rem; }
+    .names { font-size: 1.8rem; }
+    .love-quote { font-size: 0.95rem; }
+    .typewriter { font-size: 0.8rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- 极光 -->
+<div class="aurora" id="aurora"></div>
+
+<!-- 星星 -->
+<div class="stars" id="starsContainer"></div>
+
+<!-- Canvas -->
+<canvas id="bgCanvas"></canvas>
+<canvas id="fxCanvas"></canvas>
+
+<!-- 主内容 -->
+<div class="content-layer" style="top: 22%;">
+  <div class="giant-heart-wrap"><span class="giant-heart">💖</span></div>
+  <div class="names">郑逸晖 ❤️ 马天奇</div>
+  <div class="love-quote" id="loveQuote">你是我生命中最美的意外 ✦</div>
+</div>
+
+<!-- 打字机区域 -->
+<div class="typewriter-wrap">
+  <span class="typewriter" id="typewriter"></span>
+</div>
+
+<script>
+// ==================== 星星 ====================
+(function stars() {
+  const c = document.getElementById('starsContainer');
+  for (let i = 0; i < 150; i++) {
+    const s = document.createElement('div'); s.className = 'star';
+    const sz = Math.random() * 2.8 + 0.6;
+    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--dur:${Math.random()*3.5+1.5}s;--delay:${Math.random()*6}s;`;
+    c.appendChild(s);
+  }
+})();
+
+// ==================== Aurora 跟随鼠标 ====================
+document.addEventListener('mousemove', e => {
+  const x = (e.clientX / window.innerWidth * 100).toFixed(1);
+  const y = (e.clientY / window.innerHeight * 100).toFixed(1);
+  document.getElementById('aurora').style.setProperty('--mx', x + '%');
+  document.getElementById('aurora').style.setProperty('--my', y + '%');
+});
+
+// ==================== Canvas 1: 粒子+烟花 ====================
+const bgC = document.getElementById('bgCanvas');
+const bgX = bgC.getContext('2d');
+let w, h;
+function rs() { w = bgC.width = window.innerWidth; h = bgC.height = window.innerHeight; }
+window.addEventListener('resize', rs); rs();
+
+// 爱心曲线
+function heartXY(t, scale = 1) {
+  return {
+    x: 16 * Math.pow(Math.sin(t), 3) * scale,
+    y: -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)) * scale
+  };
+}
+
+// 爱心轨迹粒子
+class TrailParticle {
+  constructor() {
+    this.t = Math.random() * Math.PI * 2;
+    this.spd = (Math.random() * 0.01 + 0.004) * (Math.random() > 0.5 ? 1 : -1);
+    this.sz = Math.random() * 2.2 + 0.5;
+    this.scl = Math.random() * 80 + 25;
+    this.cx = w/2 + (Math.random()-0.5)*50;
+    this.cy = h*0.48 + (Math.random()-0.5)*40;
+    this.alpha = Math.random()*0.45+0.2;
+    this.hue = Math.random()*40+335;
+    this.phase = Math.random()*Math.PI*2;
+  }
+  upd() {
+    this.t += this.spd;
+    if (this.t > Math.PI*2) this.t = 0;
+    if (this.t < 0) this.t = Math.PI*2;
+    const p = heartXY(this.t, this.scl*0.25);
+    this.x = this.cx + p.x + Math.sin(this.phase)*3;
+    this.y = this.cy + p.y + Math.cos(this.phase*1.3)*3;
+    this.phase += 0.008;
+  }
+  draw(ctx) {
+    ctx.save(); ctx.globalAlpha = this.alpha;
+    ctx.fillStyle = `hsl(${this.hue},100%,75%)`;
+    ctx.shadowColor = `hsl(${this.hue},100%,65%)`; ctx.shadowBlur = 5;
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.sz, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+}
+
+// 烟花粒子
+class FireworkParticle {
+  constructor(x, y, hue) {
+    this.x = x; this.y = y;
+    const angle = Math.random() * Math.PI * 2;
+    const speed = Math.random() * 5 + 2;
+    this.vx = Math.cos(angle) * speed;
+    this.vy = Math.sin(angle) * speed;
+    this.alpha = 1; this.decay = Math.random() * 0.015 + 0.008;
+    this.sz = Math.random() * 2.8 + 1.2;
+    this.hue = hue + (Math.random() - 0.5) * 30;
+    this.gravity = 0.04;
+  }
+  upd() { this.x += this.vx; this.y += this.vy; this.vy += this.gravity; this.alpha -= this.decay; }
+  draw(ctx) {
+    if (this.alpha <= 0) return;
+    ctx.save(); ctx.globalAlpha = this.alpha;
+    ctx.fillStyle = `hsl(${this.hue},100%,70%)`;
+    ctx.shadowColor = `hsl(${this.hue},100%,60%)`; ctx.shadowBlur = 8;
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.sz, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+  get dead() { return this.alpha <= 0; }
+}
+
+// 飘浮光点
+class DriftSpark {
+  constructor() { this.reset(true); }
+  reset(init) {
+    this.x = init ? Math.random()*w : Math.random()*w;
+    this.y = init ? Math.random()*h : -10;
+    this.vx = (Math.random()-0.5)*0.5;
+    this.vy = Math.random()*0.35+0.1;
+    this.sz = Math.random()*1.8+0.4;
+    this.alpha = Math.random()*0.5+0.15;
+    this.hue = Math.random()<0.7 ? Math.random()*40+335 : Math.random()*60+190;
+    this.life = Math.random()*500+300; this.age = 0;
+  }
+  upd() {
+    this.x += this.vx; this.y -= this.vy; this.age++;
+    if (this.age > this.life || this.x < -20 || this.x > w+20 || this.y < -30 || this.y > h+30) this.reset(false);
+  }
+  draw(ctx) {
+    const r = 1 - this.age/this.life;
+    const a = this.alpha * r * Math.sin(r*Math.PI);
+    ctx.save(); ctx.globalAlpha = a;
+    ctx.fillStyle = `hsl(${this.hue},100%,80%)`;
+    ctx.shadowColor = `hsl(${this.hue},100%,72%)`; ctx.shadowBlur = 4;
+    ctx.beginPath(); ctx.arc(this.x, this.y, this.sz, 0, Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+}
+
+const trailPs = Array.from({length:100},()=>new TrailParticle());
+const driftPs = Array.from({length:70},()=>new DriftSpark());
+let fireworks = [];
+
+function spawnFirework() {
+  const x = Math.random()*w*0.7 + w*0.15;
+  const y = Math.random()*h*0.4 + h*0.1;
+  const hue = Math.random()*60 + 320; // 粉到红
+  const count = Math.floor(Math.random()*50)+40;
+  for (let i=0;i<count;i++) fireworks.push(new FireworkParticle(x,y,hue));
+}
+
+// 定时烟花
+setInterval(() => { if (fireworks.filter(f=>!f.dead).length < 20) spawnFirework(); }, 3500);
+setTimeout(spawnFirework, 1500);
+
+function drawBg() {
+  bgX.clearRect(0,0,w,h);
+  trailPs.forEach(p=>{p.upd();p.draw(bgX);});
+  driftPs.forEach(p=>{p.upd();p.draw(bgX);});
+  fireworks = fireworks.filter(f=>!f.dead);
+  fireworks.forEach(f=>{f.upd();f.draw(bgX);});
+  requestAnimationFrame(drawBg);
+}
+drawBg();
+
+window.addEventListener('resize', () => {
+  trailPs.forEach(p=>{p.cx=w/2+(Math.random()-0.5)*50;p.cy=h*0.48+(Math.random()-0.5)*40;});
+  driftPs.forEach(s=>s.reset(true));
+});
+
+// ==================== Canvas 2: 连线效果 ====================
+const fxC = document.getElementById('fxCanvas');
+const fxX = fxC.getContext('2d');
+let fxW, fxH;
+function fxRS() { fxW = fxC.width = window.innerWidth; fxH = fxC.height = window.innerHeight; }
+window.addEventListener('resize', fxRS); fxRS();
+
+class Node {
+  constructor() { this.reset(true); }
+  reset(init) {
+    this.x = init ? Math.random()*fxW : Math.random()*fxW;
+    this.y = init ? Math.random()*fxH : -10;
+    this.vx = (Math.random()-0.5)*0.4;
+    this.vy = Math.random()*0.3+0.08;
+    this.r = Math.random()*8+3;
+    this.alpha = Math.random()*0.25+0.08;
+    this.life = Math.random()*600+400; this.age = 0;
+  }
+  upd() {
+    this.x += this.vx; this.y -= this.vy; this.age++;
+    if (this.age>this.life||this.x<-30||this.x>fxW+30||this.y<-30||this.y>fxH+30) this.reset(false);
+  }
+  draw(ctx) {
+    const ratio = 1-this.age/this.life;
+    ctx.save(); ctx.globalAlpha = this.alpha*ratio;
+    ctx.fillStyle = 'rgba(255,180,200,0.9)';
+    ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fill();
+    ctx.restore();
+  }
+}
+const nodes = Array.from({length:35},()=>new Node());
+
+function drawFx() {
+  fxX.clearRect(0,0,fxW,fxH);
+  nodes.forEach(n=>{n.upd();n.draw(fxX);});
+  // 连线
+  for (let i=0;i<nodes.length;i++) {
+    for (let j=i+1;j<nodes.length;j++) {
+      const dx = nodes[i].x - nodes[j].x;
+      const dy = nodes[i].y - nodes[j].y;
+      const dist = Math.sqrt(dx*dx+dy*dy);
+      if (dist < 140) {
+        const alpha = (1 - dist/140) * 0.18;
+        fxX.save(); fxX.globalAlpha = alpha;
+        fxX.strokeStyle = '#ffb3c6'; fxX.lineWidth = 0.6;
+        fxX.beginPath(); fxX.moveTo(nodes[i].x,nodes[i].y); fxX.lineTo(nodes[j].x,nodes[j].y); fxX.stroke();
+        fxX.restore();
+      }
+    }
+  }
+  requestAnimationFrame(drawFx);
+}
+drawFx();
+
+// ==================== 浮动爱心 ====================
+const hearts = ['❤️','💕','💗','💖','💝','💘','💓','🩷','♥️','💞','💟','❣️'];
+function mkHeart() {
+  const el = document.createElement('span'); el.className = 'float-heart';
+  el.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+  el.style.cssText = `left:${Math.random()*95}%;--size:${Math.random()*2.5+1}rem;--dur:${Math.random()*7+8}s;--delay:${Math.random()*3}s;--rot:${Math.random()*720-360}deg;`;
+  document.body.appendChild(el);
+  el.addEventListener('animationend',()=>el.remove());
+}
+for (let i=0;i<15;i++) setTimeout(mkHeart,i*350);
+setInterval(mkHeart,2000);
+
+// ==================== 孔明灯 ====================
+function mkLantern() {
+  const wrap = document.createElement('div'); wrap.className = 'lantern';
+  const sz = Math.random()*18+14;
+  wrap.style.cssText = `left:${Math.random()*80+5}%;--lw:${sz}px;--dur:${Math.random()*10+12}s;--delay:${Math.random()*8}s;--drift:${Math.random()*80-40}px;--sway:${Math.random()*10-5}deg;`;
+  const body = document.createElement('div'); body.className = 'lantern-body';
+  wrap.appendChild(body);
+  document.body.appendChild(wrap);
+  wrap.addEventListener('animationend',()=>wrap.remove());
+}
+for (let i=0;i<6;i++) setTimeout(mkLantern,i*2500);
+setInterval(mkLantern,6000);
+
+// ==================== 蝴蝶 ====================
+const bfEmoji = ['🦋','🦋','🦋','🦋','✨','🌸'];
+function mkButterfly() {
+  const el = document.createElement('span'); el.className = 'butterfly';
+  el.textContent = bfEmoji[Math.floor(Math.random()*bfEmoji.length)];
+  const dx = (Math.random()-0.5)*window.innerWidth*0.8;
+  const dy = (Math.random()-0.5)*window.innerHeight*0.7;
+  const rot = Math.random()*40-20;
+  const flip = Math.random()>0.5?'-1':'1';
+  const flip2 = Math.random()>0.5?'-1':'1';
+  el.style.cssText = `
+    left:${Math.random()*90}%;top:${Math.random()*80}%;
+    font-size:${Math.random()*1.6+1.2}rem;
+    --dur:${Math.random()*10+12}s;--delay:${Math.random()*5}s;
+    --dx:${dx}px;--dy:${dy}px;--rot:${rot}deg;
+    --flip:${flip};--flip2:${flip2};
+  `;
+  document.body.appendChild(el);
+  el.addEventListener('animationend',()=>el.remove());
+}
+for (let i=0;i<4;i++) setTimeout(mkButterfly,i*3000);
+setInterval(mkButterfly,7000);
+
+// ==================== 情话轮播 ====================
+const quotes = [
+  '你是我生命中最美的意外 ✦',
+  '遇见你，是我最大的幸运 🌟',
+  '世界很大，我的眼里只有你 👀',
+  '想和你一起看遍世间风景 🌅',
+  '每一天都想对你说：我爱你 💌',
+  '你的笑容是我最想守护的宝藏 💎',
+  '有你在，每天都是情人节 🌹',
+  '你是我的日月星辰 ✨',
+  '执子之手，与子偕老 🤝',
+  '此生有你，足矣 💕',
+];
+let qi = 0;
+const quoteEl = document.getElementById('loveQuote');
+setInterval(() => {
+  qi = (qi+1)%quotes.length;
+  quoteEl.style.opacity = '0';
+  quoteEl.style.transform = 'translateY(10px)';
+  quoteEl.style.transition = 'all 0.5s ease';
+  setTimeout(() => {
+    quoteEl.textContent = quotes[qi];
+    quoteEl.style.opacity = '1';
+    quoteEl.style.transform = 'translateY(0)';
+  },500);
+},4500);
+
+// ==================== 打字机 ====================
+const typeLines = [
+  '晖晖，遇见你之后，我才明白什么是心动。',
+  '你的每一个微笑，都让我觉得世界无比温柔。',
+  '感谢你出现在我的生命里，照亮了我的每一天。',
+  '我想牵着你的手，走过每一个春夏秋冬。',
+  '愿我们的故事，永远不说再见。',
+  '—— 永远爱你的 天奇 ❤️',
+];
+let lineIdx = 0, charIdx = 0, isDeleting = false;
+const twEl = document.getElementById('typewriter');
+
+function typeLoop() {
+  const line = typeLines[lineIdx];
+  if (!isDeleting) {
+    if (charIdx < line.length) { twEl.textContent = line.slice(0, charIdx+1); charIdx++; setTimeout(typeLoop, 100); }
+    else { setTimeout(()=>{ isDeleting=true; typeLoop(); }, 2500); }
+  } else {
+    if (charIdx > 0) { twEl.textContent = line.slice(0, charIdx-1); charIdx--; setTimeout(typeLoop, 40); }
+    else { isDeleting=false; lineIdx=(lineIdx+1)%typeLines.length; setTimeout(typeLoop, 400); }
+  }
+}
+typeLoop();
+
+// ==================== 随机弹出情话 ====================
+const popMsgs = [
+  '💌 我爱你，晖晖 💌',
+  '💝 你是最特别的 💝',
+  '🌟 永远在你身边 🌟',
+  '💖 你就是我的全世界 💖',
+  '🌹 每一天都更爱你 🌹',
+  '💕 你是我的心跳 💕',
+  '✨ 遇见你是最美的缘分 ✨',
+  '🦋 想你了 🦋',
+];
+function showPopMsg() {
+  const el = document.createElement('div'); el.className = 'popup-msg';
+  el.textContent = popMsgs[Math.floor(Math.random()*popMsgs.length)];
+  document.body.appendChild(el);
+  el.addEventListener('animationend',()=>el.remove());
+}
+setInterval(showPopMsg, 6000);
+setTimeout(showPopMsg, 2000);
+
+// ==================== 点击效果 ====================
+document.addEventListener('click', e => {
+  // 爱心
+  const h = document.createElement('span'); h.className = 'click-heart';
+  h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+  h.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;--sz:${Math.random()*2.5+2}rem;`;
+  document.body.appendChild(h);
+  h.addEventListener('animationend',()=>h.remove());
+  // 光环
+  const r = document.createElement('div'); r.className = 'click-ring';
+  r.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;`;
+  document.body.appendChild(r);
+  r.addEventListener('animationend',()=>r.remove());
+  // 小烟花
+  const hue = Math.random()*60+320;
+  for (let i=0;i<20;i++) {
+    fireworks.push(new FireworkParticle(e.clientX, e.clientY, hue));
+  }
+});
+
+// ==================== 鼠标轨迹小爱心 ====================
+let mouseTrailTimeout;
+document.addEventListener('mousemove', e => {
+  if (mouseTrailTimeout) return;
+  mouseTrailTimeout = setTimeout(()=>{ mouseTrailTimeout = null; }, 120);
+  const el = document.createElement('span');
+  el.textContent = Math.random()>0.5?'✨':'💫';
+  el.style.cssText = `position:fixed;z-index:12;pointer-events:none;left:${e.clientX}px;top:${e.clientY}px;font-size:0.7rem;transform:translate(-50%,-50%);animation:fadeUp 1.2s ease-out forwards;`;
+  document.body.appendChild(el);
+  el.addEventListener('animationend',()=>el.remove());
+});
+const fadeUpStyle = document.createElement('style');
+fadeUpStyle.textContent = `@keyframes fadeUp{0%{opacity:1;transform:translate(-50%,-50%) scale(0.5);}100%{opacity:0;transform:translate(-50%,-80%) scale(1.3);}}`;
+document.head.appendChild(fadeUpStyle);
+</script>
+</body>
+</html>
