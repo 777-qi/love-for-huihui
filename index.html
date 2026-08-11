@@ -108,6 +108,20 @@
     border: 1px solid rgba(255,255,255,.08); border-radius: 28px;
     background: rgba(18,14,29,.72); overflow: hidden;
     box-shadow: 0 32px 100px rgba(0,0,0,.34);
+    transition: background-color .9s ease, border-color .9s ease, box-shadow .9s ease;
+  }
+  .intro-map.is-discovered {
+    border-color: rgba(255,255,255,.5);
+    background: #ead7e2;
+    box-shadow: 0 32px 100px rgba(31,12,28,.28), inset 0 0 80px rgba(255,255,255,.22);
+  }
+  .intro-map.is-discovered .map-grid { opacity: .38; }
+  .intro-map.is-discovered .land-shape path.main-land {
+    fill: #f3e6ed; stroke: rgba(98,50,78,.42);
+    transition: fill .9s ease, stroke .9s ease;
+  }
+  .intro-map.is-discovered .land-shape path.island {
+    fill: #f3e6ed; stroke: rgba(98,50,78,.35);
   }
   .map-grid {
     position: absolute; inset: 0; opacity: .22;
@@ -153,6 +167,7 @@
     opacity: 0; transition: opacity .5s ease, transform .5s ease;
   }
   .memory-spark.is-visible { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  .intro-map.copy-visible .memory-spark { opacity: .18; transition-delay: 0s !important; }
   .intro-copy {
     position: absolute; left: 50%; top: 48%; width: min(620px, 86%);
     transform: translate(-50%, -42%); opacity: 0; pointer-events: none;
@@ -163,8 +178,15 @@
     font-family: Georgia, "STKaiti", serif;
     font-size: clamp(2rem, 7vw, 4.8rem); line-height: 1.08;
     text-shadow: 0 12px 40px rgba(0,0,0,.8);
+    transition: color .7s ease, text-shadow .7s ease;
   }
+  .intro-map.is-discovered .intro-copy h1 { color: #321d2d; text-shadow: 0 8px 30px rgba(255,255,255,.55); }
+  .intro-copy h1 span { color: var(--rose); font-family: Georgia, serif; padding: 0 .08em; }
   .intro-copy p { margin: 14px 0 24px; color: #e6d9e5; font-size: clamp(.92rem, 2.5vw, 1.1rem); }
+  .intro-map.is-discovered .intro-copy p { color: #604659; }
+  .intro-map.is-discovered .memory-spark {
+    color: #4b2b40; border-color: rgba(82,43,67,.16); background: rgba(255,248,251,.86);
+  }
   .primary-button { min-width: 160px; padding: 14px 22px; }
 
   /* 主页 */
@@ -218,6 +240,14 @@
   }
   .travel-map .land-shape { inset: 8% 5%; width: 90%; height: 84%; opacity: .9; }
   .travel-map .main-land { fill: #1a1528; }
+  .china-map-plot {
+    position: absolute; left: 50%; top: 50%; width: min(820px, 88%); aspect-ratio: 10 / 7;
+    transform: translate(-50%, -50%);
+  }
+  .china-map-image {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain;
+    pointer-events: none; filter: drop-shadow(0 20px 30px rgba(0,0,0,.22));
+  }
   .route-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
   .route-line {
     fill: none; stroke: rgba(255,111,159,.36); stroke-width: .22;
@@ -281,9 +311,10 @@
     .intro-map { aspect-ratio: auto; height: 66vh; min-height: 440px; }
     .intro-copy { top: 45%; }
     .memory-spark { padding: 5px 7px; }
+    .intro-map.copy-visible .memory-spark { opacity: 0; }
     .home-hero { padding-top: 80px; }
-    .travel-map { height: 72vh; min-height: 520px; aspect-ratio: auto; }
-    .travel-map .land-shape { inset: 14% 1%; width: 98%; height: 72%; }
+    .travel-map { height: auto; min-height: 0; aspect-ratio: 1 / 1.08; }
+    .china-map-plot { width: 94%; }
     .city-label { display: none; }
     .city-marker { width: 40px; height: 40px; }
     .mobile-city-list {
@@ -342,7 +373,7 @@
       <div id="introSparks"></div>
       <button class="discovery-trigger" id="discoveryTrigger" type="button" aria-label="点击点亮我们的故事"></button>
       <div class="intro-copy" id="introCopy">
-        <h1>晖晖 & 天奇<br>我们的旅行宇宙</h1>
+        <h1>天奇<span>❤</span>晖晖</h1>
         <p>从第一次出发，到每一座被我们共同点亮的城市。</p>
         <button class="primary-button" id="enterHome" type="button">走进我们的故事</button>
       </div>
@@ -398,14 +429,13 @@
 
     <div class="travel-map" id="travelMap">
       <div class="map-grid"></div>
-      <svg class="land-shape" viewBox="0 0 1000 700" aria-hidden="true">
-        <path class="main-land" d="M93 236C112 194 151 183 176 148C210 101 270 121 317 91C363 61 414 75 455 102C503 134 540 115 590 122C655 131 703 103 758 137C804 165 817 205 868 225C911 242 928 280 905 314C881 349 848 365 847 409C845 450 800 462 777 495C751 532 709 519 678 557C651 590 607 615 564 598C524 581 493 548 449 552C406 557 380 527 345 510C303 489 253 480 230 439C207 398 165 391 149 346C137 310 73 279 93 236Z"/>
-        <path class="island" d="M741 582c16-18 45-16 55 4 8 17-8 39-31 39-24 0-39-24-24-43Z"/>
-      </svg>
-      <svg class="route-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <polyline class="route-line" id="routeLine" points=""></polyline>
-      </svg>
-      <div class="city-layer" id="cityLayer"></div>
+      <div class="china-map-plot">
+        <img class="china-map-image" src="china-map.svg" alt="中国地图">
+        <svg class="route-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+          <polyline class="route-line" id="routeLine" points=""></polyline>
+        </svg>
+        <div class="city-layer" id="cityLayer"></div>
+      </div>
       <div class="map-legend">● 已点亮 &nbsp; 14 个共同足迹</div>
     </div>
     <div class="mobile-city-list" id="mobileCityList" aria-label="城市列表"></div>
@@ -484,9 +514,14 @@
   ];
 
   function mapPoint(city) {
-    const x = 10 + ((city.lon - 73) / (135 - 73)) * 80 + (city.ox || 0);
-    const y = 10 + ((54 - city.lat) / (54 - 18)) * 80 + (city.oy || 0);
+    const x = ((city.lon - 73) / (135 - 73)) * 100 + (city.ox || 0);
+    const y = ((54 - city.lat) / (54 - 18)) * 100 + (city.oy || 0);
     return { x, y };
+  }
+
+  function introPoint(city) {
+    const point = mapPoint(city);
+    return { x: 10 + point.x * .8, y: 10 + point.y * .8 };
   }
 
   const introMap = document.getElementById('introMap');
@@ -502,7 +537,7 @@
 
     const featured = [cities[13], cities[10], cities[11], cities[0], cities[3], cities[6], cities[9], cities[12]];
     featured.forEach((city, index) => {
-      const point = mapPoint(city);
+      const point = introPoint(city);
       const spark = document.createElement('span');
       spark.className = 'memory-spark';
       spark.textContent = city.name;
@@ -512,7 +547,10 @@
       window.setTimeout(() => spark.classList.add('is-visible'), 120 + index * 120);
     });
 
-    window.setTimeout(() => introCopy.classList.add('is-visible'), 1250);
+    window.setTimeout(() => {
+      introCopy.classList.add('is-visible');
+      introMap.classList.add('copy-visible');
+    }, 1250);
   });
 
   const screens = [...document.querySelectorAll('.screen')];
