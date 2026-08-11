@@ -2,331 +2,319 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>❤️ 晖晖 — 属于你的小宇宙 ❤️</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#090713">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%96%3C/text%3E%3C/svg%3E">
+<title>我们的旅行宇宙｜晖晖 ❤️ 天奇</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
   :root {
-    --pink: #ff6b9d;
-    --rose: #ff1493;
-    --light: #ffb3c6;
-    --gold: #ffd700;
+    --bg: #090713;
+    --panel: #151121;
+    --panel-2: #1c162a;
+    --line: rgba(255,255,255,.11);
+    --text: #fff8fb;
+    --muted: #b9afc5;
+    --pink: #ff6f9f;
+    --rose: #ff3f82;
+    --peach: #ffbd9b;
+    --gold: #ffd58a;
   }
 
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { background: var(--bg); }
   body {
-    width: 100vw; height: 100vh; overflow: hidden;
-    font-family: 'Georgia', 'STKaiti', 'KaiTi', 'STSong', serif;
-    cursor: default; user-select: none; -webkit-user-select: none;
-    background: #050010;
+    width: 100%; min-height: 100vh; overflow: hidden;
+    color: var(--text); background: var(--bg);
+    font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans SC", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  button, input { font: inherit; }
+  button { color: inherit; }
+  button:focus-visible, input:focus-visible { outline: 2px solid var(--pink); outline-offset: 3px; }
+
+  /* 静态氛围层：替代原来持续重绘的双 Canvas，避免低性能设备闪屏 */
+  .ambient {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(circle at 14% 18%, rgba(255,83,139,.14), transparent 26%),
+      radial-gradient(circle at 82% 22%, rgba(130,91,255,.12), transparent 30%),
+      radial-gradient(circle at 52% 86%, rgba(255,174,117,.09), transparent 30%),
+      linear-gradient(145deg, #080611, #0d0918 52%, #090713);
+  }
+  .ambient::after {
+    content: ""; position: absolute; inset: 0; opacity: .28;
+    background-image: radial-gradient(rgba(255,255,255,.55) .65px, transparent .65px);
+    background-size: 34px 34px;
   }
 
-  /* ==================== 密码门 ==================== */
+  /* 密码门 */
   body.locked > *:not(#passwordGate):not(script) { visibility: hidden; }
   .password-gate {
-    position: fixed; inset: 0; z-index: 9999;
-    display: grid; place-items: center;
-    padding: 24px;
-    background:
-      radial-gradient(circle at 50% 35%, rgba(255,105,180,0.2), transparent 38%),
-      linear-gradient(145deg, #12031d, #050010 60%, #16051c);
-    transition: opacity 0.45s ease, visibility 0.45s ease;
+    position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center;
+    padding: 24px; background: #090713;
+    transition: opacity .4s ease, visibility .4s ease;
   }
   .password-gate::before {
-    content: '💖'; position: absolute;
-    font-size: clamp(10rem, 35vw, 24rem);
-    opacity: 0.055; filter: blur(1px);
-    animation: gateHeart 2s ease-in-out infinite;
+    content: ""; position: absolute; width: min(72vw, 620px); aspect-ratio: 1;
+    border-radius: 50%; background: rgba(255,63,130,.13); filter: blur(80px);
   }
-  .password-gate.unlocking { opacity: 0; visibility: hidden; }
+  .password-gate.is-leaving { opacity: 0; visibility: hidden; }
   .password-card {
-    position: relative; width: min(400px, 100%);
-    padding: 38px 30px 30px;
-    border: 1px solid rgba(255,179,198,0.25);
-    border-radius: 24px;
-    text-align: center;
-    background: rgba(20,4,32,0.72);
-    box-shadow: 0 24px 80px rgba(0,0,0,0.42), 0 0 50px rgba(255,20,147,0.12);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    position: relative; width: min(410px, 100%); padding: 40px 30px 30px;
+    text-align: center; border: 1px solid var(--line); border-radius: 26px;
+    background: #151020; box-shadow: 0 28px 90px rgba(0,0,0,.45);
   }
-  .password-icon { font-size: 3.4rem; margin-bottom: 12px; }
-  .password-title {
-    color: #ffd7e4; font-size: clamp(1.55rem, 6vw, 2rem);
-    letter-spacing: 0.08em; margin-bottom: 10px;
-    text-shadow: 0 0 20px rgba(255,105,180,0.35);
-  }
-  .password-tip { color: rgba(255,215,228,0.68); font-size: 0.92rem; margin-bottom: 24px; }
+  .password-icon { font-size: 3.2rem; margin-bottom: 12px; }
+  .password-title { font-size: clamp(1.6rem, 7vw, 2rem); letter-spacing: .08em; }
+  .password-tip { color: var(--muted); font-size: .92rem; margin: 10px 0 24px; }
   .password-input {
-    width: 100%; height: 50px;
-    border: 1px solid rgba(255,179,198,0.32); border-radius: 14px;
-    outline: none; padding: 0 16px;
-    color: #fff; background: rgba(255,255,255,0.07);
-    text-align: center; font-size: 1.1rem; letter-spacing: 0.22em;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    width: 100%; height: 52px; padding: 0 16px; border-radius: 14px;
+    border: 1px solid var(--line); color: #fff; background: #0e0b17;
+    text-align: center; font-size: 1.08rem; letter-spacing: .22em;
   }
-  .password-input:focus {
-    border-color: rgba(255,105,180,0.8);
-    box-shadow: 0 0 0 4px rgba(255,105,180,0.12);
+  .password-button, .primary-button {
+    border: 0; cursor: pointer; border-radius: 14px;
+    background: linear-gradient(135deg, var(--pink), var(--rose));
+    box-shadow: 0 12px 30px rgba(255,63,130,.25);
   }
-  .password-button {
-    width: 100%; height: 50px; margin-top: 14px;
-    border: 0; border-radius: 14px; cursor: pointer;
-    color: #fff; font-size: 1rem; letter-spacing: 0.12em;
-    background: linear-gradient(135deg, #ff5c93, #ff1493);
-    box-shadow: 0 10px 28px rgba(255,20,147,0.28);
-    transition: transform 0.2s, box-shadow 0.2s;
-  }
-  .password-button:hover { transform: translateY(-1px); box-shadow: 0 14px 34px rgba(255,20,147,0.38); }
-  .password-button:active { transform: translateY(1px); }
-  .password-error { min-height: 20px; margin-top: 12px; color: #ff91b3; font-size: 0.86rem; }
-  .password-card.shake { animation: gateShake 0.38s ease; }
-  @keyframes gateHeart { 0%,100% { transform: scale(1); } 50% { transform: scale(1.06); } }
-  @keyframes gateShake {
-    0%,100% { transform: translateX(0); }
+  .password-button { width: 100%; height: 52px; margin-top: 14px; letter-spacing: .1em; }
+  .password-error { min-height: 20px; margin-top: 12px; color: #ff9abb; font-size: .86rem; }
+  .password-card.shake { animation: shake .35s ease; }
+  @keyframes shake {
     25% { transform: translateX(-8px); }
     50% { transform: translateX(8px); }
     75% { transform: translateX(-4px); }
   }
 
-  /* ==================== 极光背景 ==================== */
-  .aurora {
-    position: fixed; inset: 0; z-index: 0;
-    opacity: 0.55;
-    background:
-      radial-gradient(ellipse 80% 50% at 20% 50%, rgba(180,70,140,0.4) 0%, transparent 70%),
-      radial-gradient(ellipse 60% 40% at 60% 20%, rgba(100,180,220,0.3) 0%, transparent 70%),
-      radial-gradient(ellipse 70% 50% at 50% 80%, rgba(200,100,160,0.35) 0%, transparent 70%),
-      radial-gradient(ellipse 50% 40% at 80% 60%, rgba(140,200,180,0.25) 0%, transparent 60%);
-    animation: auroraShift 12s ease-in-out infinite;
+  /* 页面切换 */
+  .screen {
+    position: fixed; inset: 0; z-index: 1; overflow: auto;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity .45s ease, transform .45s ease, visibility .45s;
   }
-  @keyframes auroraShift {
-    0%,100% { transform: translate(0,0) rotate(0deg); opacity: 0.55; }
-    25%     { transform: translate(2%,1%) rotate(1deg); opacity: 0.7; }
-    50%     { transform: translate(-1%,-1%) rotate(-1deg); opacity: 0.5; }
-    75%     { transform: translate(-2%,2%) rotate(0.5deg); opacity: 0.65; }
+  .screen.is-active { opacity: 1; visibility: visible; pointer-events: auto; transform: none; }
+  .page-shell { width: min(1180px, calc(100% - 40px)); margin: 0 auto; }
+
+  /* 初见：只有地图，点击后逐步显现 */
+  .intro-screen { display: grid; place-items: center; overflow: hidden; }
+  .intro-wrap { width: min(980px, calc(100% - 28px)); text-align: center; }
+  .intro-kicker {
+    color: var(--muted); font-size: .76rem; letter-spacing: .34em;
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  .intro-map {
+    position: relative; width: 100%; aspect-ratio: 16 / 9; min-height: 310px;
+    border: 1px solid rgba(255,255,255,.08); border-radius: 28px;
+    background: rgba(18,14,29,.72); overflow: hidden;
+    box-shadow: 0 32px 100px rgba(0,0,0,.34);
+  }
+  .map-grid {
+    position: absolute; inset: 0; opacity: .22;
+    background-image:
+      linear-gradient(rgba(255,255,255,.07) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,.07) 1px, transparent 1px);
+    background-size: 54px 54px;
+    mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  }
+  .land-shape { position: absolute; inset: 7% 6%; width: 88%; height: 86%; opacity: .64; }
+  .land-shape path.main-land {
+    fill: #181328; stroke: rgba(255,196,215,.2); stroke-width: 2;
+    vector-effect: non-scaling-stroke;
+  }
+  .land-shape path.island { fill: #181328; stroke: rgba(255,196,215,.18); stroke-width: 2; }
+  .discovery-trigger {
+    position: absolute; left: 66%; top: 69%; transform: translate(-50%,-50%);
+    width: 56px; height: 56px; border: 0; border-radius: 50%; cursor: pointer;
+    background: rgba(255,111,159,.13); box-shadow: 0 0 0 1px rgba(255,111,159,.5), 0 0 36px rgba(255,63,130,.25);
+  }
+  .discovery-trigger::before {
+    content: ""; position: absolute; inset: 18px; border-radius: 50%;
+    background: var(--pink); box-shadow: 0 0 18px var(--pink);
+  }
+  .discovery-trigger::after {
+    content: "点击点亮"; position: absolute; top: 68px; left: 50%; transform: translateX(-50%);
+    width: 110px; color: #eadce5; font-size: .8rem; letter-spacing: .12em;
+  }
+  .intro-map:not(.is-discovered) .discovery-trigger { animation: softPulse 1.8s ease-in-out infinite; }
+  @keyframes softPulse {
+    50% { box-shadow: 0 0 0 12px rgba(255,111,159,0), 0 0 44px rgba(255,63,130,.38); }
+  }
+  .intro-map.is-discovered .discovery-trigger {
+    width: 16px; height: 16px; pointer-events: none; background: var(--pink);
+    box-shadow: 0 0 30px var(--pink); transition: width .45s, height .45s, background .45s;
+  }
+  .intro-map.is-discovered .discovery-trigger::before,
+  .intro-map.is-discovered .discovery-trigger::after { display: none; }
+  .memory-spark {
+    position: absolute; transform: translate(-50%,-50%) scale(.6);
+    padding: 7px 10px; border: 1px solid rgba(255,255,255,.12); border-radius: 999px;
+    color: #f8dce6; background: #1b1426; font-size: clamp(.68rem, 2vw, .82rem);
+    opacity: 0; transition: opacity .5s ease, transform .5s ease;
+  }
+  .memory-spark.is-visible { opacity: 1; transform: translate(-50%,-50%) scale(1); }
+  .intro-copy {
+    position: absolute; left: 50%; top: 48%; width: min(620px, 86%);
+    transform: translate(-50%, -42%); opacity: 0; pointer-events: none;
+    transition: opacity .7s ease, transform .7s ease;
+  }
+  .intro-copy.is-visible { opacity: 1; transform: translate(-50%, -50%); pointer-events: auto; }
+  .intro-copy h1 {
+    font-family: Georgia, "STKaiti", serif;
+    font-size: clamp(2rem, 7vw, 4.8rem); line-height: 1.08;
+    text-shadow: 0 12px 40px rgba(0,0,0,.8);
+  }
+  .intro-copy p { margin: 14px 0 24px; color: #e6d9e5; font-size: clamp(.92rem, 2.5vw, 1.1rem); }
+  .primary-button { min-width: 160px; padding: 14px 22px; }
+
+  /* 主页 */
+  .main-screen { padding: 24px 0 60px; }
+  .topbar { display: flex; align-items: center; justify-content: space-between; min-height: 60px; }
+  .brand { display: flex; gap: 12px; align-items: center; }
+  .brand-heart {
+    display: grid; place-items: center; width: 38px; height: 38px; border-radius: 12px;
+    background: rgba(255,111,159,.13); border: 1px solid rgba(255,111,159,.25);
+  }
+  .brand strong { display: block; font-size: .95rem; }
+  .brand small { color: var(--muted); font-size: .72rem; }
+  .home-hero { padding: clamp(70px, 13vh, 140px) 0 56px; max-width: 760px; }
+  .eyebrow { color: var(--pink); font-size: .76rem; letter-spacing: .28em; margin-bottom: 16px; }
+  .home-hero h1 { font-family: Georgia, "STKaiti", serif; font-size: clamp(2.5rem, 8vw, 5.4rem); line-height: 1.02; }
+  .home-hero p { color: var(--muted); line-height: 1.9; margin-top: 20px; max-width: 600px; }
+  .section-head { display: flex; align-items: end; justify-content: space-between; margin-bottom: 18px; }
+  .section-head h2 { font-size: clamp(1.35rem, 4vw, 1.8rem); }
+  .section-head span { color: var(--muted); font-size: .82rem; }
+  .memory-card {
+    position: relative; width: 100%; min-height: 280px; padding: clamp(24px, 5vw, 54px);
+    overflow: hidden; text-align: left; cursor: pointer;
+    border: 1px solid var(--line); border-radius: 26px; background: var(--panel);
+  }
+  .memory-card::after {
+    content: ""; position: absolute; width: 380px; height: 380px; right: -100px; top: -145px;
+    border-radius: 50%; background: rgba(255,63,130,.11);
+  }
+  .card-index { color: var(--pink); letter-spacing: .22em; font-size: .74rem; }
+  .memory-card h3 { position: relative; z-index: 1; margin: 42px 0 12px; font-size: clamp(2rem, 6vw, 3.6rem); }
+  .memory-card p { position: relative; z-index: 1; color: var(--muted); max-width: 560px; line-height: 1.8; }
+  .card-footer { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; margin-top: 44px; }
+  .city-count { color: var(--gold); }
+  .open-arrow { font-size: 1.4rem; transition: transform .25s ease; }
+  .memory-card:hover .open-arrow { transform: translateX(7px); }
+
+  /* 足迹地图 */
+  .footprint-screen { padding: 22px 0 50px; }
+  .footprint-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+  .back-button, .modal-close {
+    border: 1px solid var(--line); background: var(--panel); cursor: pointer;
+  }
+  .back-button { padding: 10px 14px; border-radius: 12px; }
+  .footprint-title { text-align: right; }
+  .footprint-title h1 { font-size: clamp(1.35rem, 4vw, 2rem); }
+  .footprint-title p { color: var(--muted); font-size: .8rem; margin-top: 4px; }
+  .travel-map {
+    position: relative; width: 100%; aspect-ratio: 16 / 9; min-height: 480px;
+    overflow: hidden; border: 1px solid var(--line); border-radius: 26px;
+    background: #110d1c; box-shadow: 0 30px 90px rgba(0,0,0,.3);
+  }
+  .travel-map .land-shape { inset: 8% 5%; width: 90%; height: 84%; opacity: .9; }
+  .travel-map .main-land { fill: #1a1528; }
+  .route-svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+  .route-line {
+    fill: none; stroke: rgba(255,111,159,.36); stroke-width: .22;
+    stroke-dasharray: 1.1 1.1; vector-effect: non-scaling-stroke;
+  }
+  .route-line.draw-once { animation: routeReveal 1.8s ease both; }
+  @keyframes routeReveal { from { opacity: 0; stroke-dashoffset: 18; } to { opacity: 1; stroke-dashoffset: 0; } }
+  .city-layer { position: absolute; inset: 0; }
+  .city-marker {
+    position: absolute; width: 34px; height: 34px; transform: translate(-50%,-50%);
+    border: 0; border-radius: 50%; cursor: pointer; background: transparent;
+  }
+  .city-marker::before {
+    content: ""; position: absolute; left: 50%; top: 50%; width: 9px; height: 9px;
+    transform: translate(-50%,-50%); border-radius: 50%; background: var(--pink);
+    box-shadow: 0 0 0 5px rgba(255,111,159,.15), 0 0 18px rgba(255,111,159,.8);
+  }
+  .city-marker:hover::before, .city-marker:focus-visible::before { background: var(--gold); }
+  .city-label {
+    position: absolute; left: 50%; top: -15px;
+    transform: translate(calc(-50% + var(--label-x, 0px)), var(--label-y, 0px));
+    padding: 3px 6px; border-radius: 6px; white-space: nowrap;
+    color: #fbe9ef; background: rgba(9,7,19,.84); font-size: clamp(.65rem, 1.4vw, .78rem);
+  }
+  .map-legend {
+    position: absolute; left: 20px; bottom: 18px; padding: 10px 12px;
+    border: 1px solid var(--line); border-radius: 10px; color: var(--muted);
+    background: rgba(9,7,19,.84); font-size: .76rem;
+  }
+  .mobile-city-list { display: none; }
+
+  /* 城市详情 */
+  .city-modal {
+    position: fixed; inset: 0; z-index: 100; display: grid; place-items: center;
+    padding: 18px; background: rgba(4,3,9,.76); opacity: 0; visibility: hidden;
+    transition: opacity .25s ease, visibility .25s;
+  }
+  .city-modal.is-open { opacity: 1; visibility: visible; }
+  .city-dialog {
+    width: min(760px, 100%); max-height: min(86vh, 760px); overflow: auto;
+    border: 1px solid var(--line); border-radius: 24px; background: #151120;
+    box-shadow: 0 30px 100px rgba(0,0,0,.55); transform: translateY(12px);
+    transition: transform .25s ease;
+  }
+  .city-modal.is-open .city-dialog { transform: none; }
+  .dialog-head { display: flex; align-items: start; justify-content: space-between; padding: 26px 26px 0; }
+  .city-order { color: var(--pink); font-size: .72rem; letter-spacing: .2em; }
+  .dialog-head h2 { margin-top: 8px; font-size: clamp(2rem, 7vw, 3.4rem); }
+  .modal-close { width: 38px; height: 38px; border-radius: 12px; font-size: 1.2rem; }
+  .dialog-copy { padding: 14px 26px 22px; color: var(--muted); line-height: 1.8; }
+  .photo-grid { display: grid; grid-template-columns: 1.45fr 1fr 1fr; gap: 10px; padding: 0 26px 26px; }
+  .photo-placeholder {
+    display: grid; place-items: center; min-height: 170px; padding: 16px;
+    border: 1px dashed rgba(255,255,255,.16); border-radius: 16px;
+    color: #958a9f; text-align: center; background: #100c19; font-size: .8rem;
+  }
+  .photo-placeholder:first-child { min-height: 250px; grid-row: span 2; }
+
+  @media (max-width: 720px) {
+    .page-shell { width: min(100% - 24px, 1180px); }
+    .intro-map { aspect-ratio: auto; height: 66vh; min-height: 440px; }
+    .intro-copy { top: 45%; }
+    .memory-spark { padding: 5px 7px; }
+    .home-hero { padding-top: 80px; }
+    .travel-map { height: 72vh; min-height: 520px; aspect-ratio: auto; }
+    .travel-map .land-shape { inset: 14% 1%; width: 98%; height: 72%; }
+    .city-label { display: none; }
+    .city-marker { width: 40px; height: 40px; }
+    .mobile-city-list {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px;
+    }
+    .mobile-city-button {
+      min-height: 40px; border: 1px solid var(--line); border-radius: 10px;
+      color: #eadfe8; background: var(--panel); cursor: pointer; font-size: .78rem;
+    }
+    .photo-grid { grid-template-columns: 1fr 1fr; }
+    .photo-placeholder:first-child { grid-column: 1 / -1; grid-row: auto; min-height: 210px; }
   }
 
-  /* 动态光晕 */
-  .aurora::after {
-    content: ''; position: absolute; inset: 0;
-    background:
-      radial-gradient(ellipse 30% 30% at var(--mx,50%) var(--my,50%), rgba(255,150,200,0.15) 0%, transparent 100%);
-    transition: background 0.3s;
+  @media (max-width: 430px) {
+    .password-card { padding: 34px 20px 24px; }
+    .intro-map { height: 70vh; }
+    .intro-kicker { letter-spacing: .2em; }
+    .memory-card { min-height: 310px; }
+    .map-legend { left: 12px; bottom: 12px; }
+    .dialog-head, .dialog-copy { padding-left: 20px; padding-right: 20px; }
+    .photo-grid { padding: 0 20px 20px; }
+    .mobile-city-list { grid-template-columns: repeat(3, 1fr); }
   }
 
-  /* ==================== Canvas 层 ==================== */
-  canvas#bgCanvas  { position: fixed; inset: 0; z-index: 1; pointer-events: none; }
-  canvas#fxCanvas  { position: fixed; inset: 0; z-index: 2; pointer-events: none; }
-
-  /* ==================== 星星 ==================== */
-  .stars { position: fixed; inset: 0; z-index: 0; }
-  .star {
-    position: absolute; border-radius: 50%; background: white;
-    animation: twinkle var(--dur) ease-in-out infinite;
-    animation-delay: var(--delay); opacity: 0;
-  }
-  @keyframes twinkle {
-    0%,100% { opacity: 0.15; transform: scale(1); }
-    50%     { opacity: 1; transform: scale(1.8); }
-  }
-
-  /* ==================== 主内容 ==================== */
-  .content-layer { position: fixed; inset: 0; z-index: 10; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; }
-
-  /* 大爱心 */
-  .giant-heart-wrap {
-    animation: heartFloat 3s ease-in-out infinite;
-  }
-  .giant-heart {
-    font-size: clamp(5rem, 15vw, 11rem);
-    display: block; text-align: center;
-    filter: drop-shadow(0 0 50px rgba(255,20,147,0.7))
-            drop-shadow(0 0 100px rgba(255,105,180,0.4))
-            drop-shadow(0 0 150px rgba(255,182,193,0.3));
-    animation: heartPulse 1.2s ease-in-out infinite;
-  }
-  @keyframes heartFloat {
-    0%,100% { transform: translateY(0); }
-    50%     { transform: translateY(-12px); }
-  }
-  @keyframes heartPulse {
-    0%,100% { transform: scale(1); }
-    14%     { transform: scale(1.12); }
-    28%     { transform: scale(1); }
-    42%     { transform: scale(1.08); }
-    56%     { transform: scale(1); }
-  }
-
-  /* 名字标题 */
-  .names {
-    font-size: clamp(2rem, 6vw, 4.5rem);
-    font-weight: bold;
-    text-align: center;
-    letter-spacing: 0.12em;
-    background: linear-gradient(135deg, #ff6b9d, #ff1493, #ff69b4, #ffa0c5, #ff6b9d);
-    background-size: 400% 400%;
-    -webkit-background-clip: text; background-clip: text;
-    -webkit-text-fill-color: transparent;
-    animation: gradientFlow 4s ease-in-out infinite;
-    filter: drop-shadow(0 0 30px rgba(255,105,180,0.5));
-    margin-bottom: 0.15em;
-  }
-  @keyframes gradientFlow {
-    0%,100% { background-position: 0% 50%; }
-    50%     { background-position: 100% 50%; }
-  }
-
-  /* 副标题/情话 */
-  .love-quote {
-    font-size: clamp(1rem, 2.5vw, 1.6rem);
-    color: rgba(255,192,203,0.9);
-    text-align: center;
-    letter-spacing: 0.1em;
-    margin-top: 0.4em;
-    animation: quoteFade 4s ease-in-out infinite;
-  }
-  @keyframes quoteFade {
-    0%,100% { opacity: 0.7; text-shadow: 0 0 8px rgba(255,105,180,0.4); }
-    50%     { opacity: 1; text-shadow: 0 0 25px rgba(255,20,147,0.7), 0 0 50px rgba(255,105,180,0.4); }
-  }
-
-  /* 底部打字机 */
-  .typewriter-wrap {
-    position: fixed; bottom: 8%; left: 50%; transform: translateX(-50%);
-    z-index: 10; pointer-events: none; text-align: center;
-  }
-  .typewriter {
-    font-size: clamp(0.9rem, 2vw, 1.3rem);
-    color: rgba(255,218,185,0.85);
-    letter-spacing: 0.08em;
-    border-right: 2px solid rgba(255,105,180,0.7);
-    padding-right: 4px;
-    animation: blink 0.8s step-end infinite;
-    display: inline;
-  }
-  @keyframes blink {
-    0%,100% { border-color: rgba(255,105,180,0.7); }
-    50%     { border-color: transparent; }
-  }
-
-  /* ==================== 灯笼 ==================== */
-  .lantern {
-    position: fixed; z-index: 6; pointer-events: none;
-    animation: lanternRise var(--dur) linear infinite;
-    animation-delay: var(--delay);
-    opacity: 0;
-  }
-  .lantern-body {
-    width: var(--lw); height: calc(var(--lw) * 1.3);
-    background: radial-gradient(ellipse at 50% 40%, #ffb347, #ff6b35 60%, #cc3300);
-    border-radius: 50% 50% 45% 45%;
-    box-shadow: 0 0 calc(var(--lw) * 2) rgba(255,140,0,0.5),
-                0 0 calc(var(--lw) * 4) rgba(255,100,0,0.3),
-                inset 0 -10px 20px rgba(0,0,0,0.15);
-    position: relative;
-    animation: lanternGlow 2s ease-in-out infinite;
-  }
-  .lantern-body::after {
-    content: ''; position: absolute; bottom: -3px; left: 25%; width: 50%; height: 6px;
-    background: #8B4513; border-radius: 2px;
-  }
-  @keyframes lanternGlow {
-    0%,100% { box-shadow: 0 0 calc(var(--lw) * 2) rgba(255,140,0,0.5), 0 0 calc(var(--lw) * 4) rgba(255,100,0,0.3); }
-    50%     { box-shadow: 0 0 calc(var(--lw) * 3) rgba(255,160,0,0.7), 0 0 calc(var(--lw) * 6) rgba(255,120,0,0.45); }
-  }
-  @keyframes lanternRise {
-    0%   { transform: translateY(105vh) translateX(var(--drift)) rotate(var(--sway)); opacity: 0; }
-    15%  { opacity: 0.85; }
-    85%  { opacity: 0.7; }
-    100% { transform: translateY(-20vh) translateX(calc(var(--drift) + 30px)) rotate(calc(var(--sway) + 8deg)); opacity: 0; }
-  }
-
-  /* ==================== 蝴蝶 ==================== */
-  .butterfly {
-    position: fixed; z-index: 7; pointer-events: none;
-    animation: butterflyFly var(--dur) var(--delay) linear infinite;
-    opacity: 0;
-  }
-  @keyframes butterflyFly {
-    0%   { transform: translate(0, 0) rotate(0deg) scaleX(1); opacity: 0; }
-    5%   { opacity: 0.8; }
-    10%  { transform: translate(calc(var(--dx)*0.2), calc(var(--dy)*0.15)) rotate(calc(var(--rot)*0.3)) scaleX(var(--flip,1)); }
-    25%  { transform: translate(calc(var(--dx)*0.45), calc(var(--dy)*0.3)) rotate(calc(var(--rot)*0.5)) scaleX(var(--flip,1)); }
-    40%  { transform: translate(calc(var(--dx)*0.6), calc(var(--dy)*0.45)) rotate(calc(var(--rot)*0.7)) scaleX(var(--flip2,1)); }
-    55%  { transform: translate(calc(var(--dx)*0.75), calc(var(--dy)*0.65)) rotate(calc(var(--rot)*0.8)) scaleX(var(--flip,1)); }
-    70%  { transform: translate(calc(var(--dx)*0.9), calc(var(--dy)*0.8)) rotate(calc(var(--rot)*0.9)) scaleX(var(--flip2,1)); }
-    85%  { opacity: 0.7; transform: translate(calc(var(--dx)*0.95), calc(var(--dy)*0.9)) rotate(var(--rot)) scaleX(var(--flip,1)); }
-    95%  { opacity: 0; }
-    100% { transform: translate(var(--dx), var(--dy)) rotate(var(--rot)) scaleX(var(--flip,1)); opacity: 0; }
-  }
-
-  /* ==================== 浮动心 ==================== */
-  .float-heart {
-    position: fixed; z-index: 5; pointer-events: none;
-    animation: heartUp var(--dur) linear infinite;
-    animation-delay: var(--delay); opacity: 0;
-    font-size: var(--size);
-    filter: drop-shadow(0 0 8px rgba(255,105,180,0.45));
-  }
-  @keyframes heartUp {
-    0%   { transform: translateY(105vh) rotate(0deg) scale(0.2); opacity: 0; }
-    8%   { opacity: 0.85; }
-    85%  { opacity: 0.7; }
-    100% { transform: translateY(-10vh) rotate(var(--rot)) scale(1.1); opacity: 0; }
-  }
-
-  /* ==================== 点击效果 ==================== */
-  .click-heart {
-    position: fixed; z-index: 20; pointer-events: none;
-    animation: clickBurst 1.2s ease-out forwards; font-size: var(--sz);
-  }
-  @keyframes clickBurst {
-    0%   { transform: translate(-50%,-50%) scale(0); opacity: 1; }
-    30%  { transform: translate(-50%,-50%) scale(1.5); opacity: 1; }
-    100% { transform: translate(-50%,-50%) scale(2.5); opacity: 0; }
-  }
-  .click-ring {
-    position: fixed; z-index: 19; pointer-events: none;
-    border-radius: 50%; border: 2px solid rgba(255,105,180,0.6);
-    animation: ringOut 1.5s ease-out forwards;
-    box-shadow: 0 0 20px rgba(255,20,147,0.3), inset 0 0 10px rgba(255,105,180,0.15);
-  }
-  @keyframes ringOut {
-    0%   { width: 0; height: 0; transform: translate(-50%,-50%) scale(0); opacity: 1; }
-    100% { width: 200px; height: 200px; transform: translate(-50%,-50%) scale(1); opacity: 0; }
-  }
-
-  /* ==================== 中部信息弹出 ==================== */
-  .popup-msg {
-    position: fixed; z-index: 15; pointer-events: none;
-    top: 60%; left: 50%; transform: translate(-50%,-50%);
-    font-size: clamp(1rem, 2.5vw, 1.8rem);
-    color: rgba(255,255,255,0.9);
-    text-align: center;
-    animation: msgPop 5s ease-in-out forwards;
-    text-shadow: 0 0 20px rgba(255,105,180,0.6);
-    white-space: nowrap;
-  }
-  @keyframes msgPop {
-    0%   { opacity: 0; transform: translate(-50%,-50%) translateY(20px); }
-    15%  { opacity: 1; transform: translate(-50%,-50%) translateY(0); }
-    75%  { opacity: 1; }
-    100% { opacity: 0; transform: translate(-50%,-50%) translateY(-30px); }
-  }
-
-  /* ==================== 响应式 ==================== */
-  @media (max-width: 600px) {
-    .giant-heart { font-size: 4rem; }
-    .names { font-size: 1.8rem; }
-    .love-quote { font-size: 0.95rem; }
-    .typewriter { font-size: 0.8rem; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
   }
 </style>
 </head>
 <body class="locked">
 
-<!-- 密码门 -->
 <div class="password-gate" id="passwordGate">
   <form class="password-card" id="passwordForm">
     <div class="password-icon">🔐</div>
@@ -339,421 +327,268 @@
   </form>
 </div>
 
-<!-- 极光 -->
-<div class="aurora" id="aurora"></div>
+<div class="ambient" aria-hidden="true"></div>
 
-<!-- 星星 -->
-<div class="stars" id="starsContainer"></div>
+<!-- 初始探索页 -->
+<section class="screen intro-screen is-active" id="introScreen" aria-label="点亮我们的故事">
+  <div class="intro-wrap">
+    <p class="intro-kicker">Our private travel universe</p>
+    <div class="intro-map" id="introMap">
+      <div class="map-grid"></div>
+      <svg class="land-shape" viewBox="0 0 1000 700" aria-hidden="true">
+        <path class="main-land" d="M93 236C112 194 151 183 176 148C210 101 270 121 317 91C363 61 414 75 455 102C503 134 540 115 590 122C655 131 703 103 758 137C804 165 817 205 868 225C911 242 928 280 905 314C881 349 848 365 847 409C845 450 800 462 777 495C751 532 709 519 678 557C651 590 607 615 564 598C524 581 493 548 449 552C406 557 380 527 345 510C303 489 253 480 230 439C207 398 165 391 149 346C137 310 73 279 93 236Z"/>
+        <path class="island" d="M741 582c16-18 45-16 55 4 8 17-8 39-31 39-24 0-39-24-24-43Z"/>
+      </svg>
+      <div id="introSparks"></div>
+      <button class="discovery-trigger" id="discoveryTrigger" type="button" aria-label="点击点亮我们的故事"></button>
+      <div class="intro-copy" id="introCopy">
+        <h1>晖晖 & 天奇<br>我们的旅行宇宙</h1>
+        <p>从第一次出发，到每一座被我们共同点亮的城市。</p>
+        <button class="primary-button" id="enterHome" type="button">走进我们的故事</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-<!-- Canvas -->
-<canvas id="bgCanvas"></canvas>
-<canvas id="fxCanvas"></canvas>
+<!-- 主页面 -->
+<main class="screen main-screen" id="mainScreen">
+  <div class="page-shell">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-heart">♥</span>
+        <div><strong>晖晖 × 天奇</strong><small>OUR LITTLE UNIVERSE</small></div>
+      </div>
+      <span style="color:var(--muted);font-size:.76rem;">始于 2024.02.28</span>
+    </header>
 
-<!-- 主内容 -->
-<div class="content-layer" style="top: 22%;">
-  <div class="giant-heart-wrap"><span class="giant-heart">💖</span></div>
-  <div class="names">郑逸晖 ❤️ 马天奇</div>
-  <div class="love-quote" id="loveQuote">你是我生命中最美的意外 ✦</div>
-</div>
+    <section class="home-hero">
+      <p class="eyebrow">WELCOME HOME</p>
+      <h1>把我们走过的路，<br>变成会发光的回忆。</h1>
+      <p>这里会慢慢收集我们的旅行、照片和故事。每一次打开，都能回到那些一起看过的风景里。</p>
+    </section>
 
-<!-- 打字机区域 -->
-<div class="typewriter-wrap">
-  <span class="typewriter" id="typewriter"></span>
+    <section aria-labelledby="memoryTitle">
+      <div class="section-head">
+        <h2 id="memoryTitle">我们的栏目</h2>
+        <span>持续更新中</span>
+      </div>
+      <button class="memory-card" id="openFootprints" type="button">
+        <span class="card-index">01 / FOOTPRINTS</span>
+        <h3>去过的地方 · 足迹</h3>
+        <p>把共同抵达的城市一一点亮。点击地图上的地点，打开属于那座城市的照片与故事。</p>
+        <span class="card-footer">
+          <span class="city-count">已点亮 14 座城市</span>
+          <span class="open-arrow">→</span>
+        </span>
+      </button>
+    </section>
+  </div>
+</main>
+
+<!-- 足迹地图页 -->
+<section class="screen footprint-screen" id="footprintScreen" aria-label="我们的足迹地图">
+  <div class="page-shell">
+    <header class="footprint-topbar">
+      <button class="back-button" id="backHome" type="button">← 返回主页</button>
+      <div class="footprint-title">
+        <h1>去过的地方 · 足迹</h1>
+        <p>点击发光的城市，打开那里的故事</p>
+      </div>
+    </header>
+
+    <div class="travel-map" id="travelMap">
+      <div class="map-grid"></div>
+      <svg class="land-shape" viewBox="0 0 1000 700" aria-hidden="true">
+        <path class="main-land" d="M93 236C112 194 151 183 176 148C210 101 270 121 317 91C363 61 414 75 455 102C503 134 540 115 590 122C655 131 703 103 758 137C804 165 817 205 868 225C911 242 928 280 905 314C881 349 848 365 847 409C845 450 800 462 777 495C751 532 709 519 678 557C651 590 607 615 564 598C524 581 493 548 449 552C406 557 380 527 345 510C303 489 253 480 230 439C207 398 165 391 149 346C137 310 73 279 93 236Z"/>
+        <path class="island" d="M741 582c16-18 45-16 55 4 8 17-8 39-31 39-24 0-39-24-24-43Z"/>
+      </svg>
+      <svg class="route-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <polyline class="route-line" id="routeLine" points=""></polyline>
+      </svg>
+      <div class="city-layer" id="cityLayer"></div>
+      <div class="map-legend">● 已点亮 &nbsp; 14 个共同足迹</div>
+    </div>
+    <div class="mobile-city-list" id="mobileCityList" aria-label="城市列表"></div>
+  </div>
+</section>
+
+<!-- 城市详情 -->
+<div class="city-modal" id="cityModal" role="dialog" aria-modal="true" aria-labelledby="cityName">
+  <article class="city-dialog">
+    <header class="dialog-head">
+      <div>
+        <p class="city-order" id="cityOrder"></p>
+        <h2 id="cityName"></h2>
+      </div>
+      <button class="modal-close" id="closeModal" type="button" aria-label="关闭">×</button>
+    </header>
+    <p class="dialog-copy" id="cityStory"></p>
+    <div class="photo-grid" id="photoGrid"></div>
+  </article>
 </div>
 
 <script>
-// ==================== 密码验证 ====================
-const gate = document.getElementById('passwordGate');
-const passwordForm = document.getElementById('passwordForm');
-const passwordInput = document.getElementById('passwordInput');
-const passwordError = document.getElementById('passwordError');
+  // 密码验证：纯前端访问门，仅用于基础隐私保护
+  const gate = document.getElementById('passwordGate');
+  const passwordForm = document.getElementById('passwordForm');
+  const passwordInput = document.getElementById('passwordInput');
+  const passwordError = document.getElementById('passwordError');
 
-function unlockPage(animate = true) {
-  document.body.classList.remove('locked');
-  if (animate) {
-    gate.classList.add('unlocking');
-    setTimeout(() => gate.remove(), 480);
-  } else {
-    gate.remove();
-  }
-}
-
-try {
-  if (sessionStorage.getItem('lovePageUnlocked') === 'yes') unlockPage(false);
-} catch (_) {}
-
-passwordForm.addEventListener('submit', event => {
-  event.preventDefault();
-  if (passwordInput.value === '20240228') {
-    try { sessionStorage.setItem('lovePageUnlocked', 'yes'); } catch (_) {}
-    unlockPage(true);
-    return;
-  }
-
-  passwordError.textContent = '密码不对哦，再想想这个特别的日子 💕';
-  passwordInput.value = '';
-  passwordInput.focus();
-  passwordForm.classList.remove('shake');
-  void passwordForm.offsetWidth;
-  passwordForm.classList.add('shake');
-});
-
-// ==================== 星星 ====================
-(function stars() {
-  const c = document.getElementById('starsContainer');
-  for (let i = 0; i < 150; i++) {
-    const s = document.createElement('div'); s.className = 'star';
-    const sz = Math.random() * 2.8 + 0.6;
-    s.style.cssText = `left:${Math.random()*100}%;top:${Math.random()*100}%;width:${sz}px;height:${sz}px;--dur:${Math.random()*3.5+1.5}s;--delay:${Math.random()*6}s;`;
-    c.appendChild(s);
-  }
-})();
-
-// ==================== Aurora 跟随鼠标 ====================
-document.addEventListener('mousemove', e => {
-  const x = (e.clientX / window.innerWidth * 100).toFixed(1);
-  const y = (e.clientY / window.innerHeight * 100).toFixed(1);
-  document.getElementById('aurora').style.setProperty('--mx', x + '%');
-  document.getElementById('aurora').style.setProperty('--my', y + '%');
-});
-
-// ==================== Canvas 1: 粒子+烟花 ====================
-const bgC = document.getElementById('bgCanvas');
-const bgX = bgC.getContext('2d');
-let w, h;
-function rs() { w = bgC.width = window.innerWidth; h = bgC.height = window.innerHeight; }
-window.addEventListener('resize', rs); rs();
-
-// 爱心曲线
-function heartXY(t, scale = 1) {
-  return {
-    x: 16 * Math.pow(Math.sin(t), 3) * scale,
-    y: -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)) * scale
-  };
-}
-
-// 爱心轨迹粒子
-class TrailParticle {
-  constructor() {
-    this.t = Math.random() * Math.PI * 2;
-    this.spd = (Math.random() * 0.01 + 0.004) * (Math.random() > 0.5 ? 1 : -1);
-    this.sz = Math.random() * 2.2 + 0.5;
-    this.scl = Math.random() * 80 + 25;
-    this.cx = w/2 + (Math.random()-0.5)*50;
-    this.cy = h*0.48 + (Math.random()-0.5)*40;
-    this.alpha = Math.random()*0.45+0.2;
-    this.hue = Math.random()*40+335;
-    this.phase = Math.random()*Math.PI*2;
-  }
-  upd() {
-    this.t += this.spd;
-    if (this.t > Math.PI*2) this.t = 0;
-    if (this.t < 0) this.t = Math.PI*2;
-    const p = heartXY(this.t, this.scl*0.25);
-    this.x = this.cx + p.x + Math.sin(this.phase)*3;
-    this.y = this.cy + p.y + Math.cos(this.phase*1.3)*3;
-    this.phase += 0.008;
-  }
-  draw(ctx) {
-    ctx.save(); ctx.globalAlpha = this.alpha;
-    ctx.fillStyle = `hsl(${this.hue},100%,75%)`;
-    ctx.shadowColor = `hsl(${this.hue},100%,65%)`; ctx.shadowBlur = 5;
-    ctx.beginPath(); ctx.arc(this.x, this.y, this.sz, 0, Math.PI*2); ctx.fill();
-    ctx.restore();
-  }
-}
-
-// 烟花粒子
-class FireworkParticle {
-  constructor(x, y, hue) {
-    this.x = x; this.y = y;
-    const angle = Math.random() * Math.PI * 2;
-    const speed = Math.random() * 5 + 2;
-    this.vx = Math.cos(angle) * speed;
-    this.vy = Math.sin(angle) * speed;
-    this.alpha = 1; this.decay = Math.random() * 0.015 + 0.008;
-    this.sz = Math.random() * 2.8 + 1.2;
-    this.hue = hue + (Math.random() - 0.5) * 30;
-    this.gravity = 0.04;
-  }
-  upd() { this.x += this.vx; this.y += this.vy; this.vy += this.gravity; this.alpha -= this.decay; }
-  draw(ctx) {
-    if (this.alpha <= 0) return;
-    ctx.save(); ctx.globalAlpha = this.alpha;
-    ctx.fillStyle = `hsl(${this.hue},100%,70%)`;
-    ctx.shadowColor = `hsl(${this.hue},100%,60%)`; ctx.shadowBlur = 8;
-    ctx.beginPath(); ctx.arc(this.x, this.y, this.sz, 0, Math.PI*2); ctx.fill();
-    ctx.restore();
-  }
-  get dead() { return this.alpha <= 0; }
-}
-
-// 飘浮光点
-class DriftSpark {
-  constructor() { this.reset(true); }
-  reset(init) {
-    this.x = init ? Math.random()*w : Math.random()*w;
-    this.y = init ? Math.random()*h : -10;
-    this.vx = (Math.random()-0.5)*0.5;
-    this.vy = Math.random()*0.35+0.1;
-    this.sz = Math.random()*1.8+0.4;
-    this.alpha = Math.random()*0.5+0.15;
-    this.hue = Math.random()<0.7 ? Math.random()*40+335 : Math.random()*60+190;
-    this.life = Math.random()*500+300; this.age = 0;
-  }
-  upd() {
-    this.x += this.vx; this.y -= this.vy; this.age++;
-    if (this.age > this.life || this.x < -20 || this.x > w+20 || this.y < -30 || this.y > h+30) this.reset(false);
-  }
-  draw(ctx) {
-    const r = 1 - this.age/this.life;
-    const a = this.alpha * r * Math.sin(r*Math.PI);
-    ctx.save(); ctx.globalAlpha = a;
-    ctx.fillStyle = `hsl(${this.hue},100%,80%)`;
-    ctx.shadowColor = `hsl(${this.hue},100%,72%)`; ctx.shadowBlur = 4;
-    ctx.beginPath(); ctx.arc(this.x, this.y, this.sz, 0, Math.PI*2); ctx.fill();
-    ctx.restore();
-  }
-}
-
-const trailPs = Array.from({length:100},()=>new TrailParticle());
-const driftPs = Array.from({length:70},()=>new DriftSpark());
-let fireworks = [];
-
-function spawnFirework() {
-  const x = Math.random()*w*0.7 + w*0.15;
-  const y = Math.random()*h*0.4 + h*0.1;
-  const hue = Math.random()*60 + 320; // 粉到红
-  const count = Math.floor(Math.random()*50)+40;
-  for (let i=0;i<count;i++) fireworks.push(new FireworkParticle(x,y,hue));
-}
-
-// 定时烟花
-setInterval(() => { if (fireworks.filter(f=>!f.dead).length < 20) spawnFirework(); }, 3500);
-setTimeout(spawnFirework, 1500);
-
-function drawBg() {
-  bgX.clearRect(0,0,w,h);
-  trailPs.forEach(p=>{p.upd();p.draw(bgX);});
-  driftPs.forEach(p=>{p.upd();p.draw(bgX);});
-  fireworks = fireworks.filter(f=>!f.dead);
-  fireworks.forEach(f=>{f.upd();f.draw(bgX);});
-  requestAnimationFrame(drawBg);
-}
-drawBg();
-
-window.addEventListener('resize', () => {
-  trailPs.forEach(p=>{p.cx=w/2+(Math.random()-0.5)*50;p.cy=h*0.48+(Math.random()-0.5)*40;});
-  driftPs.forEach(s=>s.reset(true));
-});
-
-// ==================== Canvas 2: 连线效果 ====================
-const fxC = document.getElementById('fxCanvas');
-const fxX = fxC.getContext('2d');
-let fxW, fxH;
-function fxRS() { fxW = fxC.width = window.innerWidth; fxH = fxC.height = window.innerHeight; }
-window.addEventListener('resize', fxRS); fxRS();
-
-class Node {
-  constructor() { this.reset(true); }
-  reset(init) {
-    this.x = init ? Math.random()*fxW : Math.random()*fxW;
-    this.y = init ? Math.random()*fxH : -10;
-    this.vx = (Math.random()-0.5)*0.4;
-    this.vy = Math.random()*0.3+0.08;
-    this.r = Math.random()*8+3;
-    this.alpha = Math.random()*0.25+0.08;
-    this.life = Math.random()*600+400; this.age = 0;
-  }
-  upd() {
-    this.x += this.vx; this.y -= this.vy; this.age++;
-    if (this.age>this.life||this.x<-30||this.x>fxW+30||this.y<-30||this.y>fxH+30) this.reset(false);
-  }
-  draw(ctx) {
-    const ratio = 1-this.age/this.life;
-    ctx.save(); ctx.globalAlpha = this.alpha*ratio;
-    ctx.fillStyle = 'rgba(255,180,200,0.9)';
-    ctx.beginPath(); ctx.arc(this.x,this.y,this.r,0,Math.PI*2); ctx.fill();
-    ctx.restore();
-  }
-}
-const nodes = Array.from({length:35},()=>new Node());
-
-function drawFx() {
-  fxX.clearRect(0,0,fxW,fxH);
-  nodes.forEach(n=>{n.upd();n.draw(fxX);});
-  // 连线
-  for (let i=0;i<nodes.length;i++) {
-    for (let j=i+1;j<nodes.length;j++) {
-      const dx = nodes[i].x - nodes[j].x;
-      const dy = nodes[i].y - nodes[j].y;
-      const dist = Math.sqrt(dx*dx+dy*dy);
-      if (dist < 140) {
-        const alpha = (1 - dist/140) * 0.18;
-        fxX.save(); fxX.globalAlpha = alpha;
-        fxX.strokeStyle = '#ffb3c6'; fxX.lineWidth = 0.6;
-        fxX.beginPath(); fxX.moveTo(nodes[i].x,nodes[i].y); fxX.lineTo(nodes[j].x,nodes[j].y); fxX.stroke();
-        fxX.restore();
-      }
+  function unlockPage(animate = true) {
+    document.body.classList.remove('locked');
+    if (!gate) return;
+    if (animate) {
+      gate.classList.add('is-leaving');
+      window.setTimeout(() => gate.remove(), 430);
+    } else {
+      gate.remove();
     }
   }
-  requestAnimationFrame(drawFx);
-}
-drawFx();
 
-// ==================== 浮动爱心 ====================
-const hearts = ['❤️','💕','💗','💖','💝','💘','💓','🩷','♥️','💞','💟','❣️'];
-function mkHeart() {
-  const el = document.createElement('span'); el.className = 'float-heart';
-  el.textContent = hearts[Math.floor(Math.random()*hearts.length)];
-  el.style.cssText = `left:${Math.random()*95}%;--size:${Math.random()*2.5+1}rem;--dur:${Math.random()*7+8}s;--delay:${Math.random()*3}s;--rot:${Math.random()*720-360}deg;`;
-  document.body.appendChild(el);
-  el.addEventListener('animationend',()=>el.remove());
-}
-for (let i=0;i<15;i++) setTimeout(mkHeart,i*350);
-setInterval(mkHeart,2000);
+  try {
+    if (sessionStorage.getItem('lovePageUnlocked') === 'yes') unlockPage(false);
+  } catch (_) {}
 
-// ==================== 孔明灯 ====================
-function mkLantern() {
-  const wrap = document.createElement('div'); wrap.className = 'lantern';
-  const sz = Math.random()*18+14;
-  wrap.style.cssText = `left:${Math.random()*80+5}%;--lw:${sz}px;--dur:${Math.random()*10+12}s;--delay:${Math.random()*8}s;--drift:${Math.random()*80-40}px;--sway:${Math.random()*10-5}deg;`;
-  const body = document.createElement('div'); body.className = 'lantern-body';
-  wrap.appendChild(body);
-  document.body.appendChild(wrap);
-  wrap.addEventListener('animationend',()=>wrap.remove());
-}
-for (let i=0;i<6;i++) setTimeout(mkLantern,i*2500);
-setInterval(mkLantern,6000);
-
-// ==================== 蝴蝶 ====================
-const bfEmoji = ['🦋','🦋','🦋','🦋','✨','🌸'];
-function mkButterfly() {
-  const el = document.createElement('span'); el.className = 'butterfly';
-  el.textContent = bfEmoji[Math.floor(Math.random()*bfEmoji.length)];
-  const dx = (Math.random()-0.5)*window.innerWidth*0.8;
-  const dy = (Math.random()-0.5)*window.innerHeight*0.7;
-  const rot = Math.random()*40-20;
-  const flip = Math.random()>0.5?'-1':'1';
-  const flip2 = Math.random()>0.5?'-1':'1';
-  el.style.cssText = `
-    left:${Math.random()*90}%;top:${Math.random()*80}%;
-    font-size:${Math.random()*1.6+1.2}rem;
-    --dur:${Math.random()*10+12}s;--delay:${Math.random()*5}s;
-    --dx:${dx}px;--dy:${dy}px;--rot:${rot}deg;
-    --flip:${flip};--flip2:${flip2};
-  `;
-  document.body.appendChild(el);
-  el.addEventListener('animationend',()=>el.remove());
-}
-for (let i=0;i<4;i++) setTimeout(mkButterfly,i*3000);
-setInterval(mkButterfly,7000);
-
-// ==================== 情话轮播 ====================
-const quotes = [
-  '你是我生命中最美的意外 ✦',
-  '遇见你，是我最大的幸运 🌟',
-  '世界很大，我的眼里只有你 👀',
-  '想和你一起看遍世间风景 🌅',
-  '每一天都想对你说：我爱你 💌',
-  '你的笑容是我最想守护的宝藏 💎',
-  '有你在，每天都是情人节 🌹',
-  '你是我的日月星辰 ✨',
-  '执子之手，与子偕老 🤝',
-  '此生有你，足矣 💕',
-];
-let qi = 0;
-const quoteEl = document.getElementById('loveQuote');
-setInterval(() => {
-  qi = (qi+1)%quotes.length;
-  quoteEl.style.opacity = '0';
-  quoteEl.style.transform = 'translateY(10px)';
-  quoteEl.style.transition = 'all 0.5s ease';
-  setTimeout(() => {
-    quoteEl.textContent = quotes[qi];
-    quoteEl.style.opacity = '1';
-    quoteEl.style.transform = 'translateY(0)';
-  },500);
-},4500);
-
-// ==================== 打字机 ====================
-const typeLines = [
-  '晖晖，遇见你之后，我才明白什么是心动。',
-  '你的每一个微笑，都让我觉得世界无比温柔。',
-  '感谢你出现在我的生命里，照亮了我的每一天。',
-  '我想牵着你的手，走过每一个春夏秋冬。',
-  '愿我们的故事，永远不说再见。',
-  '—— 永远爱你的 天奇 ❤️',
-];
-let lineIdx = 0, charIdx = 0, isDeleting = false;
-const twEl = document.getElementById('typewriter');
-
-function typeLoop() {
-  const line = typeLines[lineIdx];
-  if (!isDeleting) {
-    if (charIdx < line.length) { twEl.textContent = line.slice(0, charIdx+1); charIdx++; setTimeout(typeLoop, 100); }
-    else { setTimeout(()=>{ isDeleting=true; typeLoop(); }, 2500); }
-  } else {
-    if (charIdx > 0) { twEl.textContent = line.slice(0, charIdx-1); charIdx--; setTimeout(typeLoop, 40); }
-    else { isDeleting=false; lineIdx=(lineIdx+1)%typeLines.length; setTimeout(typeLoop, 400); }
+  if (passwordForm) {
+    passwordForm.addEventListener('submit', event => {
+      event.preventDefault();
+      if (passwordInput.value === '20240228') {
+        try { sessionStorage.setItem('lovePageUnlocked', 'yes'); } catch (_) {}
+        unlockPage(true);
+      } else {
+        passwordError.textContent = '密码不对哦，再想想这个特别的日子 💕';
+        passwordInput.value = '';
+        passwordInput.focus();
+        passwordForm.classList.remove('shake');
+        void passwordForm.offsetWidth;
+        passwordForm.classList.add('shake');
+      }
+    });
   }
-}
-typeLoop();
 
-// ==================== 随机弹出情话 ====================
-const popMsgs = [
-  '💌 我爱你，晖晖 💌',
-  '💝 你是最特别的 💝',
-  '🌟 永远在你身边 🌟',
-  '💖 你就是我的全世界 💖',
-  '🌹 每一天都更爱你 🌹',
-  '💕 你是我的心跳 💕',
-  '✨ 遇见你是最美的缘分 ✨',
-  '🦋 想你了 🦋',
-];
-function showPopMsg() {
-  const el = document.createElement('div'); el.className = 'popup-msg';
-  el.textContent = popMsgs[Math.floor(Math.random()*popMsgs.length)];
-  document.body.appendChild(el);
-  el.addEventListener('animationend',()=>el.remove());
-}
-setInterval(showPopMsg, 6000);
-setTimeout(showPopMsg, 2000);
+  const cities = [
+    { name: '荆州', lon: 112.24, lat: 30.33, lx: 0, ly: -2, story: '古城的风与共同走过的街道，都值得留下一页。关于荆州的照片和故事，会在这里慢慢补齐。' },
+    { name: '珠海', lon: 113.58, lat: 22.27, lx: -30, ly: 22, story: '海风、晚霞和并肩散步的时刻，是珠海留给我们的温柔记忆。' },
+    { name: '广州', lon: 113.26, lat: 23.13, lx: -28, ly: -4, story: '热闹的街巷、好吃的东西，还有在人群里始终牵着的手。' },
+    { name: '深圳', lon: 114.06, lat: 22.54, lx: 31, ly: 10, story: '这座熟悉的城市承载着日常，也见证着我们一次又一次出发。' },
+    { name: '廊坊', lon: 116.68, lat: 39.52, ox: -1.2, oy: 2.5, lx: -40, ly: 14, story: '旅途中每一座看似安静的城市，都因为两个人同行而有了独特意义。' },
+    { name: '石家庄', lon: 114.51, lat: 38.04, lx: -33, ly: 12, story: '在这座城市停留的片段，等待着照片把当时的温度重新带回来。' },
+    { name: '北京', lon: 116.40, lat: 39.90, ox: -1.2, oy: -1.7, lx: 0, ly: -6, story: '从古老城墙到璀璨夜景，北京的辽阔里也藏着只属于我们的细节。' },
+    { name: '天津', lon: 117.20, lat: 39.13, ox: 1.8, oy: .8, lx: 28, ly: 3, story: '海河边的风、街巷里的烟火气，都成为共同记忆的一部分。' },
+    { name: '济南', lon: 117.00, lat: 36.65, lx: 12, ly: 12, story: '泉水与老城的节奏，让这段旅程有了温柔而从容的底色。' },
+    { name: '苏州', lon: 120.58, lat: 31.30, lx: -20, ly: -2, story: '小桥、流水与园林，把我们一起走过的时光装进了江南画卷。' },
+    { name: '成都', lon: 104.07, lat: 30.67, lx: -18, ly: -2, story: '慢一点的生活、热辣的味道，还有一起消磨的悠闲时光。' },
+    { name: '重庆', lon: 106.55, lat: 29.56, lx: 15, ly: 8, story: '山城的高低起伏和夜色，让这趟共同抵达的旅程格外鲜明。' },
+    { name: '上海', lon: 121.47, lat: 31.23, lx: 22, ly: 8, story: '灯火、街景和匆匆人潮之中，我们拥有自己的步调和方向。' },
+    { name: '喀什', lon: 75.99, lat: 39.47, lx: 0, ly: -2, story: '从熟悉的日常走到遥远的西域，距离让这次共同抵达更加珍贵。' }
+  ];
 
-// ==================== 点击效果 ====================
-document.addEventListener('click', e => {
-  // 爱心
-  const h = document.createElement('span'); h.className = 'click-heart';
-  h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
-  h.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;--sz:${Math.random()*2.5+2}rem;`;
-  document.body.appendChild(h);
-  h.addEventListener('animationend',()=>h.remove());
-  // 光环
-  const r = document.createElement('div'); r.className = 'click-ring';
-  r.style.cssText = `left:${e.clientX}px;top:${e.clientY}px;`;
-  document.body.appendChild(r);
-  r.addEventListener('animationend',()=>r.remove());
-  // 小烟花
-  const hue = Math.random()*60+320;
-  for (let i=0;i<20;i++) {
-    fireworks.push(new FireworkParticle(e.clientX, e.clientY, hue));
+  function mapPoint(city) {
+    const x = 10 + ((city.lon - 73) / (135 - 73)) * 80 + (city.ox || 0);
+    const y = 10 + ((54 - city.lat) / (54 - 18)) * 80 + (city.oy || 0);
+    return { x, y };
   }
-});
 
-// ==================== 鼠标轨迹小爱心 ====================
-let mouseTrailTimeout;
-document.addEventListener('mousemove', e => {
-  if (mouseTrailTimeout) return;
-  mouseTrailTimeout = setTimeout(()=>{ mouseTrailTimeout = null; }, 120);
-  const el = document.createElement('span');
-  el.textContent = Math.random()>0.5?'✨':'💫';
-  el.style.cssText = `position:fixed;z-index:12;pointer-events:none;left:${e.clientX}px;top:${e.clientY}px;font-size:0.7rem;transform:translate(-50%,-50%);animation:fadeUp 1.2s ease-out forwards;`;
-  document.body.appendChild(el);
-  el.addEventListener('animationend',()=>el.remove());
-});
-const fadeUpStyle = document.createElement('style');
-fadeUpStyle.textContent = `@keyframes fadeUp{0%{opacity:1;transform:translate(-50%,-50%) scale(0.5);}100%{opacity:0;transform:translate(-50%,-80%) scale(1.3);}}`;
-document.head.appendChild(fadeUpStyle);
+  const introMap = document.getElementById('introMap');
+  const introCopy = document.getElementById('introCopy');
+  const introSparks = document.getElementById('introSparks');
+  const discoveryTrigger = document.getElementById('discoveryTrigger');
+  let discovered = false;
+
+  discoveryTrigger.addEventListener('click', () => {
+    if (discovered) return;
+    discovered = true;
+    introMap.classList.add('is-discovered');
+
+    const featured = [cities[13], cities[10], cities[11], cities[0], cities[3], cities[6], cities[9], cities[12]];
+    featured.forEach((city, index) => {
+      const point = mapPoint(city);
+      const spark = document.createElement('span');
+      spark.className = 'memory-spark';
+      spark.textContent = city.name;
+      spark.style.left = point.x + '%';
+      spark.style.top = point.y + '%';
+      introSparks.appendChild(spark);
+      window.setTimeout(() => spark.classList.add('is-visible'), 120 + index * 120);
+    });
+
+    window.setTimeout(() => introCopy.classList.add('is-visible'), 1250);
+  });
+
+  const screens = [...document.querySelectorAll('.screen')];
+  function showScreen(target) {
+    screens.forEach(screen => screen.classList.toggle('is-active', screen === target));
+    target.scrollTop = 0;
+  }
+
+  const mainScreen = document.getElementById('mainScreen');
+  const footprintScreen = document.getElementById('footprintScreen');
+  document.getElementById('enterHome').addEventListener('click', () => showScreen(mainScreen));
+  document.getElementById('backHome').addEventListener('click', () => showScreen(mainScreen));
+  document.getElementById('openFootprints').addEventListener('click', () => {
+    showScreen(footprintScreen);
+    const route = document.getElementById('routeLine');
+    route.classList.remove('draw-once');
+    void route.getBoundingClientRect();
+    route.classList.add('draw-once');
+  });
+
+  const cityLayer = document.getElementById('cityLayer');
+  const mobileCityList = document.getElementById('mobileCityList');
+  const routeLine = document.getElementById('routeLine');
+  const cityModal = document.getElementById('cityModal');
+  const cityName = document.getElementById('cityName');
+  const cityOrder = document.getElementById('cityOrder');
+  const cityStory = document.getElementById('cityStory');
+  const photoGrid = document.getElementById('photoGrid');
+  const closeModal = document.getElementById('closeModal');
+
+  routeLine.setAttribute('points', cities.map(city => {
+    const point = mapPoint(city);
+    return `${point.x.toFixed(2)},${point.y.toFixed(2)}`;
+  }).join(' '));
+
+  cities.forEach((city, index) => {
+    const point = mapPoint(city);
+    const marker = document.createElement('button');
+    marker.type = 'button';
+    marker.className = 'city-marker';
+    marker.style.left = point.x + '%';
+    marker.style.top = point.y + '%';
+    marker.style.setProperty('--label-x', (city.lx || 0) + 'px');
+    marker.style.setProperty('--label-y', (city.ly || 0) + 'px');
+    marker.setAttribute('aria-label', `打开${city.name}的回忆`);
+    marker.innerHTML = `<span class="city-label">${city.name}</span>`;
+    marker.addEventListener('click', () => openCity(city, index));
+    cityLayer.appendChild(marker);
+
+    const listButton = document.createElement('button');
+    listButton.type = 'button';
+    listButton.className = 'mobile-city-button';
+    listButton.textContent = city.name;
+    listButton.addEventListener('click', () => openCity(city, index));
+    mobileCityList.appendChild(listButton);
+  });
+
+  function openCity(city, index) {
+    cityOrder.textContent = `FOOTPRINT ${String(index + 1).padStart(2, '0')} / 14`;
+    cityName.textContent = city.name;
+    cityStory.textContent = city.story;
+    photoGrid.innerHTML = Array.from({ length: 3 }, (_, photoIndex) =>
+      `<div class="photo-placeholder">${city.name}照片 ${photoIndex + 1}<br>等待加入我们的真实照片</div>`
+    ).join('');
+    cityModal.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    closeModal.focus();
+  }
+
+  function hideCity() {
+    cityModal.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  closeModal.addEventListener('click', hideCity);
+  cityModal.addEventListener('click', event => { if (event.target === cityModal) hideCity(); });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') hideCity(); });
 </script>
 </body>
 </html>
