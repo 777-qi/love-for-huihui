@@ -206,6 +206,7 @@
   .section-head { display: flex; align-items: end; justify-content: space-between; margin-bottom: 18px; }
   .section-head h2 { font-size: clamp(1.35rem, 4vw, 1.8rem); }
   .section-head span { color: var(--muted); font-size: .82rem; }
+  .memory-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
   .memory-card {
     position: relative; width: 100%; min-height: 280px; padding: clamp(24px, 5vw, 54px);
     overflow: hidden; text-align: left; cursor: pointer;
@@ -222,6 +223,113 @@
   .city-count { color: var(--gold); }
   .open-arrow { font-size: 1.4rem; transition: transform .25s ease; }
   .memory-card:hover .open-arrow { transform: translateX(7px); }
+  .memory-card.firsts-card::after { background: rgba(255,189,155,.1); }
+  .memory-card.firsts-card .card-index { color: var(--peach); }
+
+  /* 我们的第一次 */
+  .firsts-screen { padding: 22px 0 70px; }
+  .firsts-intro {
+    display: flex; align-items: end; justify-content: space-between; gap: 28px;
+    padding: clamp(42px, 8vw, 86px) 0 34px;
+  }
+  .firsts-intro-copy { max-width: 720px; }
+  .firsts-intro h1 {
+    margin-top: 12px; font-family: Georgia, "STKaiti", serif;
+    font-size: clamp(2.4rem, 7vw, 5rem); line-height: 1.08;
+  }
+  .firsts-intro p:not(.eyebrow) { margin-top: 18px; color: var(--muted); line-height: 1.85; }
+  .add-first-button {
+    flex: 0 0 auto; border: 0; border-radius: 14px; padding: 14px 20px;
+    color: #fff; background: linear-gradient(135deg, var(--pink), var(--rose));
+    box-shadow: 0 12px 30px rgba(255,63,130,.24); cursor: pointer;
+  }
+  .firsts-note {
+    display: flex; align-items: center; gap: 9px; margin-bottom: 30px; padding: 12px 14px;
+    border: 1px solid var(--line); border-radius: 12px; color: var(--muted);
+    background: rgba(21,17,33,.7); font-size: .78rem;
+  }
+  .firsts-timeline { position: relative; padding-left: 42px; }
+  .firsts-timeline::before {
+    content: ""; position: absolute; left: 12px; top: 12px; bottom: 12px; width: 1px;
+    background: linear-gradient(to bottom, var(--pink), rgba(255,111,159,.08));
+  }
+  .first-entry {
+    position: relative; margin-bottom: 22px; padding: clamp(22px, 4vw, 34px);
+    border: 1px solid var(--line); border-radius: 22px; background: var(--panel);
+  }
+  .first-entry::before {
+    content: ""; position: absolute; left: -36px; top: 34px; width: 13px; height: 13px;
+    border: 4px solid #241629; border-radius: 50%; background: var(--pink);
+    box-shadow: 0 0 18px rgba(255,111,159,.7);
+  }
+  .first-entry-head { display: flex; align-items: start; justify-content: space-between; gap: 18px; }
+  .first-entry-date { color: var(--pink); font-size: .76rem; letter-spacing: .14em; }
+  .first-entry h2 { margin-top: 8px; font-size: clamp(1.5rem, 4vw, 2.25rem); }
+  .first-entry-story { margin-top: 16px; color: var(--muted); line-height: 1.85; white-space: pre-wrap; }
+  .first-entry-actions { display: flex; gap: 8px; }
+  .entry-action {
+    border: 1px solid var(--line); border-radius: 9px; padding: 7px 10px;
+    color: var(--muted); background: #100c19; cursor: pointer; font-size: .76rem;
+  }
+  .entry-action:hover { color: #fff; border-color: rgba(255,255,255,.24); }
+  .first-entry-photos {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 9px; margin-top: 20px;
+  }
+  .first-entry-photo {
+    width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 13px;
+    border: 1px solid rgba(255,255,255,.08); background: #0d0a15;
+  }
+  .firsts-empty {
+    padding: 70px 24px; border: 1px dashed rgba(255,255,255,.14); border-radius: 22px;
+    color: var(--muted); text-align: center; background: rgba(21,17,33,.55);
+  }
+  .firsts-empty strong { display: block; margin-bottom: 10px; color: #f8eaf0; font-size: 1.25rem; }
+
+  /* 第一次记录表单 */
+  .first-form-modal {
+    position: fixed; inset: 0; z-index: 120; display: grid; place-items: center;
+    padding: 18px; background: rgba(4,3,9,.8); opacity: 0; visibility: hidden;
+    transition: opacity .25s ease, visibility .25s;
+  }
+  .first-form-modal.is-open { opacity: 1; visibility: visible; }
+  .first-form-dialog {
+    width: min(680px, 100%); max-height: 90vh; overflow: auto; padding: clamp(22px, 5vw, 34px);
+    border: 1px solid var(--line); border-radius: 24px; background: #151120;
+    box-shadow: 0 30px 100px rgba(0,0,0,.55); transform: translateY(12px);
+    transition: transform .25s ease;
+  }
+  .first-form-modal.is-open .first-form-dialog { transform: none; }
+  .first-form-head { display: flex; align-items: start; justify-content: space-between; margin-bottom: 26px; }
+  .first-form-head h2 { margin-top: 7px; font-size: clamp(1.7rem, 5vw, 2.4rem); }
+  .first-form { display: grid; gap: 17px; }
+  .form-field { display: grid; gap: 8px; }
+  .form-field label { color: #e7dbe4; font-size: .84rem; }
+  .form-field input, .form-field textarea {
+    width: 100%; border: 1px solid var(--line); border-radius: 12px;
+    color: #fff; background: #0e0b17; padding: 13px 14px;
+  }
+  .form-field textarea { min-height: 120px; resize: vertical; line-height: 1.65; }
+  .image-picker {
+    position: relative; display: grid; place-items: center; min-height: 104px; padding: 18px;
+    border: 1px dashed rgba(255,255,255,.2); border-radius: 14px;
+    color: var(--muted); text-align: center; background: #100c19; cursor: pointer;
+  }
+  .image-picker input { position: absolute; inset: 0; width: 100%; opacity: 0; cursor: pointer; }
+  .image-picker strong { display: block; margin-bottom: 5px; color: #f7e8ee; }
+  .upload-preview { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+  .upload-preview-item { position: relative; }
+  .upload-preview img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; }
+  .remove-preview {
+    position: absolute; right: 4px; top: 4px; width: 24px; height: 24px;
+    border: 0; border-radius: 50%; color: #fff; background: rgba(0,0,0,.7); cursor: pointer;
+  }
+  .form-status { min-height: 20px; color: #ff9abb; font-size: .8rem; }
+  .form-submit {
+    min-height: 50px; border: 0; border-radius: 13px; color: #fff;
+    background: linear-gradient(135deg, var(--pink), var(--rose)); cursor: pointer;
+  }
+  .form-submit:disabled { opacity: .55; cursor: wait; }
 
   /* 足迹地图 */
   .footprint-screen { padding: 22px 0 50px; }
@@ -326,6 +434,10 @@
     }
     .photo-grid { grid-template-columns: 1fr 1fr; }
     .photo-placeholder:first-child { grid-column: 1 / -1; grid-row: auto; min-height: 210px; }
+    .memory-grid { grid-template-columns: 1fr; }
+    .firsts-intro { align-items: stretch; flex-direction: column; }
+    .add-first-button { align-self: flex-start; }
+    .upload-preview { grid-template-columns: repeat(3, 1fr); }
   }
 
   @media (max-width: 430px) {
@@ -337,6 +449,12 @@
     .dialog-head, .dialog-copy { padding-left: 20px; padding-right: 20px; }
     .photo-grid { padding: 0 20px 20px; }
     .mobile-city-list { grid-template-columns: repeat(3, 1fr); }
+    .firsts-timeline { padding-left: 30px; }
+    .firsts-timeline::before { left: 8px; }
+    .first-entry::before { left: -28px; }
+    .first-entry-head { flex-direction: column; }
+    .first-entry-actions { align-self: flex-end; }
+    .first-entry-photos { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -403,15 +521,26 @@
         <h2 id="memoryTitle">我们的栏目</h2>
         <span>持续更新中</span>
       </div>
-      <button class="memory-card" id="openFootprints" type="button">
-        <span class="card-index">01 / FOOTPRINTS</span>
-        <h3>去过的地方 · 足迹</h3>
-        <p>把共同抵达的城市一一点亮。点击地图上的地点，打开属于那座城市的照片与故事。</p>
-        <span class="card-footer">
-          <span class="city-count">已点亮 14 座城市</span>
-          <span class="open-arrow">→</span>
-        </span>
-      </button>
+      <div class="memory-grid">
+        <button class="memory-card" id="openFootprints" type="button">
+          <span class="card-index">01 / FOOTPRINTS</span>
+          <h3>去过的地方 · 足迹</h3>
+          <p>把共同抵达的城市一一点亮。点击地图上的地点，打开属于那座城市的照片与故事。</p>
+          <span class="card-footer">
+            <span class="city-count">已点亮 14 座城市</span>
+            <span class="open-arrow">→</span>
+          </span>
+        </button>
+        <button class="memory-card firsts-card" id="openFirsts" type="button">
+          <span class="card-index">02 / OUR FIRSTS</span>
+          <h3>我们的第一次</h3>
+          <p>第一次见面、第一次旅行、第一次一起做饭……把时间、故事和照片都认真收藏起来。</p>
+          <span class="card-footer">
+            <span class="city-count" id="firstCount">等待第一篇回忆</span>
+            <span class="open-arrow">→</span>
+          </span>
+        </button>
+      </div>
     </section>
   </div>
 </main>
@@ -442,6 +571,31 @@
   </div>
 </section>
 
+<!-- 我们的第一次 -->
+<section class="screen firsts-screen" id="firstsScreen" aria-label="我们的第一次">
+  <div class="page-shell">
+    <header class="footprint-topbar">
+      <button class="back-button" id="backHomeFromFirsts" type="button">← 返回主页</button>
+      <div class="footprint-title">
+        <h1>我们的第一次</h1>
+        <p>每一个第一次，都让我们成为现在的我们</p>
+      </div>
+    </header>
+
+    <section class="firsts-intro">
+      <div class="firsts-intro-copy">
+        <p class="eyebrow">ALL OUR FIRST TIMES</p>
+        <h1>把很多很多第一次，<br>写进我们的时间里。</h1>
+        <p>记录发生的日期、当时的故事和珍贵照片。回忆会按照时间自动排列，慢慢长成属于我们的纪念册。</p>
+      </div>
+      <button class="add-first-button" id="addFirst" type="button">＋ 记录一个第一次</button>
+    </section>
+
+    <p class="firsts-note">☁ 当前新增的记录和照片保存在这台设备的浏览器里；正式写入网站后，所有设备都能看到。</p>
+    <div class="firsts-timeline" id="firstsTimeline"></div>
+  </div>
+</section>
+
 <!-- 城市详情 -->
 <div class="city-modal" id="cityModal" role="dialog" aria-modal="true" aria-labelledby="cityName">
   <article class="city-dialog">
@@ -454,6 +608,47 @@
     </header>
     <p class="dialog-copy" id="cityStory"></p>
     <div class="photo-grid" id="photoGrid"></div>
+  </article>
+</div>
+
+<!-- 新增“第一次”表单 -->
+<div class="first-form-modal" id="firstFormModal" role="dialog" aria-modal="true" aria-labelledby="firstFormTitle">
+  <article class="first-form-dialog">
+    <header class="first-form-head">
+      <div>
+        <p class="city-order">A NEW FIRST</p>
+        <h2 id="firstFormTitle">记录一个第一次</h2>
+      </div>
+      <button class="modal-close" id="closeFirstForm" type="button" aria-label="关闭">×</button>
+    </header>
+    <form class="first-form" id="firstForm">
+      <div class="form-field">
+        <label for="firstTitle">这是什么第一次？</label>
+        <input id="firstTitle" name="title" maxlength="50" required placeholder="例如：第一次一起看海">
+      </div>
+      <div class="form-field">
+        <label for="firstDate">发生日期</label>
+        <input id="firstDate" name="date" type="date" required>
+      </div>
+      <div class="form-field">
+        <label for="firstTime">具体时间（可选）</label>
+        <input id="firstTime" name="time" type="time">
+      </div>
+      <div class="form-field">
+        <label for="firstStory">当时的故事</label>
+        <textarea id="firstStory" name="story" maxlength="1200" placeholder="写下那天发生的事、当时的心情……"></textarea>
+      </div>
+      <div class="form-field">
+        <label>添加照片（最多 8 张）</label>
+        <label class="image-picker">
+          <input id="firstPhotos" type="file" accept="image/*" multiple>
+          <span><strong>点击选择照片</strong>会自动压缩后保存在浏览器中</span>
+        </label>
+        <div class="upload-preview" id="uploadPreview"></div>
+      </div>
+      <p class="form-status" id="firstFormStatus" role="alert" aria-live="polite"></p>
+      <button class="form-submit" id="saveFirst" type="submit">保存这次回忆</button>
+    </form>
   </article>
 </div>
 
@@ -561,8 +756,10 @@
 
   const mainScreen = document.getElementById('mainScreen');
   const footprintScreen = document.getElementById('footprintScreen');
+  const firstsScreen = document.getElementById('firstsScreen');
   document.getElementById('enterHome').addEventListener('click', () => showScreen(mainScreen));
   document.getElementById('backHome').addEventListener('click', () => showScreen(mainScreen));
+  document.getElementById('backHomeFromFirsts').addEventListener('click', () => showScreen(mainScreen));
   document.getElementById('openFootprints').addEventListener('click', () => {
     showScreen(footprintScreen);
     const route = document.getElementById('routeLine');
@@ -570,6 +767,234 @@
     void route.getBoundingClientRect();
     route.classList.add('draw-once');
   });
+  document.getElementById('openFirsts').addEventListener('click', () => {
+    showScreen(firstsScreen);
+    renderFirsts();
+  });
+
+  // “我们的第一次”：使用 IndexedDB 保存文字与压缩后的图片
+  const firstsTimeline = document.getElementById('firstsTimeline');
+  const firstCount = document.getElementById('firstCount');
+  const firstFormModal = document.getElementById('firstFormModal');
+  const firstForm = document.getElementById('firstForm');
+  const firstTitle = document.getElementById('firstTitle');
+  const firstDate = document.getElementById('firstDate');
+  const firstTime = document.getElementById('firstTime');
+  const firstStory = document.getElementById('firstStory');
+  const firstPhotos = document.getElementById('firstPhotos');
+  const uploadPreview = document.getElementById('uploadPreview');
+  const firstFormStatus = document.getElementById('firstFormStatus');
+  const saveFirst = document.getElementById('saveFirst');
+  const closeFirstForm = document.getElementById('closeFirstForm');
+  let selectedFirstPhotos = [];
+  let firstsCache = [];
+
+  function openFirstsDatabase() {
+    return new Promise((resolve, reject) => {
+      if (!('indexedDB' in window)) {
+        reject(new Error('当前浏览器不支持本地回忆存储'));
+        return;
+      }
+      const request = indexedDB.open('huihui-tianqi-memories', 1);
+      request.onupgradeneeded = () => {
+        const database = request.result;
+        if (!database.objectStoreNames.contains('firsts')) {
+          database.createObjectStore('firsts', { keyPath: 'id' });
+        }
+      };
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error || new Error('无法打开本地回忆库'));
+    });
+  }
+
+  async function readFirsts() {
+    const database = await openFirstsDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = database.transaction('firsts', 'readonly');
+      const request = transaction.objectStore('firsts').getAll();
+      request.onsuccess = () => resolve(request.result || []);
+      request.onerror = () => reject(request.error);
+      transaction.oncomplete = () => database.close();
+    });
+  }
+
+  async function putFirst(entry) {
+    const database = await openFirstsDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = database.transaction('firsts', 'readwrite');
+      transaction.objectStore('firsts').put(entry);
+      transaction.oncomplete = () => { database.close(); resolve(); };
+      transaction.onerror = () => { database.close(); reject(transaction.error); };
+    });
+  }
+
+  async function removeFirst(id) {
+    const database = await openFirstsDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = database.transaction('firsts', 'readwrite');
+      transaction.objectStore('firsts').delete(id);
+      transaction.oncomplete = () => { database.close(); resolve(); };
+      transaction.onerror = () => { database.close(); reject(transaction.error); };
+    });
+  }
+
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>'"]/g, character => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    })[character]);
+  }
+
+  function formatFirstDate(dateValue) {
+    if (!dateValue) return '未填写日期';
+    const parts = dateValue.split('-');
+    return `${parts[0]} 年 ${Number(parts[1])} 月 ${Number(parts[2])} 日`;
+  }
+
+  async function renderFirsts() {
+    try {
+      firstsCache = (await readFirsts()).sort((a, b) =>
+        b.date.localeCompare(a.date) || b.createdAt - a.createdAt
+      );
+      firstCount.textContent = firstsCache.length ? `已收藏 ${firstsCache.length} 个第一次` : '等待第一篇回忆';
+      if (!firstsCache.length) {
+        firstsTimeline.innerHTML = '<div class="firsts-empty"><strong>这里还没有记录</strong>点击“记录一个第一次”，写下属于你们的第一篇回忆吧。</div>';
+        return;
+      }
+
+      firstsTimeline.innerHTML = firstsCache.map((entry, index) => {
+        const photos = (entry.photos || []).map((photo, photoIndex) =>
+          `<img class="first-entry-photo" src="${photo}" alt="${escapeHtml(entry.title)}的照片 ${photoIndex + 1}" loading="lazy">`
+        ).join('');
+        return `<article class="first-entry" data-entry-id="${escapeHtml(entry.id)}">
+          <header class="first-entry-head">
+            <div>
+              <p class="first-entry-date">FIRST ${String(firstsCache.length - index).padStart(2, '0')} · ${formatFirstDate(entry.date)}${entry.time ? ` · ${escapeHtml(entry.time)}` : ''}</p>
+              <h2>${escapeHtml(entry.title)}</h2>
+            </div>
+            <div class="first-entry-actions">
+              <button class="entry-action delete-first" type="button" data-id="${escapeHtml(entry.id)}">删除</button>
+            </div>
+          </header>
+          ${entry.story ? `<p class="first-entry-story">${escapeHtml(entry.story)}</p>` : ''}
+          ${photos ? `<div class="first-entry-photos">${photos}</div>` : ''}
+        </article>`;
+      }).join('');
+    } catch (error) {
+      firstsTimeline.innerHTML = `<div class="firsts-empty"><strong>暂时无法读取记录</strong>${escapeHtml(error.message)}</div>`;
+    }
+  }
+
+  function showFirstForm() {
+    firstForm.reset();
+    firstDate.value = new Date().toISOString().slice(0, 10);
+    selectedFirstPhotos = [];
+    firstFormStatus.textContent = '';
+    renderUploadPreview();
+    firstFormModal.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    window.setTimeout(() => firstTitle.focus(), 80);
+  }
+
+  function hideFirstForm() {
+    firstFormModal.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  function renderUploadPreview() {
+    uploadPreview.innerHTML = selectedFirstPhotos.map((photo, index) =>
+      `<div class="upload-preview-item"><img src="${photo}" alt="待上传照片 ${index + 1}"><button class="remove-preview" type="button" data-index="${index}" aria-label="移除照片">×</button></div>`
+    ).join('');
+  }
+
+  function compressPhoto(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error(`无法读取 ${file.name}`));
+      reader.onload = () => {
+        const image = new Image();
+        image.onerror = () => reject(new Error(`${file.name} 不是有效图片`));
+        image.onload = () => {
+          const maxSide = 1600;
+          const scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+          canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+          const context = canvas.getContext('2d');
+          context.fillStyle = '#0d0a15';
+          context.fillRect(0, 0, canvas.width, canvas.height);
+          context.drawImage(image, 0, 0, canvas.width, canvas.height);
+          resolve(canvas.toDataURL('image/jpeg', .82));
+        };
+        image.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  document.getElementById('addFirst').addEventListener('click', showFirstForm);
+  closeFirstForm.addEventListener('click', hideFirstForm);
+  firstFormModal.addEventListener('click', event => { if (event.target === firstFormModal) hideFirstForm(); });
+  uploadPreview.addEventListener('click', event => {
+    const button = event.target.closest('.remove-preview');
+    if (!button) return;
+    selectedFirstPhotos.splice(Number(button.dataset.index), 1);
+    renderUploadPreview();
+  });
+
+  firstPhotos.addEventListener('change', async () => {
+    const files = [...firstPhotos.files].filter(file => file.type.startsWith('image/'));
+    const availableSlots = 8 - selectedFirstPhotos.length;
+    if (files.length > availableSlots) firstFormStatus.textContent = '每条回忆最多保存 8 张照片。';
+    saveFirst.disabled = true;
+    try {
+      const compressed = await Promise.all(files.slice(0, availableSlots).map(compressPhoto));
+      selectedFirstPhotos.push(...compressed);
+      renderUploadPreview();
+      if (files.length <= availableSlots) firstFormStatus.textContent = `已选择 ${selectedFirstPhotos.length} 张照片。`;
+    } catch (error) {
+      firstFormStatus.textContent = error.message;
+    } finally {
+      saveFirst.disabled = false;
+      firstPhotos.value = '';
+    }
+  });
+
+  firstForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    saveFirst.disabled = true;
+    firstFormStatus.textContent = '正在保存回忆…';
+    const entry = {
+      id: window.crypto && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      title: firstTitle.value.trim(),
+      date: firstDate.value,
+      time: firstTime.value,
+      story: firstStory.value.trim(),
+      photos: selectedFirstPhotos,
+      createdAt: Date.now()
+    };
+    try {
+      await putFirst(entry);
+      hideFirstForm();
+      await renderFirsts();
+    } catch (error) {
+      firstFormStatus.textContent = error.name === 'QuotaExceededError'
+        ? '浏览器存储空间不足，请减少照片数量后重试。'
+        : `保存失败：${error.message}`;
+    } finally {
+      saveFirst.disabled = false;
+    }
+  });
+
+  firstsTimeline.addEventListener('click', async event => {
+    const button = event.target.closest('.delete-first');
+    if (!button) return;
+    const entry = firstsCache.find(item => item.id === button.dataset.id);
+    if (!entry || !window.confirm(`确定删除“${entry.title}”这条回忆吗？`)) return;
+    await removeFirst(entry.id);
+    await renderFirsts();
+  });
+
+  renderFirsts();
 
   const cityLayer = document.getElementById('cityLayer');
   const mobileCityList = document.getElementById('mobileCityList');
@@ -627,6 +1052,7 @@
   closeModal.addEventListener('click', hideCity);
   cityModal.addEventListener('click', event => { if (event.target === cityModal) hideCity(); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') hideCity(); });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') hideFirstForm(); });
 </script>
 </body>
 </html>
