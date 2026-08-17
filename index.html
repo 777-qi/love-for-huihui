@@ -98,6 +98,13 @@
 
   /* 初见：只有地图，点击后逐步显现 */
   .intro-screen { display: grid; place-items: center; overflow: hidden; }
+  .intro-back-button {
+    position: absolute; z-index: 5; top: max(20px, env(safe-area-inset-top)); left: max(20px, env(safe-area-inset-left));
+    padding: 10px 14px; border: 1px solid var(--line); border-radius: 12px;
+    color: var(--text); background: rgba(21,17,33,.82); backdrop-filter: blur(12px);
+    cursor: pointer; transition: border-color .25s ease, background .25s ease, transform .25s ease;
+  }
+  .intro-back-button:hover { border-color: rgba(255,111,159,.45); background: #1d162a; transform: translateX(-2px); }
   .intro-wrap { width: min(980px, calc(100% - 28px)); text-align: center; }
   .intro-kicker {
     color: var(--muted); font-size: .76rem; letter-spacing: .34em;
@@ -191,14 +198,15 @@
 
   /* 主页 */
   .main-screen {
-    padding: 0 0 72px; color: #4b2230;
+    padding: 0 0 72px; color: var(--text);
     background:
-      radial-gradient(circle at 50% 18%, rgba(255,111,159,.08), transparent 25%),
-      linear-gradient(180deg, #fffafb, #fff 62%, #fff8fa);
+      radial-gradient(circle at 50% 17%, rgba(255,82,126,.14), transparent 27%),
+      radial-gradient(circle at 86% 23%, rgba(117,78,214,.1), transparent 31%),
+      linear-gradient(155deg, #090611, #120b1d 55%, #090711);
   }
   .main-screen::before {
     content: ""; position: fixed; left: 0; right: 0; top: 0; height: 2px;
-    background: linear-gradient(90deg, transparent, #f4a8bf, transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,111,159,.66), transparent);
   }
   .topbar { display: flex; align-items: center; justify-content: space-between; min-height: 60px; }
   .brand { display: flex; gap: 12px; align-items: center; }
@@ -213,8 +221,8 @@
     align-items: center; justify-content: center; padding: 48px 0 58px; text-align: center;
   }
   .home-heart-icon {
-    color: #ef527e; font-size: clamp(4rem, 9vw, 6.2rem); line-height: 1;
-    filter: drop-shadow(0 12px 18px rgba(239,82,126,.22));
+    color: #ff5d8c; font-size: clamp(4rem, 9vw, 6.2rem); line-height: 1;
+    filter: drop-shadow(0 12px 22px rgba(255,63,130,.34));
     animation: homeHeartBeat 2.6s ease-in-out infinite;
   }
   @keyframes homeHeartBeat {
@@ -224,42 +232,42 @@
   }
   .couple-names {
     margin-top: 24px; font-size: clamp(3rem, 8vw, 5.3rem); line-height: 1;
-    font-weight: 700; letter-spacing: -.035em; color: #47202d;
+    font-weight: 700; letter-spacing: -.035em; color: #fff4f8;
   }
-  .couple-names span { color: #ef527e; padding: 0 .06em; }
+  .couple-names span { color: #ff5d8c; padding: 0 .06em; }
   .couple-subtitle {
-    margin-top: 13px; color: #995060; font-family: Georgia, serif;
+    margin-top: 13px; color: #d9a3b1; font-family: Georgia, serif;
     font-size: clamp(.95rem, 2vw, 1.2rem); font-style: italic;
   }
   .together-label {
-    margin: 24px 0 13px; color: #8c4556; font-size: .72rem;
+    margin: 24px 0 13px; color: #d6a1af; font-size: .72rem;
     font-weight: 700; letter-spacing: .14em;
   }
   .love-counter {
     display: grid; grid-template-columns: repeat(6, minmax(90px, 1fr));
     width: min(760px, 100%); overflow: hidden;
-    border: 1px solid #f2b6c7; border-radius: 14px; background: rgba(255,255,255,.78);
-    box-shadow: 0 18px 50px rgba(91,35,52,.06);
+    border: 1px solid rgba(255,111,159,.46); border-radius: 14px; background: rgba(18,13,27,.78);
+    box-shadow: 0 22px 64px rgba(0,0,0,.32), 0 0 50px rgba(255,63,130,.06);
   }
-  .counter-unit { padding: 18px 10px 15px; border-right: 1px solid #f2c2cf; }
+  .counter-unit { padding: 18px 10px 15px; border-right: 1px solid rgba(255,111,159,.24); }
   .counter-unit:last-child { border-right: 0; }
   .counter-value {
-    display: block; min-width: 2ch; color: #ed507a;
+    display: block; min-width: 2ch; color: #ff5d89;
     font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 700; line-height: 1;
     font-variant-numeric: tabular-nums;
   }
   .counter-label {
-    display: block; margin-top: 11px; color: #974c5d;
+    display: block; margin-top: 11px; color: #d69aae;
     font-size: .58rem; font-weight: 700; letter-spacing: .14em;
   }
-  .since-date { margin-top: 14px; color: #a87580; font-size: .76rem; letter-spacing: .08em; }
+  .since-date { margin-top: 14px; color: #a994ad; font-size: .76rem; letter-spacing: .08em; }
   .home-sections { padding-top: 14px; }
   .eyebrow { color: var(--pink); font-size: .76rem; letter-spacing: .28em; margin-bottom: 16px; }
   .section-head { display: flex; align-items: end; justify-content: space-between; margin-bottom: 18px; }
   .section-head h2 { font-size: clamp(1.35rem, 4vw, 1.8rem); }
   .section-head span { color: var(--muted); font-size: .82rem; }
-  .main-screen .section-head h2 { color: #4b2230; }
-  .main-screen .section-head span { color: #a87580; }
+  .main-screen .section-head h2 { color: #fff8fb; }
+  .main-screen .section-head span { color: #a99dae; }
   .memory-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
   .memory-card {
     position: relative; width: 100%; min-height: 280px; padding: clamp(24px, 5vw, 54px);
@@ -280,13 +288,153 @@
   .memory-card.firsts-card::after { background: rgba(255,189,155,.1); }
   .memory-card.firsts-card .card-index { color: var(--peach); }
   .main-screen .memory-card {
-    color: #4b2230; border-color: #f1d5dd; background: rgba(255,255,255,.9);
-    box-shadow: 0 18px 50px rgba(91,35,52,.06);
+    color: var(--text); border-color: var(--line); background: rgba(21,17,33,.9);
+    box-shadow: 0 18px 50px rgba(0,0,0,.2);
   }
-  .main-screen .memory-card::after { background: rgba(239,82,126,.09); }
+  .main-screen .memory-card::after { background: rgba(255,63,130,.11); }
   .main-screen .memory-card.firsts-card::after { background: rgba(255,174,117,.11); }
-  .main-screen .memory-card p { color: #8c6872; }
-  .main-screen .city-count { color: #d35b77; }
+  .main-screen .memory-card p { color: var(--muted); }
+  .main-screen .city-count { color: #ff8eb2; }
+  .memory-card.plans-card::after { background: rgba(92,203,190,.11); }
+  .memory-card.plans-card .card-index { color: #7fe0d2; }
+  .memory-card.capsule-card::after { background: rgba(142,112,255,.13); }
+  .memory-card.capsule-card .card-index { color: #b7a2ff; }
+  .memory-card.question-card::after { background: rgba(255,198,97,.1); }
+  .memory-card.question-card .card-index { color: #ffd079; }
+  .memory-card.wheel-card::after { background: rgba(99,146,255,.12); }
+  .memory-card.wheel-card .card-index { color: #91b1ff; }
+
+  /* 互动栏目通用布局 */
+  .feature-screen { padding: 22px 0 72px; }
+  .feature-intro {
+    display: flex; align-items: end; justify-content: space-between; gap: 28px;
+    padding: clamp(46px, 8vw, 90px) 0 34px;
+  }
+  .feature-intro-copy { max-width: 760px; }
+  .feature-intro h1 {
+    margin-top: 12px; font-family: Georgia, "STKaiti", serif;
+    font-size: clamp(2.5rem, 7vw, 5rem); line-height: 1.08;
+  }
+  .feature-intro p:not(.eyebrow) { margin-top: 17px; color: var(--muted); line-height: 1.85; }
+  .feature-action {
+    flex: 0 0 auto; min-height: 48px; padding: 0 20px; border: 0; border-radius: 14px;
+    color: #fff; background: linear-gradient(135deg, var(--pink), var(--rose));
+    box-shadow: 0 12px 30px rgba(255,63,130,.22); cursor: pointer;
+  }
+  .local-note {
+    margin-bottom: 24px; padding: 11px 14px; border: 1px solid var(--line); border-radius: 12px;
+    color: var(--muted); background: rgba(21,17,33,.66); font-size: .78rem; line-height: 1.6;
+  }
+  .collection-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; }
+  .collection-panel {
+    min-height: 330px; padding: clamp(20px, 4vw, 30px); border: 1px solid var(--line);
+    border-radius: 24px; background: rgba(21,17,33,.84);
+  }
+  .collection-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
+  .collection-head h2 { font-size: 1.15rem; }
+  .collection-head span { color: var(--muted); font-size: .74rem; }
+  .item-list { display: grid; gap: 11px; }
+  .empty-state {
+    display: grid; place-items: center; min-height: 220px; padding: 26px;
+    border: 1px dashed rgba(255,255,255,.14); border-radius: 16px;
+    color: var(--muted); text-align: center; line-height: 1.75;
+  }
+  .plan-item {
+    display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 13px;
+    padding: 15px; border: 1px solid rgba(255,255,255,.08); border-radius: 15px; background: #100c19;
+  }
+  .plan-icon {
+    display: grid; place-items: center; width: 42px; height: 42px; border-radius: 13px;
+    background: rgba(255,111,159,.11); font-size: 1.1rem;
+  }
+  .plan-item h3 { font-size: .98rem; }
+  .plan-item p { margin-top: 5px; color: var(--muted); font-size: .75rem; line-height: 1.5; }
+  .plan-actions { display: flex; gap: 7px; }
+  .mini-button {
+    padding: 7px 10px; border: 1px solid var(--line); border-radius: 9px;
+    color: #e9dfe7; background: #181221; cursor: pointer; font-size: .72rem;
+  }
+  .mini-button.complete { color: #9bf1d9; border-color: rgba(127,224,210,.28); }
+  .memory-plan { opacity: .86; }
+  .memory-plan .plan-icon { background: rgba(127,224,210,.1); }
+
+  /* 时光胶囊 */
+  .capsule-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .capsule-item {
+    position: relative; min-height: 270px; overflow: hidden; padding: 26px;
+    border: 1px solid var(--line); border-radius: 23px; background: #151120;
+  }
+  .capsule-item::after {
+    content: ""; position: absolute; width: 230px; height: 230px; right: -80px; top: -95px;
+    border-radius: 50%; background: rgba(142,112,255,.12);
+  }
+  .capsule-meta { position: relative; z-index: 1; color: #b7a2ff; font-size: .72rem; letter-spacing: .15em; }
+  .capsule-item h2 { position: relative; z-index: 1; margin-top: 25px; font-size: 1.65rem; }
+  .capsule-lock { position: relative; z-index: 1; margin-top: 20px; color: var(--muted); line-height: 1.7; }
+  .capsule-letter { position: relative; z-index: 1; margin-top: 17px; color: #ded2dc; line-height: 1.8; white-space: pre-wrap; }
+  .capsule-photos { position: relative; z-index: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-top: 18px; }
+  .capsule-photos img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 10px; }
+  .capsule-delete { position: absolute; z-index: 3; right: 18px; bottom: 18px; }
+
+  /* 每日一问 */
+  .daily-question-box {
+    padding: clamp(24px, 5vw, 48px); border: 1px solid rgba(255,111,159,.2);
+    border-radius: 28px; text-align: center;
+    background: radial-gradient(circle at 50% 0, rgba(255,63,130,.12), transparent 48%), #151120;
+  }
+  .question-date { color: var(--pink); font-size: .72rem; letter-spacing: .18em; }
+  .daily-question-box h2 { max-width: 850px; margin: 18px auto 0; font-size: clamp(1.6rem, 5vw, 2.8rem); line-height: 1.45; }
+  .answer-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin-top: 30px; text-align: left; }
+  .answer-panel { padding: 22px; border: 1px solid var(--line); border-radius: 19px; background: rgba(9,7,19,.68); }
+  .answer-person { display: flex; align-items: center; justify-content: space-between; margin-bottom: 13px; }
+  .answer-person strong { font-size: 1.05rem; }
+  .answer-person span { color: var(--muted); font-size: .72rem; }
+  .answer-panel textarea {
+    width: 100%; min-height: 130px; resize: vertical; padding: 13px 14px;
+    border: 1px solid var(--line); border-radius: 12px; color: #fff; background: #0e0b17; line-height: 1.65;
+  }
+  .answer-submit { width: 100%; min-height: 44px; margin-top: 10px; border: 0; border-radius: 11px; color: #fff; background: #342239; cursor: pointer; }
+  .answer-submit:hover { background: #4a2941; }
+  .sealed-answer { display: grid; place-items: center; min-height: 186px; color: var(--muted); text-align: center; line-height: 1.8; }
+  .revealed-answer { min-height: 186px; color: #f0e5ec; line-height: 1.8; white-space: pre-wrap; }
+  .question-reset { margin-top: 18px; border: 0; color: #8f8297; background: transparent; cursor: pointer; font-size: .72rem; }
+
+  /* 约会转盘 */
+  .wheel-layout { display: grid; grid-template-columns: minmax(320px, .9fr) 1.1fr; gap: 28px; align-items: center; }
+  .wheel-stage { display: grid; justify-items: center; padding: 30px 16px; }
+  .wheel-wrap { position: relative; width: min(390px, 82vw); aspect-ratio: 1; }
+  .wheel-pointer {
+    position: absolute; z-index: 4; left: 50%; top: -14px; transform: translateX(-50%);
+    width: 0; height: 0; border-left: 16px solid transparent; border-right: 16px solid transparent; border-top: 30px solid #fff2f7;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,.35));
+  }
+  .date-wheel {
+    position: absolute; inset: 0; border: 8px solid #2a2035; border-radius: 50%;
+    background: conic-gradient(#ff5d8c 0 45deg, #7958d3 45deg 90deg, #ff9c70 90deg 135deg, #4f91bc 135deg 180deg, #c5548d 180deg 225deg, #6b4daf 225deg 270deg, #dc7e66 270deg 315deg, #3b789d 315deg);
+    box-shadow: 0 28px 80px rgba(0,0,0,.38), inset 0 0 0 2px rgba(255,255,255,.12);
+    transition: transform 3.6s cubic-bezier(.15,.7,.08,1);
+  }
+  .wheel-core {
+    position: absolute; z-index: 3; left: 50%; top: 50%; display: grid; place-items: center;
+    width: 98px; height: 98px; transform: translate(-50%,-50%); border: 7px solid #171020;
+    border-radius: 50%; color: #fff; background: linear-gradient(135deg, #ff6f9f, #ff3f82);
+    box-shadow: 0 8px 24px rgba(0,0,0,.35); cursor: pointer; font-weight: 700;
+  }
+  .wheel-result { min-height: 64px; margin-top: 22px; text-align: center; }
+  .wheel-result strong { display: block; color: #ff8eb2; font-size: 1.35rem; }
+  .wheel-result span { display: block; margin-top: 5px; color: var(--muted); font-size: .76rem; }
+  .wheel-panel { padding: clamp(22px, 4vw, 32px); border: 1px solid var(--line); border-radius: 24px; background: #151120; }
+  .wheel-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 16px 0 20px; }
+  .filter-chip { padding: 8px 12px; border: 1px solid var(--line); border-radius: 999px; color: var(--muted); background: #0e0b17; cursor: pointer; font-size: .76rem; }
+  .filter-chip.is-active { color: #fff; border-color: rgba(255,111,159,.45); background: rgba(255,111,159,.14); }
+  .wheel-add-form { display: grid; grid-template-columns: 120px 1fr auto; gap: 8px; }
+  .wheel-add-form select, .wheel-add-form input {
+    min-width: 0; padding: 11px 12px; border: 1px solid var(--line); border-radius: 11px; color: #fff; background: #0e0b17;
+  }
+  .wheel-add-form button { padding: 0 15px; border: 0; border-radius: 11px; color: #fff; background: #38213b; cursor: pointer; }
+  .wheel-options { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .wheel-option { display: inline-flex; align-items: center; gap: 7px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 999px; color: #ded3dc; background: #100c19; font-size: .75rem; }
+  .wheel-option button { border: 0; color: #8e8294; background: transparent; cursor: pointer; }
 
   /* 我们的第一次 */
   .firsts-screen { padding: 22px 0 70px; }
@@ -367,7 +515,7 @@
   .first-form { display: grid; gap: 17px; }
   .form-field { display: grid; gap: 8px; }
   .form-field label { color: #e7dbe4; font-size: .84rem; }
-  .form-field input, .form-field textarea {
+  .form-field input, .form-field textarea, .form-field select {
     width: 100%; border: 1px solid var(--line); border-radius: 12px;
     color: #fff; background: #0e0b17; padding: 13px 14px;
   }
@@ -500,8 +648,15 @@
     .home-love-hero { min-height: 760px; padding-top: 56px; }
     .love-counter { grid-template-columns: repeat(3, 1fr); width: min(430px, 100%); }
     .counter-unit:nth-child(3) { border-right: 0; }
-    .counter-unit:nth-child(-n+3) { border-bottom: 1px solid #f2c2cf; }
+    .counter-unit:nth-child(-n+3) { border-bottom: 1px solid rgba(255,111,159,.24); }
     .firsts-intro { align-items: stretch; flex-direction: column; }
+    .feature-intro { align-items: stretch; flex-direction: column; }
+    .feature-action { align-self: flex-start; }
+    .collection-grid, .answer-grid, .wheel-layout { grid-template-columns: 1fr; }
+    .capsule-grid { grid-template-columns: 1fr; }
+    .wheel-layout { gap: 8px; }
+    .wheel-add-form { grid-template-columns: 1fr; }
+    .wheel-add-form button { min-height: 43px; }
     .add-first-button { align-self: flex-start; }
     .upload-preview { grid-template-columns: repeat(3, 1fr); }
   }
@@ -521,6 +676,9 @@
     .first-entry-head { flex-direction: column; }
     .first-entry-actions { align-self: flex-end; }
     .first-entry-photos { grid-template-columns: repeat(2, 1fr); }
+    .plan-item { grid-template-columns: auto 1fr; }
+    .plan-actions { grid-column: 1 / -1; justify-content: flex-end; }
+    .capsule-photos { grid-template-columns: repeat(2, 1fr); }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -545,7 +703,8 @@
 <div class="ambient" aria-hidden="true"></div>
 
 <!-- 初始探索页 -->
-<section class="screen intro-screen is-active" id="introScreen" aria-label="点亮我们的故事">
+<section class="screen intro-screen" id="introScreen" aria-label="点亮我们的足迹">
+  <button class="intro-back-button" id="backHomeFromIntro" type="button">← 返回主页</button>
   <div class="intro-wrap">
     <p class="intro-kicker">Our private travel universe</p>
     <div class="intro-map" id="introMap">
@@ -559,14 +718,14 @@
       <div class="intro-copy" id="introCopy">
         <h1>天奇<span>❤</span>晖晖</h1>
         <p>从第一次出发，到每一座被我们共同点亮的城市。</p>
-        <button class="primary-button" id="enterHome" type="button">走进我们的故事</button>
+        <button class="primary-button" id="enterFootprints" type="button">查看我们的足迹</button>
       </div>
     </div>
   </div>
 </section>
 
 <!-- 主页面 -->
-<main class="screen main-screen" id="mainScreen">
+<main class="screen main-screen is-active" id="mainScreen">
   <div class="page-shell">
     <section class="home-love-hero" aria-labelledby="coupleNames">
       <div class="home-heart-icon" aria-hidden="true">♥</div>
@@ -605,6 +764,42 @@
           <p>第一次见面、第一次旅行、第一次一起做饭……把时间、故事和照片都认真收藏起来。</p>
           <span class="card-footer">
             <span class="city-count" id="firstCount">等待第一篇回忆</span>
+            <span class="open-arrow">→</span>
+          </span>
+        </button>
+        <button class="memory-card plans-card" id="openPlans" type="button">
+          <span class="card-index">03 / FUTURE LIST</span>
+          <h3>未来清单</h3>
+          <p>收藏想去的地方、想吃的店和想一起完成的事。完成的愿望会自动搬进回忆区。</p>
+          <span class="card-footer">
+            <span class="city-count" id="planCount">等待第一个愿望</span>
+            <span class="open-arrow">→</span>
+          </span>
+        </button>
+        <button class="memory-card capsule-card" id="openCapsules" type="button">
+          <span class="card-index">04 / TIME CAPSULE</span>
+          <h3>时光胶囊</h3>
+          <p>把信和照片藏进未来，在约定的那一天到来前，谁都不能提前打开。</p>
+          <span class="card-footer">
+            <span class="city-count" id="capsuleCount">还没有埋下胶囊</span>
+            <span class="open-arrow">→</span>
+          </span>
+        </button>
+        <button class="memory-card question-card" id="openDailyQuestion" type="button">
+          <span class="card-index">05 / DAILY QUESTION</span>
+          <h3>每日一问</h3>
+          <p>天奇和晖晖分别写下答案。只有两个人都提交后，今天的答案才会一起揭晓。</p>
+          <span class="card-footer">
+            <span class="city-count">今天也更懂彼此一点</span>
+            <span class="open-arrow">→</span>
+          </span>
+        </button>
+        <button class="memory-card wheel-card" id="openDateWheel" type="button">
+          <span class="card-index">06 / DATE WHEEL</span>
+          <h3>约会转盘</h3>
+          <p>不知道去哪、吃什么、做什么的时候，就把决定交给命运和一点点浪漫。</p>
+          <span class="card-footer">
+            <span class="city-count">随机抽取约会灵感</span>
             <span class="open-arrow">→</span>
           </span>
         </button>
@@ -664,6 +859,128 @@
   </div>
 </section>
 
+<!-- 未来清单 -->
+<section class="screen feature-screen" id="plansScreen" aria-label="未来清单">
+  <div class="page-shell">
+    <header class="footprint-topbar">
+      <button class="back-button" id="backHomeFromPlans" type="button">← 返回主页</button>
+      <div class="footprint-title"><h1>未来清单</h1><p>把想要的未来，一件件变成共同回忆</p></div>
+    </header>
+    <section class="feature-intro">
+      <div class="feature-intro-copy">
+        <p class="eyebrow">THINGS WE WILL DO</p>
+        <h1>先把愿望写下来，<br>然后一起去实现。</h1>
+        <p>想去的地方、想吃的店、想完成的事都可以放在这里。点击“完成”后，它会自动进入右侧的回忆区。</p>
+      </div>
+      <button class="feature-action" id="addPlan" type="button">＋ 添加一个愿望</button>
+    </section>
+    <p class="local-note">☁ 当前清单保存在这台设备的浏览器里；清除浏览器数据会同时清除这些记录。</p>
+    <div class="collection-grid">
+      <section class="collection-panel">
+        <header class="collection-head"><h2>等待实现</h2><span id="pendingPlanCount">0 件</span></header>
+        <div class="item-list" id="pendingPlanList"></div>
+      </section>
+      <section class="collection-panel">
+        <header class="collection-head"><h2>已经成为回忆</h2><span id="completedPlanCount">0 件</span></header>
+        <div class="item-list" id="completedPlanList"></div>
+      </section>
+    </div>
+  </div>
+</section>
+
+<!-- 时光胶囊 -->
+<section class="screen feature-screen" id="capsulesScreen" aria-label="时光胶囊">
+  <div class="page-shell">
+    <header class="footprint-topbar">
+      <button class="back-button" id="backHomeFromCapsules" type="button">← 返回主页</button>
+      <div class="footprint-title"><h1>时光胶囊</h1><p>写给未来的我们</p></div>
+    </header>
+    <section class="feature-intro">
+      <div class="feature-intro-copy">
+        <p class="eyebrow">LETTERS TO THE FUTURE</p>
+        <h1>把今天的心意，<br>交给未来某天开启。</h1>
+        <p>写一封信、放入照片，再设置解锁日期。日期到来之前，信件和照片会一直被温柔地封存。</p>
+      </div>
+      <button class="feature-action" id="addCapsule" type="button">＋ 埋下一颗胶囊</button>
+    </section>
+    <p class="local-note">🔒 解锁以北京时间的日期为准。当前胶囊只保存在这台设备的浏览器中。</p>
+    <div class="capsule-grid" id="capsuleGrid"></div>
+  </div>
+</section>
+
+<!-- 每日一问 -->
+<section class="screen feature-screen" id="dailyQuestionScreen" aria-label="每日一问">
+  <div class="page-shell">
+    <header class="footprint-topbar">
+      <button class="back-button" id="backHomeFromQuestion" type="button">← 返回主页</button>
+      <div class="footprint-title"><h1>每日一问</h1><p>先独立回答，再一起揭晓</p></div>
+    </header>
+    <section class="feature-intro">
+      <div class="feature-intro-copy">
+        <p class="eyebrow">ONE QUESTION A DAY</p>
+        <h1>每天一个问题，<br>慢慢读懂彼此。</h1>
+        <p>两个人分别提交自己的答案。在双方都完成之前，看不到对方写了什么。</p>
+      </div>
+    </section>
+    <p class="local-note">👫 双方答案目前保存在同一台设备中；跨手机同步需要下一步接入在线数据库。</p>
+    <section class="daily-question-box">
+      <p class="question-date" id="questionDate"></p>
+      <h2 id="dailyQuestionText"></h2>
+      <div class="answer-grid">
+        <div class="answer-panel" id="tianqiAnswerPanel"></div>
+        <div class="answer-panel" id="huihuiAnswerPanel"></div>
+      </div>
+      <button class="question-reset" id="resetDailyQuestion" type="button">重新填写今天的答案</button>
+    </section>
+  </div>
+</section>
+
+<!-- 约会转盘 -->
+<section class="screen feature-screen" id="dateWheelScreen" aria-label="约会转盘">
+  <div class="page-shell">
+    <header class="footprint-topbar">
+      <button class="back-button" id="backHomeFromWheel" type="button">← 返回主页</button>
+      <div class="footprint-title"><h1>约会转盘</h1><p>选择困难时，让心动替我们决定</p></div>
+    </header>
+    <section class="feature-intro">
+      <div class="feature-intro-copy">
+        <p class="eyebrow">LET FATE DECIDE</p>
+        <h1>今天的约会，<br>交给转盘吧。</h1>
+        <p>选择餐厅、活动或旅行分类，点击转盘随机抽取。也可以把你们自己的约会灵感不断加进来。</p>
+      </div>
+    </section>
+    <div class="wheel-layout">
+      <section class="wheel-stage">
+        <div class="wheel-wrap">
+          <div class="wheel-pointer" aria-hidden="true"></div>
+          <div class="date-wheel" id="dateWheel" aria-hidden="true"></div>
+          <button class="wheel-core" id="spinWheel" type="button">转一下</button>
+        </div>
+        <p class="wheel-result" id="wheelResult"><strong>准备好了吗？</strong><span>点击中间按钮开始抽取</span></p>
+      </section>
+      <section class="wheel-panel">
+        <h2>约会候选池</h2>
+        <div class="wheel-filters" id="wheelFilters">
+          <button class="filter-chip is-active" type="button" data-filter="all">全部</button>
+          <button class="filter-chip" type="button" data-filter="restaurant">想吃的店</button>
+          <button class="filter-chip" type="button" data-filter="activity">约会活动</button>
+          <button class="filter-chip" type="button" data-filter="trip">旅行计划</button>
+        </div>
+        <form class="wheel-add-form" id="wheelAddForm">
+          <select id="wheelCategory" aria-label="分类">
+            <option value="restaurant">想吃的店</option>
+            <option value="activity">约会活动</option>
+            <option value="trip">旅行计划</option>
+          </select>
+          <input id="wheelOptionText" maxlength="40" required placeholder="例如：去吃一家没试过的火锅店">
+          <button type="submit">加入</button>
+        </form>
+        <div class="wheel-options" id="wheelOptions"></div>
+      </section>
+    </div>
+  </div>
+</section>
+
 <!-- 城市详情 -->
 <div class="city-modal" id="cityModal" role="dialog" aria-modal="true" aria-labelledby="cityName">
   <article class="city-dialog">
@@ -716,6 +1033,46 @@
       </div>
       <p class="form-status" id="firstFormStatus" role="alert" aria-live="polite"></p>
       <button class="form-submit" id="saveFirst" type="submit">保存这次回忆</button>
+    </form>
+  </article>
+</div>
+
+<!-- 新增未来清单表单 -->
+<div class="first-form-modal" id="planFormModal" role="dialog" aria-modal="true" aria-labelledby="planFormTitle">
+  <article class="first-form-dialog">
+    <header class="first-form-head">
+      <div><p class="city-order">A FUTURE WISH</p><h2 id="planFormTitle">添加一个未来愿望</h2></div>
+      <button class="modal-close" id="closePlanForm" type="button" aria-label="关闭">×</button>
+    </header>
+    <form class="first-form" id="planForm">
+      <div class="form-field"><label for="planCategory">愿望分类</label><select id="planCategory"><option value="place">想去的地方</option><option value="restaurant">想吃的店</option><option value="thing">想完成的事</option></select></div>
+      <div class="form-field"><label for="planTitle">愿望名称</label><input id="planTitle" maxlength="60" required placeholder="例如：一起去看一次极光"></div>
+      <div class="form-field"><label for="planTargetDate">希望完成的日期（可选）</label><input id="planTargetDate" type="date"></div>
+      <div class="form-field"><label for="planNote">想说的话（可选）</label><textarea id="planNote" maxlength="600" placeholder="为什么想一起完成这件事……"></textarea></div>
+      <p class="form-status" id="planFormStatus" role="alert"></p>
+      <button class="form-submit" type="submit">加入我们的未来</button>
+    </form>
+  </article>
+</div>
+
+<!-- 新增时光胶囊表单 -->
+<div class="first-form-modal" id="capsuleFormModal" role="dialog" aria-modal="true" aria-labelledby="capsuleFormTitle">
+  <article class="first-form-dialog">
+    <header class="first-form-head">
+      <div><p class="city-order">A LETTER TO US</p><h2 id="capsuleFormTitle">埋下一颗时光胶囊</h2></div>
+      <button class="modal-close" id="closeCapsuleForm" type="button" aria-label="关闭">×</button>
+    </header>
+    <form class="first-form" id="capsuleForm">
+      <div class="form-field"><label for="capsuleTitle">胶囊标题</label><input id="capsuleTitle" maxlength="60" required placeholder="例如：写给三周年的我们"></div>
+      <div class="form-field"><label for="capsuleUnlockDate">允许打开的日期</label><input id="capsuleUnlockDate" type="date" required></div>
+      <div class="form-field"><label for="capsuleLetter">写给未来的信</label><textarea id="capsuleLetter" maxlength="3000" required placeholder="未来的我们，你们现在过得好吗……"></textarea></div>
+      <div class="form-field">
+        <label>放入照片（最多 6 张）</label>
+        <label class="image-picker"><input id="capsulePhotos" type="file" accept="image/*" multiple><span><strong>点击选择照片</strong>照片会压缩后和信一起封存</span></label>
+        <div class="upload-preview" id="capsuleUploadPreview"></div>
+      </div>
+      <p class="form-status" id="capsuleFormStatus" role="alert"></p>
+      <button class="form-submit" id="saveCapsule" type="submit">封存到未来</button>
     </form>
   </article>
 </div>
@@ -850,6 +1207,21 @@
   const introSparks = document.getElementById('introSparks');
   const discoveryTrigger = document.getElementById('discoveryTrigger');
   let discovered = false;
+  let introRevealTimers = [];
+
+  function queueIntroReveal(callback, delay) {
+    const timer = window.setTimeout(callback, delay);
+    introRevealTimers.push(timer);
+  }
+
+  function resetFootprintIntro() {
+    introRevealTimers.forEach(timer => window.clearTimeout(timer));
+    introRevealTimers = [];
+    discovered = false;
+    introMap.classList.remove('is-discovered', 'copy-visible');
+    introCopy.classList.remove('is-visible');
+    introSparks.replaceChildren();
+  }
 
   discoveryTrigger.addEventListener('click', () => {
     if (discovered) return;
@@ -865,10 +1237,10 @@
       spark.style.left = point.x + '%';
       spark.style.top = point.y + '%';
       introSparks.appendChild(spark);
-      window.setTimeout(() => spark.classList.add('is-visible'), 120 + index * 120);
+      queueIntroReveal(() => spark.classList.add('is-visible'), 120 + index * 120);
     });
 
-    window.setTimeout(() => {
+    queueIntroReveal(() => {
       introCopy.classList.add('is-visible');
       introMap.classList.add('copy-visible');
     }, 1250);
@@ -880,22 +1252,54 @@
     target.scrollTop = 0;
   }
 
+  const introScreen = document.getElementById('introScreen');
   const mainScreen = document.getElementById('mainScreen');
   const footprintScreen = document.getElementById('footprintScreen');
   const firstsScreen = document.getElementById('firstsScreen');
-  document.getElementById('enterHome').addEventListener('click', () => showScreen(mainScreen));
-  document.getElementById('backHome').addEventListener('click', () => showScreen(mainScreen));
-  document.getElementById('backHomeFromFirsts').addEventListener('click', () => showScreen(mainScreen));
-  document.getElementById('openFootprints').addEventListener('click', () => {
+  const plansScreen = document.getElementById('plansScreen');
+  const capsulesScreen = document.getElementById('capsulesScreen');
+  const dailyQuestionScreen = document.getElementById('dailyQuestionScreen');
+  const dateWheelScreen = document.getElementById('dateWheelScreen');
+
+  function showFootprintMap() {
     showScreen(footprintScreen);
     const route = document.getElementById('routeLine');
     route.classList.remove('draw-once');
     void route.getBoundingClientRect();
     route.classList.add('draw-once');
+  }
+
+  document.getElementById('enterFootprints').addEventListener('click', showFootprintMap);
+  document.getElementById('backHomeFromIntro').addEventListener('click', () => showScreen(mainScreen));
+  document.getElementById('backHome').addEventListener('click', () => showScreen(mainScreen));
+  document.getElementById('backHomeFromFirsts').addEventListener('click', () => showScreen(mainScreen));
+  document.getElementById('backHomeFromPlans').addEventListener('click', () => showScreen(mainScreen));
+  document.getElementById('backHomeFromCapsules').addEventListener('click', () => showScreen(mainScreen));
+  document.getElementById('backHomeFromQuestion').addEventListener('click', () => showScreen(mainScreen));
+  document.getElementById('backHomeFromWheel').addEventListener('click', () => showScreen(mainScreen));
+  document.getElementById('openFootprints').addEventListener('click', () => {
+    resetFootprintIntro();
+    showScreen(introScreen);
   });
   document.getElementById('openFirsts').addEventListener('click', () => {
     showScreen(firstsScreen);
     renderFirsts();
+  });
+  document.getElementById('openPlans').addEventListener('click', () => {
+    showScreen(plansScreen);
+    renderPlans();
+  });
+  document.getElementById('openCapsules').addEventListener('click', () => {
+    showScreen(capsulesScreen);
+    renderCapsules();
+  });
+  document.getElementById('openDailyQuestion').addEventListener('click', () => {
+    showScreen(dailyQuestionScreen);
+    renderDailyQuestion();
+  });
+  document.getElementById('openDateWheel').addEventListener('click', () => {
+    showScreen(dateWheelScreen);
+    renderWheelOptions();
   });
 
   // “我们的第一次”：使用 IndexedDB 保存文字与压缩后的图片
@@ -921,11 +1325,17 @@
         reject(new Error('当前浏览器不支持本地回忆存储'));
         return;
       }
-      const request = indexedDB.open('huihui-tianqi-memories', 1);
+      const request = indexedDB.open('huihui-tianqi-memories', 2);
       request.onupgradeneeded = () => {
         const database = request.result;
         if (!database.objectStoreNames.contains('firsts')) {
           database.createObjectStore('firsts', { keyPath: 'id' });
+        }
+        if (!database.objectStoreNames.contains('plans')) {
+          database.createObjectStore('plans', { keyPath: 'id' });
+        }
+        if (!database.objectStoreNames.contains('capsules')) {
+          database.createObjectStore('capsules', { keyPath: 'id' });
         }
       };
       request.onsuccess = () => resolve(request.result);
@@ -959,6 +1369,37 @@
     return new Promise((resolve, reject) => {
       const transaction = database.transaction('firsts', 'readwrite');
       transaction.objectStore('firsts').delete(id);
+      transaction.oncomplete = () => { database.close(); resolve(); };
+      transaction.onerror = () => { database.close(); reject(transaction.error); };
+    });
+  }
+
+  async function readMemoryStore(storeName) {
+    const database = await openFirstsDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = database.transaction(storeName, 'readonly');
+      const request = transaction.objectStore(storeName).getAll();
+      request.onsuccess = () => resolve(request.result || []);
+      request.onerror = () => reject(request.error);
+      transaction.oncomplete = () => database.close();
+    });
+  }
+
+  async function putMemoryStore(storeName, value) {
+    const database = await openFirstsDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = database.transaction(storeName, 'readwrite');
+      transaction.objectStore(storeName).put(value);
+      transaction.oncomplete = () => { database.close(); resolve(); };
+      transaction.onerror = () => { database.close(); reject(transaction.error); };
+    });
+  }
+
+  async function deleteMemoryStore(storeName, id) {
+    const database = await openFirstsDatabase();
+    return new Promise((resolve, reject) => {
+      const transaction = database.transaction(storeName, 'readwrite');
+      transaction.objectStore(storeName).delete(id);
       transaction.oncomplete = () => { database.close(); resolve(); };
       transaction.onerror = () => { database.close(); reject(transaction.error); };
     });
@@ -1122,6 +1563,369 @@
 
   renderFirsts();
 
+  // 未来清单：完成后自动移动到回忆区
+  const planFormModal = document.getElementById('planFormModal');
+  const planForm = document.getElementById('planForm');
+  const planCategory = document.getElementById('planCategory');
+  const planTitle = document.getElementById('planTitle');
+  const planTargetDate = document.getElementById('planTargetDate');
+  const planNote = document.getElementById('planNote');
+  const pendingPlanList = document.getElementById('pendingPlanList');
+  const completedPlanList = document.getElementById('completedPlanList');
+  const planCategoryMeta = {
+    place: { icon: '⌖', label: '想去的地方' },
+    restaurant: { icon: '♨', label: '想吃的店' },
+    thing: { icon: '✓', label: '想完成的事' }
+  };
+  let plansCache = [];
+
+  function planItemHtml(plan, completed = false) {
+    const meta = planCategoryMeta[plan.category] || planCategoryMeta.thing;
+    const timing = completed
+      ? `完成于 ${new Date(plan.completedAt).toLocaleDateString('zh-CN')}`
+      : (plan.targetDate ? `期待日期：${formatFirstDate(plan.targetDate)}` : '等我们选一个好日子');
+    return `<article class="plan-item ${completed ? 'memory-plan' : ''}" data-plan-id="${escapeHtml(plan.id)}">
+      <span class="plan-icon" aria-hidden="true">${meta.icon}</span>
+      <div><h3>${escapeHtml(plan.title)}</h3><p>${meta.label} · ${timing}${plan.note ? ` · ${escapeHtml(plan.note)}` : ''}</p></div>
+      <div class="plan-actions">
+        ${completed ? '' : `<button class="mini-button complete complete-plan" type="button" data-id="${escapeHtml(plan.id)}">完成</button>`}
+        <button class="mini-button delete-plan" type="button" data-id="${escapeHtml(plan.id)}">删除</button>
+      </div>
+    </article>`;
+  }
+
+  async function renderPlans() {
+    try {
+      plansCache = (await readMemoryStore('plans')).sort((a, b) => b.createdAt - a.createdAt);
+      const pending = plansCache.filter(plan => !plan.completed);
+      const completed = plansCache.filter(plan => plan.completed).sort((a, b) => b.completedAt - a.completedAt);
+      document.getElementById('pendingPlanCount').textContent = `${pending.length} 件`;
+      document.getElementById('completedPlanCount').textContent = `${completed.length} 件`;
+      document.getElementById('planCount').textContent = pending.length ? `${pending.length} 个愿望等待实现` : (completed.length ? `已实现 ${completed.length} 个愿望` : '等待第一个愿望');
+      pendingPlanList.innerHTML = pending.length ? pending.map(plan => planItemHtml(plan)).join('') : '<div class="empty-state">还没有等待实现的愿望。<br>把下一次心动计划写下来吧。</div>';
+      completedPlanList.innerHTML = completed.length ? completed.map(plan => planItemHtml(plan, true)).join('') : '<div class="empty-state">完成的愿望会自动来到这里，<br>变成一份共同回忆。</div>';
+    } catch (error) {
+      pendingPlanList.innerHTML = `<div class="empty-state">暂时无法读取清单：${escapeHtml(error.message)}</div>`;
+    }
+  }
+
+  function showPlanForm() {
+    planForm.reset();
+    document.getElementById('planFormStatus').textContent = '';
+    planFormModal.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    window.setTimeout(() => planTitle.focus(), 80);
+  }
+
+  function hidePlanForm() {
+    planFormModal.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('addPlan').addEventListener('click', showPlanForm);
+  document.getElementById('closePlanForm').addEventListener('click', hidePlanForm);
+  planFormModal.addEventListener('click', event => { if (event.target === planFormModal) hidePlanForm(); });
+  planForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const plan = {
+      id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
+      category: planCategory.value,
+      title: planTitle.value.trim(),
+      targetDate: planTargetDate.value,
+      note: planNote.value.trim(),
+      completed: false,
+      createdAt: Date.now()
+    };
+    await putMemoryStore('plans', plan);
+    hidePlanForm();
+    await renderPlans();
+  });
+
+  async function handlePlanListClick(event) {
+    const completeButton = event.target.closest('.complete-plan');
+    const deleteButton = event.target.closest('.delete-plan');
+    if (!completeButton && !deleteButton) return;
+    const id = (completeButton || deleteButton).dataset.id;
+    const plan = plansCache.find(item => item.id === id);
+    if (!plan) return;
+    if (completeButton) {
+      plan.completed = true;
+      plan.completedAt = Date.now();
+      await putMemoryStore('plans', plan);
+    } else if (window.confirm(`确定删除“${plan.title}”吗？`)) {
+      await deleteMemoryStore('plans', id);
+    } else return;
+    await renderPlans();
+  }
+  pendingPlanList.addEventListener('click', handlePlanListClick);
+  completedPlanList.addEventListener('click', handlePlanListClick);
+
+  // 时光胶囊：到达约定日期后才显示信和照片
+  const capsuleFormModal = document.getElementById('capsuleFormModal');
+  const capsuleForm = document.getElementById('capsuleForm');
+  const capsuleTitle = document.getElementById('capsuleTitle');
+  const capsuleUnlockDate = document.getElementById('capsuleUnlockDate');
+  const capsuleLetter = document.getElementById('capsuleLetter');
+  const capsulePhotos = document.getElementById('capsulePhotos');
+  const capsuleUploadPreview = document.getElementById('capsuleUploadPreview');
+  const capsuleFormStatus = document.getElementById('capsuleFormStatus');
+  const capsuleGrid = document.getElementById('capsuleGrid');
+  let selectedCapsulePhotos = [];
+  let capsulesCache = [];
+
+  function shanghaiDateKey() {
+    return shanghaiNowAsUtcDate().toISOString().slice(0, 10);
+  }
+
+  function tomorrowDateKey() {
+    const date = shanghaiNowAsUtcDate();
+    date.setUTCDate(date.getUTCDate() + 1);
+    return date.toISOString().slice(0, 10);
+  }
+
+  function renderCapsulePreview() {
+    capsuleUploadPreview.innerHTML = selectedCapsulePhotos.map((photo, index) =>
+      `<div class="upload-preview-item"><img src="${photo}" alt="胶囊照片 ${index + 1}"><button class="remove-preview" type="button" data-index="${index}" aria-label="移除照片">×</button></div>`
+    ).join('');
+  }
+
+  function showCapsuleForm() {
+    capsuleForm.reset();
+    selectedCapsulePhotos = [];
+    capsuleUnlockDate.min = tomorrowDateKey();
+    capsuleUnlockDate.value = tomorrowDateKey();
+    capsuleFormStatus.textContent = '';
+    renderCapsulePreview();
+    capsuleFormModal.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    window.setTimeout(() => capsuleTitle.focus(), 80);
+  }
+
+  function hideCapsuleForm() {
+    capsuleFormModal.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  async function renderCapsules() {
+    try {
+      capsulesCache = (await readMemoryStore('capsules')).sort((a, b) => b.createdAt - a.createdAt);
+      document.getElementById('capsuleCount').textContent = capsulesCache.length ? `已封存 ${capsulesCache.length} 颗胶囊` : '还没有埋下胶囊';
+      if (!capsulesCache.length) {
+        capsuleGrid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">还没有时光胶囊。<br>写一封只属于未来的信吧。</div>';
+        return;
+      }
+      const today = shanghaiDateKey();
+      capsuleGrid.innerHTML = capsulesCache.map(capsule => {
+        const unlocked = today >= capsule.unlockDate;
+        const photos = unlocked && capsule.photos?.length
+          ? `<div class="capsule-photos">${capsule.photos.map((photo, index) => `<img src="${photo}" alt="${escapeHtml(capsule.title)}的照片 ${index + 1}" loading="lazy">`).join('')}</div>` : '';
+        return `<article class="capsule-item" data-capsule-id="${escapeHtml(capsule.id)}">
+          <p class="capsule-meta">${unlocked ? 'OPENED · 已到解锁日' : 'SEALED · 封存中'}</p>
+          <h2>${escapeHtml(capsule.title)}</h2>
+          ${unlocked
+            ? `<p class="capsule-letter">${escapeHtml(capsule.letter)}</p>${photos}`
+            : `<p class="capsule-lock">🔒 将在 ${formatFirstDate(capsule.unlockDate)} 打开<br>再耐心等一等，未来正在靠近。</p>`}
+          <button class="mini-button capsule-delete delete-capsule" type="button" data-id="${escapeHtml(capsule.id)}">删除</button>
+        </article>`;
+      }).join('');
+    } catch (error) {
+      capsuleGrid.innerHTML = `<div class="empty-state">暂时无法读取胶囊：${escapeHtml(error.message)}</div>`;
+    }
+  }
+
+  document.getElementById('addCapsule').addEventListener('click', showCapsuleForm);
+  document.getElementById('closeCapsuleForm').addEventListener('click', hideCapsuleForm);
+  capsuleFormModal.addEventListener('click', event => { if (event.target === capsuleFormModal) hideCapsuleForm(); });
+  capsuleUploadPreview.addEventListener('click', event => {
+    const button = event.target.closest('.remove-preview');
+    if (!button) return;
+    selectedCapsulePhotos.splice(Number(button.dataset.index), 1);
+    renderCapsulePreview();
+  });
+  capsulePhotos.addEventListener('change', async () => {
+    const files = [...capsulePhotos.files].filter(file => file.type.startsWith('image/'));
+    const availableSlots = 6 - selectedCapsulePhotos.length;
+    document.getElementById('saveCapsule').disabled = true;
+    try {
+      const compressed = await Promise.all(files.slice(0, availableSlots).map(compressPhoto));
+      selectedCapsulePhotos.push(...compressed);
+      renderCapsulePreview();
+      capsuleFormStatus.textContent = `已放入 ${selectedCapsulePhotos.length} 张照片。`;
+    } catch (error) {
+      capsuleFormStatus.textContent = error.message;
+    } finally {
+      document.getElementById('saveCapsule').disabled = false;
+      capsulePhotos.value = '';
+    }
+  });
+  capsuleForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (capsuleUnlockDate.value <= shanghaiDateKey()) {
+      capsuleFormStatus.textContent = '时光胶囊需要设置为未来的日期。';
+      return;
+    }
+    await putMemoryStore('capsules', {
+      id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
+      title: capsuleTitle.value.trim(), unlockDate: capsuleUnlockDate.value,
+      letter: capsuleLetter.value.trim(), photos: selectedCapsulePhotos, createdAt: Date.now()
+    });
+    hideCapsuleForm();
+    await renderCapsules();
+  });
+  capsuleGrid.addEventListener('click', async event => {
+    const button = event.target.closest('.delete-capsule');
+    if (!button) return;
+    const capsule = capsulesCache.find(item => item.id === button.dataset.id);
+    if (!capsule || !window.confirm(`确定删除“${capsule.title}”这颗胶囊吗？`)) return;
+    await deleteMemoryStore('capsules', capsule.id);
+    await renderCapsules();
+  });
+
+  // 每日一问：两个人都提交后才同时展示答案
+  const dailyQuestions = [
+    '最近哪一个瞬间，让你突然觉得“有你真好”？',
+    '如果明天可以立刻出发，你最想和我去哪里？',
+    '你觉得我们最像哪一种小动物组合？为什么？',
+    '最近有什么小事，是你希望我能更懂你的？',
+    '如果把我们的一天拍成电影，你会给它取什么名字？',
+    '你最想和我一起养成哪一个长期习惯？',
+    '第一次见到我时，你印象最深的细节是什么？',
+    '你心里最理想的一次普通约会是什么样？',
+    '如果要把一句话留给十年后的我们，你会写什么？',
+    '我们一起做过的哪件傻事，现在想起来最好笑？',
+    '你希望下一张合照是在什么地方拍下的？',
+    '最近我做的哪件小事，让你感到被爱？'
+  ];
+
+  function currentDailyQuestion() {
+    const key = shanghaiDateKey();
+    const dayNumber = Math.floor(Date.parse(`${key}T00:00:00Z`) / 86400000);
+    return { key, text: dailyQuestions[dayNumber % dailyQuestions.length] };
+  }
+
+  function readDailyAnswers(key) {
+    try { return JSON.parse(localStorage.getItem(`love-daily-${key}`)) || {}; } catch (_) { return {}; }
+  }
+
+  function renderAnswerPanel(person, label, answers, bothAnswered) {
+    const answer = answers[person];
+    if (bothAnswered) {
+      return `<div class="answer-person"><strong>${label}</strong><span>答案已揭晓</span></div><p class="revealed-answer">${escapeHtml(answer)}</p>`;
+    }
+    if (answer) {
+      return `<div class="answer-person"><strong>${label}</strong><span>已提交</span></div><div class="sealed-answer">💌<br>你的答案已经封好<br>等待对方提交后一起揭晓</div>`;
+    }
+    return `<form class="daily-answer-form" data-person="${person}"><div class="answer-person"><strong>${label}</strong><span>独立作答中</span></div><textarea maxlength="600" required placeholder="写下你的真实答案……"></textarea><button class="answer-submit" type="submit">封存我的答案</button></form>`;
+  }
+
+  function renderDailyQuestion() {
+    const question = currentDailyQuestion();
+    const answers = readDailyAnswers(question.key);
+    const bothAnswered = Boolean(answers.tianqi && answers.huihui);
+    const date = new Date(`${question.key}T00:00:00+08:00`);
+    document.getElementById('questionDate').textContent = `${date.toLocaleDateString('zh-CN')} · TODAY'S QUESTION`;
+    document.getElementById('dailyQuestionText').textContent = question.text;
+    document.getElementById('tianqiAnswerPanel').innerHTML = renderAnswerPanel('tianqi', '天奇', answers, bothAnswered);
+    document.getElementById('huihuiAnswerPanel').innerHTML = renderAnswerPanel('huihui', '晖晖', answers, bothAnswered);
+  }
+
+  dailyQuestionScreen.addEventListener('submit', event => {
+    const form = event.target.closest('.daily-answer-form');
+    if (!form) return;
+    event.preventDefault();
+    const question = currentDailyQuestion();
+    const answers = readDailyAnswers(question.key);
+    answers[form.dataset.person] = form.querySelector('textarea').value.trim();
+    localStorage.setItem(`love-daily-${question.key}`, JSON.stringify(answers));
+    renderDailyQuestion();
+  });
+  document.getElementById('resetDailyQuestion').addEventListener('click', () => {
+    if (!window.confirm('确定清空今天两个人的答案，重新填写吗？')) return;
+    localStorage.removeItem(`love-daily-${currentDailyQuestion().key}`);
+    renderDailyQuestion();
+  });
+
+  // 约会转盘：可筛选分类并加入自定义候选项
+  const wheelDefaults = [
+    { id: 'd1', category: 'restaurant', text: '去吃一家没试过的火锅店' },
+    { id: 'd2', category: 'restaurant', text: '寻找附近评分最高的甜品店' },
+    { id: 'd3', category: 'activity', text: '一起看一场电影' },
+    { id: 'd4', category: 'activity', text: '去公园散步并拍十张照片' },
+    { id: 'd5', category: 'activity', text: '一起做一顿没做过的菜' },
+    { id: 'd6', category: 'trip', text: '周末去一座没去过的城市' },
+    { id: 'd7', category: 'trip', text: '坐地铁到一个陌生终点站' },
+    { id: 'd8', category: 'restaurant', text: '重温第一次约会吃过的东西' }
+  ];
+  const wheelCategoryLabels = { restaurant: '想吃的店', activity: '约会活动', trip: '旅行计划' };
+  let wheelFilter = 'all';
+  let wheelRotation = 0;
+  let customWheelOptions = [];
+  try { customWheelOptions = JSON.parse(localStorage.getItem('love-wheel-options')) || []; } catch (_) {}
+
+  function saveWheelOptions() {
+    localStorage.setItem('love-wheel-options', JSON.stringify(customWheelOptions));
+  }
+
+  function activeWheelOptions() {
+    const all = [...wheelDefaults, ...customWheelOptions];
+    return wheelFilter === 'all' ? all : all.filter(option => option.category === wheelFilter);
+  }
+
+  function renderWheelOptions() {
+    document.querySelectorAll('#wheelFilters .filter-chip').forEach(button => button.classList.toggle('is-active', button.dataset.filter === wheelFilter));
+    const options = activeWheelOptions();
+    document.getElementById('wheelOptions').innerHTML = options.map(option =>
+      `<span class="wheel-option"><span>${wheelCategoryLabels[option.category]} · ${escapeHtml(option.text)}</span>${option.id.startsWith('c') ? `<button type="button" class="delete-wheel-option" data-id="${escapeHtml(option.id)}" aria-label="删除">×</button>` : ''}</span>`
+    ).join('');
+  }
+
+  document.getElementById('wheelFilters').addEventListener('click', event => {
+    const button = event.target.closest('.filter-chip');
+    if (!button) return;
+    wheelFilter = button.dataset.filter;
+    renderWheelOptions();
+  });
+  document.getElementById('wheelAddForm').addEventListener('submit', event => {
+    event.preventDefault();
+    const input = document.getElementById('wheelOptionText');
+    customWheelOptions.push({ id: `c${Date.now()}`, category: document.getElementById('wheelCategory').value, text: input.value.trim() });
+    saveWheelOptions();
+    input.value = '';
+    renderWheelOptions();
+  });
+  document.getElementById('wheelOptions').addEventListener('click', event => {
+    const button = event.target.closest('.delete-wheel-option');
+    if (!button) return;
+    customWheelOptions = customWheelOptions.filter(option => option.id !== button.dataset.id);
+    saveWheelOptions();
+    renderWheelOptions();
+  });
+  document.getElementById('spinWheel').addEventListener('click', () => {
+    const candidates = activeWheelOptions();
+    if (!candidates.length) {
+      document.getElementById('wheelResult').innerHTML = '<strong>候选池是空的</strong><span>先加入一个约会灵感吧</span>';
+      return;
+    }
+    const randomIndex = window.crypto?.getRandomValues
+      ? crypto.getRandomValues(new Uint32Array(1))[0] % candidates.length
+      : Math.floor(Math.random() * candidates.length);
+    const result = candidates[randomIndex];
+    wheelRotation += 1440 + Math.floor(Math.random() * 360);
+    document.getElementById('dateWheel').style.transform = `rotate(${wheelRotation}deg)`;
+    const spinButton = document.getElementById('spinWheel');
+    spinButton.disabled = true;
+    document.getElementById('wheelResult').innerHTML = '<strong>命运正在选择…</strong><span>心动答案马上揭晓</span>';
+    window.setTimeout(() => {
+      document.getElementById('wheelResult').innerHTML = `<strong>${escapeHtml(result.text)}</strong><span>${wheelCategoryLabels[result.category]} · 就决定是它啦</span>`;
+      spinButton.disabled = false;
+    }, 3650);
+  });
+
+  renderPlans();
+  renderCapsules();
+  renderDailyQuestion();
+  renderWheelOptions();
+
   const cityLayer = document.getElementById('cityLayer');
   const mobileCityList = document.getElementById('mobileCityList');
   const routeLine = document.getElementById('routeLine');
@@ -1179,6 +1983,8 @@
   cityModal.addEventListener('click', event => { if (event.target === cityModal) hideCity(); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') hideCity(); });
   document.addEventListener('keydown', event => { if (event.key === 'Escape') hideFirstForm(); });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') hidePlanForm(); });
+  document.addEventListener('keydown', event => { if (event.key === 'Escape') hideCapsuleForm(); });
 </script>
 </body>
 </html>
