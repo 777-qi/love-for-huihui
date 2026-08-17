@@ -190,7 +190,16 @@
   .primary-button { min-width: 160px; padding: 14px 22px; }
 
   /* 主页 */
-  .main-screen { padding: 24px 0 60px; }
+  .main-screen {
+    padding: 0 0 72px; color: #4b2230;
+    background:
+      radial-gradient(circle at 50% 18%, rgba(255,111,159,.08), transparent 25%),
+      linear-gradient(180deg, #fffafb, #fff 62%, #fff8fa);
+  }
+  .main-screen::before {
+    content: ""; position: fixed; left: 0; right: 0; top: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, #f4a8bf, transparent);
+  }
   .topbar { display: flex; align-items: center; justify-content: space-between; min-height: 60px; }
   .brand { display: flex; gap: 12px; align-items: center; }
   .brand-heart {
@@ -199,13 +208,58 @@
   }
   .brand strong { display: block; font-size: .95rem; }
   .brand small { color: var(--muted); font-size: .72rem; }
-  .home-hero { padding: clamp(70px, 13vh, 140px) 0 56px; max-width: 760px; }
+  .home-love-hero {
+    min-height: min(760px, 82vh); display: flex; flex-direction: column;
+    align-items: center; justify-content: center; padding: 48px 0 58px; text-align: center;
+  }
+  .home-heart-icon {
+    color: #ef527e; font-size: clamp(4rem, 9vw, 6.2rem); line-height: 1;
+    filter: drop-shadow(0 12px 18px rgba(239,82,126,.22));
+    animation: homeHeartBeat 2.6s ease-in-out infinite;
+  }
+  @keyframes homeHeartBeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.08); }
+    28% { transform: scale(1); }
+  }
+  .couple-names {
+    margin-top: 24px; font-size: clamp(3rem, 8vw, 5.3rem); line-height: 1;
+    font-weight: 700; letter-spacing: -.035em; color: #47202d;
+  }
+  .couple-names span { color: #ef527e; padding: 0 .06em; }
+  .couple-subtitle {
+    margin-top: 13px; color: #995060; font-family: Georgia, serif;
+    font-size: clamp(.95rem, 2vw, 1.2rem); font-style: italic;
+  }
+  .together-label {
+    margin: 24px 0 13px; color: #8c4556; font-size: .72rem;
+    font-weight: 700; letter-spacing: .14em;
+  }
+  .love-counter {
+    display: grid; grid-template-columns: repeat(6, minmax(90px, 1fr));
+    width: min(760px, 100%); overflow: hidden;
+    border: 1px solid #f2b6c7; border-radius: 14px; background: rgba(255,255,255,.78);
+    box-shadow: 0 18px 50px rgba(91,35,52,.06);
+  }
+  .counter-unit { padding: 18px 10px 15px; border-right: 1px solid #f2c2cf; }
+  .counter-unit:last-child { border-right: 0; }
+  .counter-value {
+    display: block; min-width: 2ch; color: #ed507a;
+    font-size: clamp(2.2rem, 5vw, 3.6rem); font-weight: 700; line-height: 1;
+    font-variant-numeric: tabular-nums;
+  }
+  .counter-label {
+    display: block; margin-top: 11px; color: #974c5d;
+    font-size: .58rem; font-weight: 700; letter-spacing: .14em;
+  }
+  .since-date { margin-top: 14px; color: #a87580; font-size: .76rem; letter-spacing: .08em; }
+  .home-sections { padding-top: 14px; }
   .eyebrow { color: var(--pink); font-size: .76rem; letter-spacing: .28em; margin-bottom: 16px; }
-  .home-hero h1 { font-family: Georgia, "STKaiti", serif; font-size: clamp(2.5rem, 8vw, 5.4rem); line-height: 1.02; }
-  .home-hero p { color: var(--muted); line-height: 1.9; margin-top: 20px; max-width: 600px; }
   .section-head { display: flex; align-items: end; justify-content: space-between; margin-bottom: 18px; }
   .section-head h2 { font-size: clamp(1.35rem, 4vw, 1.8rem); }
   .section-head span { color: var(--muted); font-size: .82rem; }
+  .main-screen .section-head h2 { color: #4b2230; }
+  .main-screen .section-head span { color: #a87580; }
   .memory-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
   .memory-card {
     position: relative; width: 100%; min-height: 280px; padding: clamp(24px, 5vw, 54px);
@@ -225,6 +279,14 @@
   .memory-card:hover .open-arrow { transform: translateX(7px); }
   .memory-card.firsts-card::after { background: rgba(255,189,155,.1); }
   .memory-card.firsts-card .card-index { color: var(--peach); }
+  .main-screen .memory-card {
+    color: #4b2230; border-color: #f1d5dd; background: rgba(255,255,255,.9);
+    box-shadow: 0 18px 50px rgba(91,35,52,.06);
+  }
+  .main-screen .memory-card::after { background: rgba(239,82,126,.09); }
+  .main-screen .memory-card.firsts-card::after { background: rgba(255,174,117,.11); }
+  .main-screen .memory-card p { color: #8c6872; }
+  .main-screen .city-count { color: #d35b77; }
 
   /* 我们的第一次 */
   .firsts-screen { padding: 22px 0 70px; }
@@ -435,6 +497,10 @@
     .photo-grid { grid-template-columns: 1fr 1fr; }
     .photo-placeholder:first-child { grid-column: 1 / -1; grid-row: auto; min-height: 210px; }
     .memory-grid { grid-template-columns: 1fr; }
+    .home-love-hero { min-height: 760px; padding-top: 56px; }
+    .love-counter { grid-template-columns: repeat(3, 1fr); width: min(430px, 100%); }
+    .counter-unit:nth-child(3) { border-right: 0; }
+    .counter-unit:nth-child(-n+3) { border-bottom: 1px solid #f2c2cf; }
     .firsts-intro { align-items: stretch; flex-direction: column; }
     .add-first-button { align-self: flex-start; }
     .upload-preview { grid-template-columns: repeat(3, 1fr); }
@@ -502,21 +568,23 @@
 <!-- 主页面 -->
 <main class="screen main-screen" id="mainScreen">
   <div class="page-shell">
-    <header class="topbar">
-      <div class="brand">
-        <span class="brand-heart">♥</span>
-        <div><strong>晖晖 × 天奇</strong><small>OUR LITTLE UNIVERSE</small></div>
+    <section class="home-love-hero" aria-labelledby="coupleNames">
+      <div class="home-heart-icon" aria-hidden="true">♥</div>
+      <h1 class="couple-names" id="coupleNames">天奇 <span>&amp;</span> 晖晖</h1>
+      <p class="couple-subtitle">A love story, written every day</p>
+      <p class="together-label">TOGETHER FOR</p>
+      <div class="love-counter" id="loveCounter" aria-label="我们在一起的时间">
+        <div class="counter-unit"><strong class="counter-value" id="togetherYears">0</strong><span class="counter-label">YEARS · 年</span></div>
+        <div class="counter-unit"><strong class="counter-value" id="togetherMonths">0</strong><span class="counter-label">MONTHS · 月</span></div>
+        <div class="counter-unit"><strong class="counter-value" id="togetherDays">0</strong><span class="counter-label">DAYS · 日</span></div>
+        <div class="counter-unit"><strong class="counter-value" id="togetherHours">0</strong><span class="counter-label">HOURS · 时</span></div>
+        <div class="counter-unit"><strong class="counter-value" id="togetherMinutes">0</strong><span class="counter-label">MINS · 分</span></div>
+        <div class="counter-unit"><strong class="counter-value" id="togetherSeconds">0</strong><span class="counter-label">SECS · 秒</span></div>
       </div>
-      <span style="color:var(--muted);font-size:.76rem;">始于 2024.02.28</span>
-    </header>
-
-    <section class="home-hero">
-      <p class="eyebrow">WELCOME HOME</p>
-      <h1>把我们走过的路，<br>变成会发光的回忆。</h1>
-      <p>这里会慢慢收集我们的旅行、照片和故事。每一次打开，都能回到那些一起看过的风景里。</p>
+      <p class="since-date">自 2024 年 2 月 28 日起，每一秒都算数</p>
     </section>
 
-    <section aria-labelledby="memoryTitle">
+    <section class="home-sections" aria-labelledby="memoryTitle">
       <div class="section-head">
         <h2 id="memoryTitle">我们的栏目</h2>
         <span>持续更新中</span>
@@ -690,6 +758,64 @@
       }
     });
   }
+
+  // 在一起计时：统一按北京时间计算，年月使用真实日历跨度
+  const togetherFields = {
+    years: document.getElementById('togetherYears'),
+    months: document.getElementById('togetherMonths'),
+    days: document.getElementById('togetherDays'),
+    hours: document.getElementById('togetherHours'),
+    minutes: document.getElementById('togetherMinutes'),
+    seconds: document.getElementById('togetherSeconds')
+  };
+  const togetherStart = { year: 2024, month: 2, day: 28, hour: 0, minute: 0, second: 0 };
+  const shanghaiClock = new Intl.DateTimeFormat('en-CA', {
+    timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
+    hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
+  });
+
+  function shanghaiNowAsUtcDate() {
+    const parts = Object.fromEntries(
+      shanghaiClock.formatToParts(new Date()).filter(part => part.type !== 'literal').map(part => [part.type, Number(part.value)])
+    );
+    return new Date(Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second));
+  }
+
+  function updateTogetherCounter() {
+    const now = shanghaiNowAsUtcDate();
+    const start = new Date(Date.UTC(
+      togetherStart.year, togetherStart.month - 1, togetherStart.day,
+      togetherStart.hour, togetherStart.minute, togetherStart.second
+    ));
+    if (now < start) return;
+
+    let totalMonths = (now.getUTCFullYear() - start.getUTCFullYear()) * 12
+      + now.getUTCMonth() - start.getUTCMonth();
+    let cursor = new Date(Date.UTC(2024, 1 + totalMonths, 28, 0, 0, 0));
+    if (cursor > now) {
+      totalMonths -= 1;
+      cursor = new Date(Date.UTC(2024, 1 + totalMonths, 28, 0, 0, 0));
+    }
+
+    const years = Math.floor(totalMonths / 12);
+    const months = totalMonths % 12;
+    let remainder = now - cursor;
+    const days = Math.floor(remainder / 86400000);
+    remainder %= 86400000;
+    const hours = Math.floor(remainder / 3600000);
+    remainder %= 3600000;
+    const minutes = Math.floor(remainder / 60000);
+    const seconds = Math.floor((remainder % 60000) / 1000);
+
+    togetherFields.years.textContent = years;
+    togetherFields.months.textContent = months;
+    togetherFields.days.textContent = days;
+    togetherFields.hours.textContent = hours;
+    togetherFields.minutes.textContent = minutes;
+    togetherFields.seconds.textContent = seconds;
+  }
+  updateTogetherCounter();
+  window.setInterval(updateTogetherCounter, 1000);
 
   const cities = [
     { name: '荆州', lon: 112.24, lat: 30.33, lx: 0, ly: -2, story: '古城的风与共同走过的街道，都值得留下一页。关于荆州的照片和故事，会在这里慢慢补齐。' },
