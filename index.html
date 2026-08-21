@@ -79,6 +79,16 @@
   }
   .password-button { width: 100%; height: 52px; margin-top: 14px; letter-spacing: .1em; }
   .password-error { min-height: 20px; margin-top: 12px; color: #ff9abb; font-size: .86rem; }
+  .sync-status {
+    position: fixed; z-index: 1200; left: 50%; bottom: max(20px, env(safe-area-inset-bottom));
+    max-width: min(520px, calc(100% - 28px)); padding: 11px 16px; border: 1px solid var(--line);
+    border-radius: 999px; color: var(--text); background: rgba(21,16,32,.94);
+    box-shadow: 0 14px 46px rgba(0,0,0,.38); opacity: 0; visibility: hidden;
+    transform: translate(-50%, 12px); transition: opacity .25s ease, transform .25s ease, visibility .25s;
+    font-size: .82rem; text-align: center;
+  }
+  .sync-status.is-visible { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+  .sync-status.is-error { color: #ffc0d2; border-color: rgba(255,111,159,.45); }
   .password-card.shake { animation: shake .35s ease; }
   @keyframes shake {
     25% { transform: translateX(-8px); }
@@ -701,6 +711,7 @@
 </div>
 
 <div class="ambient" aria-hidden="true"></div>
+<div class="sync-status" id="syncStatus" role="status" aria-live="polite"></div>
 
 <!-- 初始探索页 -->
 <section class="screen intro-screen" id="introScreen" aria-label="点亮我们的足迹">
@@ -854,7 +865,7 @@
       <button class="add-first-button" id="addFirst" type="button">＋ 记录一个第一次</button>
     </section>
 
-    <p class="firsts-note">☁ 当前新增的记录和照片保存在这台设备的浏览器里；正式写入网站后，所有设备都能看到。</p>
+    <p class="firsts-note">☁ 记录与照片会安全同步到云端，双方在任意设备登录后都能看到。</p>
     <div class="firsts-timeline" id="firstsTimeline"></div>
   </div>
 </section>
@@ -874,7 +885,7 @@
       </div>
       <button class="feature-action" id="addPlan" type="button">＋ 添加一个愿望</button>
     </section>
-    <p class="local-note">☁ 当前清单保存在这台设备的浏览器里；清除浏览器数据会同时清除这些记录。</p>
+    <p class="local-note">☁ 清单实时保存在共享云端，两个人看到的是同一份计划。</p>
     <div class="collection-grid">
       <section class="collection-panel">
         <header class="collection-head"><h2>等待实现</h2><span id="pendingPlanCount">0 件</span></header>
@@ -903,7 +914,7 @@
       </div>
       <button class="feature-action" id="addCapsule" type="button">＋ 埋下一颗胶囊</button>
     </section>
-    <p class="local-note">🔒 解锁以北京时间的日期为准。当前胶囊只保存在这台设备的浏览器中。</p>
+    <p class="local-note">🔒 解锁以北京时间的日期为准，胶囊会保存在双方共享的云端空间。</p>
     <div class="capsule-grid" id="capsuleGrid"></div>
   </div>
 </section>
@@ -1027,7 +1038,7 @@
         <label>添加照片（最多 8 张）</label>
         <label class="image-picker">
           <input id="firstPhotos" type="file" accept="image/*" multiple>
-          <span><strong>点击选择照片</strong>会自动压缩后保存在浏览器中</span>
+          <span><strong>点击选择照片</strong>会自动压缩并上传到共享云端</span>
         </label>
         <div class="upload-preview" id="uploadPreview"></div>
       </div>
@@ -1078,11 +1089,53 @@
 </div>
 
 <script>
-  // 密码验证：纯前端访问门，仅用于基础隐私保护
+  // 密码与共享会话：密码只发送给同站点的 Netlify Function 校验
   const gate = document.getElementById('passwordGate');
   const passwordForm = document.getElementById('passwordForm');
   const passwordInput = document.getElementById('passwordInput');
   const passwordError = document.getElementById('passwordError');
+  const syncStatus = document.getElementById('syncStatus');
+  const CLOUD_SESSION_KEY = 'loveCloudSession';
+  let syncStatusTimer = 0;
+
+  function getCloudSession() {
+    try { return sessionStorage.getItem(CLOUD_SESSION_KEY) || ''; } catch (_) { return ''; }
+  }
+
+  function setCloudSession(token) {
+    try {
+      if (token) sessionStorage.setItem(CLOUD_SESSION_KEY, token);
+      else sessionStorage.removeItem(CLOUD_SESSION_KEY);
+    } catch (_) {}
+  }
+
+  function showSyncStatus(message, isError = false, persistent = false) {
+    window.clearTimeout(syncStatusTimer);
+    syncStatus.textContent = message;
+    syncStatus.classList.toggle('is-error', isError);
+    syncStatus.classList.add('is-visible');
+    if (!persistent) syncStatusTimer = window.setTimeout(() => syncStatus.classList.remove('is-visible'), 3200);
+  }
+
+  async function cloudRequest(path, options = {}) {
+    const token = getCloudSession();
+    if (!token) throw new Error('请先输入密码解锁共享空间');
+    const response = await fetch(path, {
+      ...options,
+      headers: {
+        authorization: `Bearer ${token}`,
+        ...(options.body ? { 'content-type': 'application/json' } : {}),
+        ...(options.headers || {})
+      }
+    });
+    let result = {};
+    try { result = await response.json(); } catch (_) {}
+    if (!response.ok) {
+      if (response.status === 401) setCloudSession('');
+      throw new Error(result.error || `云端请求失败（${response.status}）`);
+    }
+    return result;
+  }
 
   function unlockPage(animate = true) {
     document.body.classList.remove('locked');
@@ -1095,26 +1148,49 @@
     }
   }
 
-  try {
-    if (sessionStorage.getItem('lovePageUnlocked') === 'yes') unlockPage(false);
-  } catch (_) {}
-
   if (passwordForm) {
-    passwordForm.addEventListener('submit', event => {
+    passwordForm.addEventListener('submit', async event => {
       event.preventDefault();
-      if (passwordInput.value === '20240228') {
-        try { sessionStorage.setItem('lovePageUnlocked', 'yes'); } catch (_) {}
+      const submitButton = passwordForm.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      passwordError.textContent = '正在连接我们的共享空间…';
+      try {
+        const response = await fetch('/api/login', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ password: passwordInput.value })
+        });
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || '暂时无法登录共享空间');
+        setCloudSession(result.token);
         unlockPage(true);
-      } else {
-        passwordError.textContent = '密码不对哦，再想想这个特别的日子 💕';
+        await initializeSharedFeatures();
+      } catch (error) {
+        passwordError.textContent = error.message;
         passwordInput.value = '';
         passwordInput.focus();
         passwordForm.classList.remove('shake');
         void passwordForm.offsetWidth;
         passwordForm.classList.add('shake');
+      } finally {
+        submitButton.disabled = false;
       }
     });
   }
+
+  async function restoreCloudSession() {
+    if (!getCloudSession()) return;
+    try {
+      await cloudRequest('/api/login');
+      unlockPage(false);
+      await initializeSharedFeatures();
+    } catch (error) {
+      setCloudSession('');
+      passwordError.textContent = error.message;
+    }
+  }
+
+  window.addEventListener('DOMContentLoaded', restoreCloudSession);
 
   // 在一起计时：统一按北京时间计算，年月使用真实日历跨度
   const togetherFields = {
@@ -1299,10 +1375,10 @@
   });
   document.getElementById('openDateWheel').addEventListener('click', () => {
     showScreen(dateWheelScreen);
-    renderWheelOptions();
+    loadWheelOptions();
   });
 
-  // “我们的第一次”：使用 IndexedDB 保存文字与压缩后的图片
+  // “我们的第一次”：云端为主，IndexedDB 仅用于迁移旧记录
   const firstsTimeline = document.getElementById('firstsTimeline');
   const firstCount = document.getElementById('firstCount');
   const firstFormModal = document.getElementById('firstFormModal');
@@ -1343,38 +1419,7 @@
     });
   }
 
-  async function readFirsts() {
-    const database = await openFirstsDatabase();
-    return new Promise((resolve, reject) => {
-      const transaction = database.transaction('firsts', 'readonly');
-      const request = transaction.objectStore('firsts').getAll();
-      request.onsuccess = () => resolve(request.result || []);
-      request.onerror = () => reject(request.error);
-      transaction.oncomplete = () => database.close();
-    });
-  }
-
-  async function putFirst(entry) {
-    const database = await openFirstsDatabase();
-    return new Promise((resolve, reject) => {
-      const transaction = database.transaction('firsts', 'readwrite');
-      transaction.objectStore('firsts').put(entry);
-      transaction.oncomplete = () => { database.close(); resolve(); };
-      transaction.onerror = () => { database.close(); reject(transaction.error); };
-    });
-  }
-
-  async function removeFirst(id) {
-    const database = await openFirstsDatabase();
-    return new Promise((resolve, reject) => {
-      const transaction = database.transaction('firsts', 'readwrite');
-      transaction.objectStore('firsts').delete(id);
-      transaction.oncomplete = () => { database.close(); resolve(); };
-      transaction.onerror = () => { database.close(); reject(transaction.error); };
-    });
-  }
-
-  async function readMemoryStore(storeName) {
+  async function readLocalMemoryStore(storeName) {
     const database = await openFirstsDatabase();
     return new Promise((resolve, reject) => {
       const transaction = database.transaction(storeName, 'readonly');
@@ -1385,30 +1430,58 @@
     });
   }
 
+  async function uploadRecordPhotos(storeName, value) {
+    if (!Array.isArray(value.photos) || !value.photos.length) return value;
+    const photos = [];
+    for (let index = 0; index < value.photos.length; index += 1) {
+      const photo = value.photos[index];
+      if (photo && typeof photo === 'object' && photo.path) {
+        photos.push(photo.path);
+        continue;
+      }
+      if (typeof photo === 'string' && !photo.startsWith('data:')) {
+        photos.push(photo);
+        continue;
+      }
+      showSyncStatus(`正在上传照片 ${index + 1} / ${value.photos.length}…`, false, true);
+      const result = await cloudRequest('/api/photo', {
+        method: 'POST',
+        body: JSON.stringify({ kind: storeName, recordId: value.id, dataUrl: photo })
+      });
+      photos.push(result.path);
+    }
+    return { ...value, photos };
+  }
+
+  async function readMemoryStore(storeName) {
+    const result = await cloudRequest(`/api/data?kind=${encodeURIComponent(storeName)}`);
+    return result.records || [];
+  }
+
   async function putMemoryStore(storeName, value) {
-    const database = await openFirstsDatabase();
-    return new Promise((resolve, reject) => {
-      const transaction = database.transaction(storeName, 'readwrite');
-      transaction.objectStore(storeName).put(value);
-      transaction.oncomplete = () => { database.close(); resolve(); };
-      transaction.onerror = () => { database.close(); reject(transaction.error); };
+    const record = await uploadRecordPhotos(storeName, value);
+    await cloudRequest('/api/data', {
+      method: 'POST',
+      body: JSON.stringify({ kind: storeName, record })
     });
   }
 
   async function deleteMemoryStore(storeName, id) {
-    const database = await openFirstsDatabase();
-    return new Promise((resolve, reject) => {
-      const transaction = database.transaction(storeName, 'readwrite');
-      transaction.objectStore(storeName).delete(id);
-      transaction.oncomplete = () => { database.close(); resolve(); };
-      transaction.onerror = () => { database.close(); reject(transaction.error); };
-    });
+    await cloudRequest(`/api/data?kind=${encodeURIComponent(storeName)}&id=${encodeURIComponent(id)}`, { method: 'DELETE' });
   }
+
+  const readFirsts = () => readMemoryStore('firsts');
+  const putFirst = entry => putMemoryStore('firsts', entry);
+  const removeFirst = id => deleteMemoryStore('firsts', id);
 
   function escapeHtml(value) {
     return String(value || '').replace(/[&<>'"]/g, character => ({
       '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
     })[character]);
+  }
+
+  function photoSource(photo) {
+    return escapeHtml(photo && typeof photo === 'object' ? photo.url : photo);
   }
 
   function formatFirstDate(dateValue) {
@@ -1430,7 +1503,7 @@
 
       firstsTimeline.innerHTML = firstsCache.map((entry, index) => {
         const photos = (entry.photos || []).map((photo, photoIndex) =>
-          `<img class="first-entry-photo" src="${photo}" alt="${escapeHtml(entry.title)}的照片 ${photoIndex + 1}" loading="lazy">`
+          `<img class="first-entry-photo" src="${photoSource(photo)}" alt="${escapeHtml(entry.title)}的照片 ${photoIndex + 1}" loading="lazy">`
         ).join('');
         return `<article class="first-entry" data-entry-id="${escapeHtml(entry.id)}">
           <header class="first-entry-head">
@@ -1481,7 +1554,7 @@
         const image = new Image();
         image.onerror = () => reject(new Error(`${file.name} 不是有效图片`));
         image.onload = () => {
-          const maxSide = 1600;
+          const maxSide = 1200;
           const scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
           const canvas = document.createElement('canvas');
           canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
@@ -1490,7 +1563,7 @@
           context.fillStyle = '#0d0a15';
           context.fillRect(0, 0, canvas.width, canvas.height);
           context.drawImage(image, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL('image/jpeg', .82));
+          resolve(canvas.toDataURL('image/jpeg', .76));
         };
         image.src = reader.result;
       };
@@ -1544,9 +1617,7 @@
       hideFirstForm();
       await renderFirsts();
     } catch (error) {
-      firstFormStatus.textContent = error.name === 'QuotaExceededError'
-        ? '浏览器存储空间不足，请减少照片数量后重试。'
-        : `保存失败：${error.message}`;
+      firstFormStatus.textContent = `保存失败：${error.message}`;
     } finally {
       saveFirst.disabled = false;
     }
@@ -1560,8 +1631,6 @@
     await removeFirst(entry.id);
     await renderFirsts();
   });
-
-  renderFirsts();
 
   // 未来清单：完成后自动移动到回忆区
   const planFormModal = document.getElementById('planFormModal');
@@ -1718,7 +1787,7 @@
       capsuleGrid.innerHTML = capsulesCache.map(capsule => {
         const unlocked = today >= capsule.unlockDate;
         const photos = unlocked && capsule.photos?.length
-          ? `<div class="capsule-photos">${capsule.photos.map((photo, index) => `<img src="${photo}" alt="${escapeHtml(capsule.title)}的照片 ${index + 1}" loading="lazy">`).join('')}</div>` : '';
+          ? `<div class="capsule-photos">${capsule.photos.map((photo, index) => `<img src="${photoSource(photo)}" alt="${escapeHtml(capsule.title)}的照片 ${index + 1}" loading="lazy">`).join('')}</div>` : '';
         return `<article class="capsule-item" data-capsule-id="${escapeHtml(capsule.id)}">
           <p class="capsule-meta">${unlocked ? 'OPENED · 已到解锁日' : 'SEALED · 封存中'}</p>
           <h2>${escapeHtml(capsule.title)}</h2>
@@ -1803,8 +1872,14 @@
     return { key, text: dailyQuestions[dayNumber % dailyQuestions.length] };
   }
 
-  function readDailyAnswers(key) {
-    try { return JSON.parse(localStorage.getItem(`love-daily-${key}`)) || {}; } catch (_) { return {}; }
+  let dailyAnswersCache = {};
+
+  async function readDailyAnswers(key) {
+    const records = await readMemoryStore('daily');
+    return records.filter(record => record.date === key).reduce((answers, record) => {
+      if (record.person && record.answer) answers[record.person] = record.answer;
+      return answers;
+    }, {});
   }
 
   function renderAnswerPanel(person, label, answers, bothAnswered) {
@@ -1818,9 +1893,10 @@
     return `<form class="daily-answer-form" data-person="${person}"><div class="answer-person"><strong>${label}</strong><span>独立作答中</span></div><textarea maxlength="600" required placeholder="写下你的真实答案……"></textarea><button class="answer-submit" type="submit">封存我的答案</button></form>`;
   }
 
-  function renderDailyQuestion() {
+  async function renderDailyQuestion() {
     const question = currentDailyQuestion();
-    const answers = readDailyAnswers(question.key);
+    const answers = await readDailyAnswers(question.key);
+    dailyAnswersCache = answers;
     const bothAnswered = Boolean(answers.tianqi && answers.huihui);
     const date = new Date(`${question.key}T00:00:00+08:00`);
     document.getElementById('questionDate').textContent = `${date.toLocaleDateString('zh-CN')} · TODAY'S QUESTION`;
@@ -1829,20 +1905,27 @@
     document.getElementById('huihuiAnswerPanel').innerHTML = renderAnswerPanel('huihui', '晖晖', answers, bothAnswered);
   }
 
-  dailyQuestionScreen.addEventListener('submit', event => {
+  dailyQuestionScreen.addEventListener('submit', async event => {
     const form = event.target.closest('.daily-answer-form');
     if (!form) return;
     event.preventDefault();
     const question = currentDailyQuestion();
-    const answers = readDailyAnswers(question.key);
-    answers[form.dataset.person] = form.querySelector('textarea').value.trim();
-    localStorage.setItem(`love-daily-${question.key}`, JSON.stringify(answers));
-    renderDailyQuestion();
+    const person = form.dataset.person;
+    const answer = form.querySelector('textarea').value.trim();
+    await putMemoryStore('daily', {
+      id: `${question.key}:${person}`,
+      date: question.key,
+      person,
+      answer,
+      createdAt: Date.now()
+    });
+    await renderDailyQuestion();
   });
-  document.getElementById('resetDailyQuestion').addEventListener('click', () => {
+  document.getElementById('resetDailyQuestion').addEventListener('click', async () => {
     if (!window.confirm('确定清空今天两个人的答案，重新填写吗？')) return;
-    localStorage.removeItem(`love-daily-${currentDailyQuestion().key}`);
-    renderDailyQuestion();
+    const key = currentDailyQuestion().key;
+    await Promise.all(['tianqi', 'huihui'].map(person => deleteMemoryStore('daily', `${key}:${person}`)));
+    await renderDailyQuestion();
   });
 
   // 约会转盘：可筛选分类并加入自定义候选项
@@ -1860,10 +1943,10 @@
   let wheelFilter = 'all';
   let wheelRotation = 0;
   let customWheelOptions = [];
-  try { customWheelOptions = JSON.parse(localStorage.getItem('love-wheel-options')) || []; } catch (_) {}
 
-  function saveWheelOptions() {
-    localStorage.setItem('love-wheel-options', JSON.stringify(customWheelOptions));
+  async function loadWheelOptions() {
+    customWheelOptions = await readMemoryStore('wheel');
+    renderWheelOptions();
   }
 
   function activeWheelOptions() {
@@ -1885,19 +1968,20 @@
     wheelFilter = button.dataset.filter;
     renderWheelOptions();
   });
-  document.getElementById('wheelAddForm').addEventListener('submit', event => {
+  document.getElementById('wheelAddForm').addEventListener('submit', async event => {
     event.preventDefault();
     const input = document.getElementById('wheelOptionText');
-    customWheelOptions.push({ id: `c${Date.now()}`, category: document.getElementById('wheelCategory').value, text: input.value.trim() });
-    saveWheelOptions();
+    const option = { id: `c${Date.now()}`, category: document.getElementById('wheelCategory').value, text: input.value.trim(), createdAt: Date.now() };
+    await putMemoryStore('wheel', option);
+    customWheelOptions.push(option);
     input.value = '';
     renderWheelOptions();
   });
-  document.getElementById('wheelOptions').addEventListener('click', event => {
+  document.getElementById('wheelOptions').addEventListener('click', async event => {
     const button = event.target.closest('.delete-wheel-option');
     if (!button) return;
+    await deleteMemoryStore('wheel', button.dataset.id);
     customWheelOptions = customWheelOptions.filter(option => option.id !== button.dataset.id);
-    saveWheelOptions();
     renderWheelOptions();
   });
   document.getElementById('spinWheel').addEventListener('click', () => {
@@ -1921,10 +2005,77 @@
     }, 3650);
   });
 
-  renderPlans();
-  renderCapsules();
-  renderDailyQuestion();
-  renderWheelOptions();
+  async function migrateLocalData() {
+    const completeKey = 'love-cloud-migration-v1';
+    const progressKey = 'love-cloud-migration-progress-v1';
+    if (localStorage.getItem(completeKey) === 'yes') return 0;
+
+    const migrationItems = [];
+    for (const storeName of ['firsts', 'plans', 'capsules']) {
+      try {
+        const records = await readLocalMemoryStore(storeName);
+        records.forEach(record => migrationItems.push({ storeName, record }));
+      } catch (_) {}
+    }
+
+    for (let index = 0; index < localStorage.length; index += 1) {
+      const key = localStorage.key(index);
+      if (!key?.startsWith('love-daily-')) continue;
+      const date = key.slice('love-daily-'.length);
+      try {
+        const answers = JSON.parse(localStorage.getItem(key)) || {};
+        Object.entries(answers).forEach(([person, answer]) => {
+          if (answer) migrationItems.push({
+            storeName: 'daily',
+            record: { id: `${date}:${person}`, date, person, answer, createdAt: Date.parse(`${date}T00:00:00+08:00`) }
+          });
+        });
+      } catch (_) {}
+    }
+
+    try {
+      const options = JSON.parse(localStorage.getItem('love-wheel-options')) || [];
+      options.forEach(option => migrationItems.push({
+        storeName: 'wheel',
+        record: { ...option, createdAt: Number(String(option.id).replace(/^c/, '')) || Date.now() }
+      }));
+    } catch (_) {}
+
+    let completedItems = [];
+    try { completedItems = JSON.parse(localStorage.getItem(progressKey)) || []; } catch (_) {}
+    const completed = new Set(completedItems);
+    let migrated = 0;
+    for (const item of migrationItems) {
+      const migrationId = `${item.storeName}:${item.record.id}`;
+      if (completed.has(migrationId)) continue;
+      showSyncStatus(`正在迁移本机旧数据 ${migrated + 1} / ${migrationItems.length}…`, false, true);
+      await putMemoryStore(item.storeName, item.record);
+      completed.add(migrationId);
+      migrated += 1;
+      localStorage.setItem(progressKey, JSON.stringify([...completed]));
+    }
+    localStorage.setItem(completeKey, 'yes');
+    localStorage.removeItem(progressKey);
+    if (migrationItems.length) showSyncStatus(`已将 ${migrationItems.length} 条本机内容同步到云端`);
+    return migrated;
+  }
+
+  async function initializeSharedFeatures() {
+    try {
+      showSyncStatus('正在同步两个人的共享内容…', false, true);
+      await migrateLocalData();
+      await Promise.all([
+        renderFirsts(),
+        renderPlans(),
+        renderCapsules(),
+        renderDailyQuestion(),
+        loadWheelOptions()
+      ]);
+      showSyncStatus('云端内容已同步');
+    } catch (error) {
+      showSyncStatus(`同步失败：${error.message}`, true, true);
+    }
+  }
 
   const cityLayer = document.getElementById('cityLayer');
   const mobileCityList = document.getElementById('mobileCityList');

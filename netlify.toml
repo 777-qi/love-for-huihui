@@ -1,2 +1,21 @@
 [build]
   publish = "."
+
+[functions]
+  directory = "netlify/functions"
+  node_bundler = "esbuild"
+
+[[redirects]]
+  from = "/api/login"
+  to = "/.netlify/functions/shared-login"
+  status = 200
+
+[[redirects]]
+  from = "/api/data"
+  to = "/.netlify/functions/shared-data"
+  status = 200
+
+[[redirects]]
+  from = "/api/photo"
+  to = "/.netlify/functions/shared-photo"
+  status = 200
