@@ -4,11 +4,14 @@ import {
   createSessionToken,
   json,
   parseBody,
+  preflight,
   safePasswordMatch
 } from './_lib/shared.mjs';
 
 export async function handler(event) {
   try {
+    const corsResponse = preflight(event);
+    if (corsResponse) return corsResponse;
     assertConfiguration();
     if (event.httpMethod === 'GET') {
       return authorized(event) ? json(200, { valid: true }) : json(401, { error: '登录已过期，请重新输入密码' });

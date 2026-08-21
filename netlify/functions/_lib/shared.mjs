@@ -7,10 +7,18 @@ export function json(statusCode, body) {
     statusCode,
     headers: {
       'content-type': 'application/json; charset=utf-8',
-      'cache-control': 'no-store'
+      'cache-control': 'no-store',
+      'access-control-allow-origin': 'https://777-qi.github.io',
+      'access-control-allow-headers': 'authorization, content-type',
+      'access-control-allow-methods': 'GET, POST, DELETE, OPTIONS',
+      vary: 'Origin'
     },
     body: JSON.stringify(body)
   };
+}
+
+export function preflight(event) {
+  return event.httpMethod === 'OPTIONS' ? json(200, { ok: true }) : null;
 }
 
 export function assertConfiguration() {

@@ -4,6 +4,7 @@ import {
   authorized,
   json,
   parseBody,
+  preflight,
   supabase,
   validateId,
   validateKind
@@ -17,6 +18,8 @@ const mimeExtensions = {
 
 export async function handler(event) {
   try {
+    const corsResponse = preflight(event);
+    if (corsResponse) return corsResponse;
     assertConfiguration();
     if (!authorized(event)) return json(401, { error: '登录已过期，请重新输入密码' });
     if (event.httpMethod !== 'POST') return json(405, { error: '请求方式不支持' });

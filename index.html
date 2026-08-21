@@ -1096,7 +1096,14 @@
   const passwordError = document.getElementById('passwordError');
   const syncStatus = document.getElementById('syncStatus');
   const CLOUD_SESSION_KEY = 'loveCloudSession';
+  const CLOUD_API_ORIGIN = window.location.hostname === '777-qi.github.io'
+    ? 'https://mtqzyh520.netlify.app'
+    : '';
   let syncStatusTimer = 0;
+
+  function cloudApiUrl(path) {
+    return `${CLOUD_API_ORIGIN}${path}`;
+  }
 
   function getCloudSession() {
     try { return sessionStorage.getItem(CLOUD_SESSION_KEY) || ''; } catch (_) { return ''; }
@@ -1120,7 +1127,7 @@
   async function cloudRequest(path, options = {}) {
     const token = getCloudSession();
     if (!token) throw new Error('请先输入密码解锁共享空间');
-    const response = await fetch(path, {
+    const response = await fetch(cloudApiUrl(path), {
       ...options,
       headers: {
         authorization: `Bearer ${token}`,
@@ -1155,7 +1162,7 @@
       submitButton.disabled = true;
       passwordError.textContent = '正在连接我们的共享空间…';
       try {
-        const response = await fetch('/api/login', {
+        const response = await fetch(cloudApiUrl('/api/login'), {
           method: 'POST',
           headers: { 'content-type': 'application/json' },
           body: JSON.stringify({ password: passwordInput.value })

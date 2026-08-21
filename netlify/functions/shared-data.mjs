@@ -3,6 +3,7 @@ import {
   authorized,
   json,
   parseBody,
+  preflight,
   storagePathFromPhoto,
   supabase,
   validateId,
@@ -25,6 +26,8 @@ async function removePhotos(payload) {
 
 export async function handler(event) {
   try {
+    const corsResponse = preflight(event);
+    if (corsResponse) return corsResponse;
     assertConfiguration();
     if (!authorized(event)) return json(401, { error: '登录已过期，请重新输入密码' });
 
