@@ -1038,7 +1038,7 @@
         <label>添加照片（最多 8 张）</label>
         <label class="image-picker">
           <input id="firstPhotos" type="file" accept="image/*" multiple>
-          <span><strong>点击选择照片</strong>会自动压缩并上传到共享云端</span>
+          <span><strong>点击选择照片</strong>每张会自动压缩至 500KB 以内并上传到共享云端</span>
         </label>
         <div class="upload-preview" id="uploadPreview"></div>
       </div>
@@ -1079,7 +1079,7 @@
       <div class="form-field"><label for="capsuleLetter">写给未来的信</label><textarea id="capsuleLetter" maxlength="3000" required placeholder="未来的我们，你们现在过得好吗……"></textarea></div>
       <div class="form-field">
         <label>放入照片（最多 6 张）</label>
-        <label class="image-picker"><input id="capsulePhotos" type="file" accept="image/*" multiple><span><strong>点击选择照片</strong>照片会压缩后和信一起封存</span></label>
+        <label class="image-picker"><input id="capsulePhotos" type="file" accept="image/*" multiple><span><strong>点击选择照片</strong>每张会自动压缩至 500KB 以内并和信一起封存</span></label>
         <div class="upload-preview" id="capsuleUploadPreview"></div>
       </div>
       <p class="form-status" id="capsuleFormStatus" role="alert"></p>
@@ -1553,6 +1553,26 @@
     ).join('');
   }
 
+  const PHOTO_MAX_BYTES = 500 * 1024;
+
+  function canvasToJpeg(canvas, quality) {
+    return new Promise((resolve, reject) => {
+      canvas.toBlob(blob => {
+        if (blob) resolve(blob);
+        else reject(new Error('当前浏览器无法压缩这张照片'));
+      }, 'image/jpeg', quality);
+    });
+  }
+
+  function blobToDataUrl(blob) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('无法读取压缩后的照片'));
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  }
+
   function compressPhoto(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -1560,17 +1580,50 @@
       reader.onload = () => {
         const image = new Image();
         image.onerror = () => reject(new Error(`${file.name} 不是有效图片`));
-        image.onload = () => {
-          const maxSide = 1200;
-          const scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
+        image.onload = async () => {
+          const maxSide = 1600;
+          let scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
           const canvas = document.createElement('canvas');
-          canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
-          canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-          const context = canvas.getContext('2d');
-          context.fillStyle = '#0d0a15';
-          context.fillRect(0, 0, canvas.width, canvas.height);
-          context.drawImage(image, 0, 0, canvas.width, canvas.height);
-          resolve(canvas.toDataURL('image/jpeg', .76));
+          let compressedBlob;
+
+          try {
+            for (let resizeAttempt = 0; resizeAttempt < 7; resizeAttempt += 1) {
+              canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
+              canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
+              const context = canvas.getContext('2d');
+              if (!context) throw new Error('当前浏览器无法处理这张照片');
+              context.fillStyle = '#0d0a15';
+              context.fillRect(0, 0, canvas.width, canvas.height);
+              context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+              let low = .35;
+              let high = .88;
+              let bestBlob = null;
+              for (let qualityAttempt = 0; qualityAttempt < 7; qualityAttempt += 1) {
+                const quality = (low + high) / 2;
+                const blob = await canvasToJpeg(canvas, quality);
+                if (blob.size <= PHOTO_MAX_BYTES) {
+                  bestBlob = blob;
+                  low = quality;
+                } else {
+                  high = quality;
+                }
+              }
+
+              if (bestBlob) {
+                compressedBlob = bestBlob;
+                break;
+              }
+              scale *= .82;
+            }
+
+            if (!compressedBlob || compressedBlob.size > PHOTO_MAX_BYTES) {
+              throw new Error(`${file.name} 无法压缩到 500KB 以内，请换一张照片`);
+            }
+            resolve(await blobToDataUrl(compressedBlob));
+          } catch (error) {
+            reject(error);
+          }
         };
         image.src = reader.result;
       };
@@ -1597,7 +1650,7 @@
       const compressed = await Promise.all(files.slice(0, availableSlots).map(compressPhoto));
       selectedFirstPhotos.push(...compressed);
       renderUploadPreview();
-      if (files.length <= availableSlots) firstFormStatus.textContent = `已选择 ${selectedFirstPhotos.length} 张照片。`;
+      if (files.length <= availableSlots) firstFormStatus.textContent = `已选择 ${selectedFirstPhotos.length} 张照片，每张均已压缩至 500KB 以内。`;
     } catch (error) {
       firstFormStatus.textContent = error.message;
     } finally {
@@ -1826,7 +1879,7 @@
       const compressed = await Promise.all(files.slice(0, availableSlots).map(compressPhoto));
       selectedCapsulePhotos.push(...compressed);
       renderCapsulePreview();
-      capsuleFormStatus.textContent = `已放入 ${selectedCapsulePhotos.length} 张照片。`;
+      capsuleFormStatus.textContent = `已放入 ${selectedCapsulePhotos.length} 张照片，每张均已压缩至 500KB 以内。`;
     } catch (error) {
       capsuleFormStatus.textContent = error.message;
     } finally {
