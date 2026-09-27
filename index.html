@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#090713">
+<meta name="robots" content="noindex, nofollow">
+<meta property="og:title" content="我们的旅行宇宙｜晖晖 ❤️ 天奇">
+<meta property="og:description" content="一个只属于我们两个人的小宇宙：足迹、第一次、未来清单、时光胶囊和每天一个问题。">
+<meta property="og:image" content="https://777-qi.github.io/love-for-huihui/icon-512.png">
+<meta property="og:url" content="https://777-qi.github.io/love-for-huihui/">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="旅行宇宙">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%92%96%3C/text%3E%3C/svg%3E">
 <title>我们的旅行宇宙｜晖晖 ❤️ 天奇</title>
 <style>
@@ -271,6 +281,11 @@
     font-size: .58rem; font-weight: 700; letter-spacing: .14em;
   }
   .since-date { margin-top: 14px; color: #a994ad; font-size: .76rem; letter-spacing: .08em; }
+  .anniversary-banner {
+    margin-top: 22px; padding: 10px 18px; border: 1px solid rgba(255,111,159,.45);
+    border-radius: 999px; color: #ffd58a; background: rgba(255,63,130,.12);
+    font-size: .85rem; letter-spacing: .06em;
+  }
   .home-sections { padding-top: 14px; }
   .eyebrow { color: var(--pink); font-size: .76rem; letter-spacing: .28em; margin-bottom: 16px; }
   .section-head { display: flex; align-items: end; justify-content: space-between; margin-bottom: 18px; }
@@ -422,6 +437,20 @@
   .sealed-answer { display: grid; place-items: center; min-height: 186px; color: var(--muted); text-align: center; line-height: 1.8; }
   .revealed-answer { min-height: 186px; color: #f0e5ec; line-height: 1.8; white-space: pre-wrap; }
   .question-reset { margin-top: 18px; border: 0; color: #8f8297; background: transparent; cursor: pointer; font-size: .72rem; }
+
+  /* 每日一问往期回顾 */
+  .daily-history { margin-top: 30px; display: grid; gap: 14px; }
+  .history-title { font-size: 1.2rem; margin-bottom: 4px; }
+  .history-item {
+    padding: 22px; border: 1px solid var(--line); border-radius: 19px;
+    background: rgba(21,17,33,.66);
+  }
+  .history-date { color: var(--pink); font-size: .74rem; letter-spacing: .14em; }
+  .history-item h3 { margin-top: 8px; font-size: 1.05rem; line-height: 1.5; }
+  .history-answers { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .history-answer { padding: 14px; border-radius: 12px; background: rgba(9,7,19,.6); }
+  .history-answer strong { font-size: .8rem; color: #d9a3b1; }
+  .history-answer p { margin-top: 8px; color: #f0e5ec; line-height: 1.75; white-space: pre-wrap; font-size: .92rem; }
 
   /* 约会转盘 */
   .wheel-layout { display: grid; grid-template-columns: minmax(320px, .9fr) 1.1fr; gap: 28px; align-items: center; }
@@ -649,8 +678,38 @@
   .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; padding: 0 26px 26px; }
   .photo-grid img {
     width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 13px;
-    border: 1px solid rgba(255,255,255,.08); background: #0d0a15;
+    border: 1px solid rgba(255,255,255,.08); background: #0d0a15; cursor: zoom-in;
   }
+
+  /* 照片灯箱 */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 300; display: grid; place-items: center;
+    background: rgba(4,3,9,.92); backdrop-filter: blur(10px);
+    opacity: 0; visibility: hidden; transition: opacity .25s ease, visibility .25s;
+  }
+  .lightbox.is-open { opacity: 1; visibility: visible; }
+  .lightbox img {
+    max-width: 92vw; max-height: 86vh; border-radius: 14px;
+    box-shadow: 0 30px 100px rgba(0,0,0,.6); object-fit: contain;
+  }
+  .lightbox-close {
+    position: absolute; top: max(16px, env(safe-area-inset-top)); right: max(16px, env(safe-area-inset-right));
+  }
+  .lightbox-nav {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    width: 46px; height: 46px; border: 1px solid var(--line); border-radius: 50%;
+    color: #fff; background: rgba(21,17,33,.75); cursor: pointer; font-size: 1.2rem;
+  }
+  .lightbox-nav:hover { background: rgba(255,111,159,.25); }
+  .lightbox-prev { left: max(14px, env(safe-area-inset-left)); }
+  .lightbox-next { right: max(14px, env(safe-area-inset-right)); }
+  .lightbox-counter {
+    position: absolute; bottom: max(18px, env(safe-area-inset-bottom)); left: 50%;
+    transform: translateX(-50%); color: var(--muted); font-size: .78rem; letter-spacing: .1em;
+  }
+  .lightbox-nav[hidden], .lightbox-close[hidden] { display: none; }
+  .first-entry-photo { cursor: zoom-in; }
+  .capsule-photos img { cursor: zoom-in; }
   .photo-placeholder {
     display: grid; place-items: center; min-height: 170px; padding: 16px;
     border: 1px dashed rgba(255,255,255,.16); border-radius: 16px;
@@ -685,6 +744,7 @@
     .feature-intro { align-items: stretch; flex-direction: column; }
     .feature-action { align-self: flex-start; }
     .collection-grid, .answer-grid, .wheel-layout { grid-template-columns: 1fr; }
+    .history-answers { grid-template-columns: 1fr; }
     .capsule-grid { grid-template-columns: 1fr; }
     .wheel-layout { gap: 8px; }
     .wheel-add-form { grid-template-columns: 1fr; }
@@ -970,6 +1030,7 @@
       </div>
       <button class="question-reset" id="resetDailyQuestion" type="button">重新填写今天的答案</button>
     </section>
+    <div class="daily-history" id="dailyHistory" aria-label="往期回答"></div>
   </div>
 </section>
 
@@ -1018,6 +1079,15 @@
     </div>
   </div>
 </section>
+
+<!-- 照片灯箱 -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="查看照片">
+  <button class="modal-close lightbox-close" id="lightboxClose" type="button" aria-label="关闭">×</button>
+  <button class="lightbox-nav lightbox-prev" id="lightboxPrev" type="button" aria-label="上一张">‹</button>
+  <img id="lightboxImage" src="" alt="正在查看的照片">
+  <button class="lightbox-nav lightbox-next" id="lightboxNext" type="button" aria-label="下一张">›</button>
+  <p class="lightbox-counter" id="lightboxCounter"></p>
+</div>
 
 <!-- 城市详情 -->
 <div class="city-modal" id="cityModal" role="dialog" aria-modal="true" aria-labelledby="cityName">
@@ -1105,6 +1175,7 @@
     </header>
     <form class="first-form" id="capsuleForm">
       <div class="form-field"><label for="capsuleTitle">胶囊标题</label><input id="capsuleTitle" maxlength="60" required placeholder="例如：写给三周年的我们"></div>
+      <div class="form-field"><label for="capsuleFrom">这是谁写的</label><select id="capsuleFrom"><option value="天奇">天奇写给晖晖</option><option value="晖晖">晖晖写给天奇</option><option value="我们">我们一起写的</option></select></div>
       <div class="form-field"><label for="capsuleUnlockDate">允许打开的日期</label><input id="capsuleUnlockDate" type="date" required></div>
       <div class="form-field"><label for="capsuleLetter">写给未来的信</label><textarea id="capsuleLetter" maxlength="3000" required placeholder="未来的我们，你们现在过得好吗……"></textarea></div>
       <div class="form-field">
@@ -1331,6 +1402,14 @@
   updateTogetherCounter();
   window.setInterval(updateTogetherCounter, 1000);
 
+  // 每月28日是我们的纪念日，主页出现小横幅
+  if (shanghaiNowAsUtcDate().getUTCDate() === 28) {
+    const banner = document.createElement('p');
+    banner.className = 'anniversary-banner';
+    banner.textContent = '💕 今天是我们每个月的纪念日';
+    document.querySelector('.couple-subtitle').after(banner);
+  }
+
   const cities = [
     { name: '荆州', lon: 112.24, lat: 30.33, lx: 0, ly: -2, story: '古城的风与共同走过的街道，都值得留下一页。关于荆州的照片和故事，会在这里慢慢补齐。' },
     { name: '珠海', lon: 113.58, lat: 22.27, lx: -30, ly: 22, story: '海风、晚霞和并肩散步的时刻，是珠海留给我们的温柔记忆。' },
@@ -1475,6 +1554,7 @@
   const closeFirstForm = document.getElementById('closeFirstForm');
   let selectedFirstPhotos = [];
   let firstsCache = [];
+  let editingEntry = null;
 
   function openFirstsDatabase() {
     return new Promise((resolve, reject) => {
@@ -1593,6 +1673,7 @@
               <h2>${escapeHtml(entry.title)}</h2>
             </div>
             <div class="first-entry-actions">
+              <button class="entry-action edit-first" type="button" data-id="${escapeHtml(entry.id)}">编辑</button>
               <button class="entry-action delete-first" type="button" data-id="${escapeHtml(entry.id)}">删除</button>
             </div>
           </header>
@@ -1605,10 +1686,23 @@
     }
   }
 
-  function showFirstForm() {
+  function showFirstForm(entry = null) {
+    editingEntry = entry;
     firstForm.reset();
-    firstDate.value = new Date().toISOString().slice(0, 10);
-    selectedFirstPhotos = [];
+    if (entry) {
+      document.getElementById('firstFormTitle').textContent = '编辑这个第一次';
+      saveFirst.textContent = '保存修改';
+      firstTitle.value = entry.title || '';
+      firstDate.value = entry.date || '';
+      firstTime.value = entry.time || '';
+      firstStory.value = entry.story || '';
+      selectedFirstPhotos = (entry.photos || []).filter(Boolean);
+    } else {
+      document.getElementById('firstFormTitle').textContent = '记录一个第一次';
+      saveFirst.textContent = '保存这次回忆';
+      firstDate.value = new Date().toISOString().slice(0, 10);
+      selectedFirstPhotos = [];
+    }
     firstFormStatus.textContent = '';
     renderUploadPreview();
     firstFormModal.classList.add('is-open');
@@ -1736,20 +1830,21 @@
   firstForm.addEventListener('submit', async event => {
     event.preventDefault();
     saveFirst.disabled = true;
-    firstFormStatus.textContent = '正在保存回忆…';
+    firstFormStatus.textContent = editingEntry ? '正在保存修改…' : '正在保存回忆…';
     const entry = {
-      id: window.crypto && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      id: editingEntry?.id || (window.crypto && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`),
       title: firstTitle.value.trim(),
       date: firstDate.value,
       time: firstTime.value,
       story: firstStory.value.trim(),
       photos: selectedFirstPhotos,
-      createdAt: Date.now()
+      createdAt: editingEntry?.createdAt || Date.now()
     };
     try {
       await putFirst(entry);
       hideFirstForm();
       await renderFirsts();
+      showSyncStatus(editingEntry ? '回忆已更新' : '新的第一次已收藏 ✓');
     } catch (error) {
       firstFormStatus.textContent = `保存失败：${error.message}`;
     } finally {
@@ -1758,6 +1853,12 @@
   });
 
   firstsTimeline.addEventListener('click', async event => {
+    const editButton = event.target.closest('.edit-first');
+    if (editButton) {
+      const entry = firstsCache.find(item => item.id === editButton.dataset.id);
+      if (entry) showFirstForm(entry);
+      return;
+    }
     const button = event.target.closest('.delete-first');
     if (!button) return;
     const entry = firstsCache.find(item => item.id === button.dataset.id);
@@ -1867,6 +1968,7 @@
   const capsuleFormModal = document.getElementById('capsuleFormModal');
   const capsuleForm = document.getElementById('capsuleForm');
   const capsuleTitle = document.getElementById('capsuleTitle');
+  const capsuleFrom = document.getElementById('capsuleFrom');
   const capsuleUnlockDate = document.getElementById('capsuleUnlockDate');
   const capsuleLetter = document.getElementById('capsuleLetter');
   const capsulePhotos = document.getElementById('capsulePhotos');
@@ -1938,9 +2040,10 @@
         const photos = unlocked && capsule.photos?.length
           ? `<div class="capsule-photos">${capsule.photos.map((photo, index) => `<img src="${photoSource(photo)}" alt="${escapeHtml(capsule.title)}的照片 ${index + 1}" loading="lazy">`).join('')}</div>` : '';
         const daysLeft = unlocked ? 0 : capsuleDaysLeft(capsule.unlockDate, today);
-        const meta = unlocked
+        const fromText = capsule.from ? `来自${capsule.from}` : '来自我们';
+        const meta = `${fromText} · ${unlocked
           ? (capsule.unlockDate === today ? '✨ JUST OPENED · 今天解锁' : 'OPENED · 已到解锁日')
-          : 'SEALED · 封存中';
+          : 'SEALED · 封存中'}`;
         const lockText = unlocked
           ? ''
           : `🔒 将在 ${formatFirstDate(capsule.unlockDate)} 打开${daysLeft ? ` · 还有 ${daysLeft} 天` : ''}<br>再耐心等一等，未来正在靠近。`;
@@ -1991,7 +2094,8 @@
     }
     await putMemoryStore('capsules', {
       id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
-      title: capsuleTitle.value.trim(), unlockDate: capsuleUnlockDate.value,
+      title: capsuleTitle.value.trim(), from: capsuleFrom.value,
+      unlockDate: capsuleUnlockDate.value,
       letter: capsuleLetter.value.trim(), photos: selectedCapsulePhotos, createdAt: Date.now()
     });
     hideCapsuleForm();
@@ -2022,17 +2126,20 @@
     '最近我做的哪件小事，让你感到被爱？'
   ];
 
+  function questionForDate(key) {
+    const dayNumber = Math.floor(Date.parse(`${key}T00:00:00Z`) / 86400000);
+    return dailyQuestions[dayNumber % dailyQuestions.length];
+  }
+
   function currentDailyQuestion() {
     const key = shanghaiDateKey();
-    const dayNumber = Math.floor(Date.parse(`${key}T00:00:00Z`) / 86400000);
-    return { key, text: dailyQuestions[dayNumber % dailyQuestions.length] };
+    return { key, text: questionForDate(key) };
   }
 
   let dailyAnswersCache = {};
 
   // 服务端在双方都提交前不下发答案内容，只带 submitted 状态
-  async function readDailyAnswers(key) {
-    const records = await readMemoryStore('daily');
+  function dailyAnswersFromRecords(records, key) {
     return records.filter(record => record.date === key && record.person).reduce((answers, record) => {
       answers[record.person] = {
         answer: record.answer || '',
@@ -2053,10 +2160,40 @@
     return `<form class="daily-answer-form" data-person="${person}"><div class="answer-person"><strong>${label}</strong><span>独立作答中</span></div><textarea maxlength="600" required placeholder="写下你的真实答案……"></textarea><button class="answer-submit" type="submit">封存我的答案</button></form>`;
   }
 
+  function renderDailyHistory(records) {
+    const container = document.getElementById('dailyHistory');
+    if (!container) return;
+    const today = shanghaiDateKey();
+    const byDate = new Map();
+    records.forEach(record => {
+      if (!record.date || !record.person || !record.answer) return;
+      if (!byDate.has(record.date)) byDate.set(record.date, {});
+      byDate.get(record.date)[record.person] = record.answer;
+    });
+    const past = [...byDate.entries()]
+      .filter(([date, pair]) => date !== today && pair.tianqi && pair.huihui)
+      .sort((a, b) => b[0].localeCompare(a[0]))
+      .slice(0, 20);
+    if (!past.length) {
+      container.innerHTML = '';
+      return;
+    }
+    container.innerHTML = `<h2 class="history-title">往期回答 · 最近 ${past.length} 天</h2>` + past.map(([date, pair]) => `
+      <article class="history-item">
+        <p class="history-date">${date.slice(0, 4)} 年 ${Number(date.slice(5, 7))} 月 ${Number(date.slice(8, 10))} 日</p>
+        <h3>${escapeHtml(questionForDate(date))}</h3>
+        <div class="history-answers">
+          <div class="history-answer"><strong>天奇</strong><p>${escapeHtml(pair.tianqi)}</p></div>
+          <div class="history-answer"><strong>晖晖</strong><p>${escapeHtml(pair.huihui)}</p></div>
+        </div>
+      </article>`).join('');
+  }
+
   async function renderDailyQuestion() {
     try {
       const question = currentDailyQuestion();
-      const answers = await readDailyAnswers(question.key);
+      const records = await readMemoryStore('daily');
+      const answers = dailyAnswersFromRecords(records, question.key);
       dailyAnswersCache = answers;
       const bothAnswered = Boolean(answers.tianqi?.answer && answers.huihui?.answer);
       const date = new Date(`${question.key}T00:00:00+08:00`);
@@ -2064,6 +2201,7 @@
       document.getElementById('dailyQuestionText').textContent = question.text;
       document.getElementById('tianqiAnswerPanel').innerHTML = renderAnswerPanel('tianqi', '天奇', answers, bothAnswered);
       document.getElementById('huihuiAnswerPanel').innerHTML = renderAnswerPanel('huihui', '晖晖', answers, bothAnswered);
+      renderDailyHistory(records);
     } catch (error) {
       document.getElementById('tianqiAnswerPanel').innerHTML = '';
       document.getElementById('huihuiAnswerPanel').innerHTML = '';
@@ -2489,11 +2627,74 @@
   cityModal.addEventListener('click', event => { if (event.target === cityModal) hideCity(); });
   document.addEventListener('keydown', event => {
     if (event.key !== 'Escape') return;
+    if (lightbox.classList.contains('is-open')) { hideLightbox(); return; }
     hideCityForm();
     hideCity();
     hideFirstForm();
     hidePlanForm();
     hideCapsuleForm();
+  });
+
+  // 照片灯箱：点击任意照片全屏查看，可左右切换
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImage = document.getElementById('lightboxImage');
+  const lightboxPrev = document.getElementById('lightboxPrev');
+  const lightboxNext = document.getElementById('lightboxNext');
+  const lightboxCounter = document.getElementById('lightboxCounter');
+  let lightboxPhotos = [];
+  let lightboxIndex = 0;
+  let lightboxReturnFocus = null;
+
+  function renderLightbox() {
+    const photo = lightboxPhotos[lightboxIndex];
+    if (!photo) return;
+    lightboxImage.src = photo.currentSrc || photo.src;
+    lightboxImage.alt = photo.alt || '我们的照片';
+    lightboxCounter.textContent = `${lightboxIndex + 1} / ${lightboxPhotos.length}`;
+    const multiple = lightboxPhotos.length > 1;
+    lightboxPrev.hidden = !multiple;
+    lightboxNext.hidden = !multiple;
+  }
+
+  function openLightbox(imageElement) {
+    const gallery = imageElement.closest('.first-entry-photos, .capsule-photos, .photo-grid');
+    lightboxPhotos = gallery ? [...gallery.querySelectorAll('img')] : [imageElement];
+    lightboxIndex = Math.max(0, lightboxPhotos.indexOf(imageElement));
+    lightboxReturnFocus = imageElement;
+    renderLightbox();
+    lightbox.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('lightboxClose').focus();
+  }
+
+  function hideLightbox() {
+    if (!lightbox.classList.contains('is-open')) return;
+    lightbox.classList.remove('is-open');
+    if (!document.querySelector('.city-modal.is-open, .first-form-modal.is-open')) document.body.style.overflow = '';
+    if (lightboxReturnFocus) {
+      lightboxReturnFocus.focus();
+      lightboxReturnFocus = null;
+    }
+  }
+
+  function stepLightbox(delta) {
+    if (!lightboxPhotos.length) return;
+    lightboxIndex = (lightboxIndex + delta + lightboxPhotos.length) % lightboxPhotos.length;
+    renderLightbox();
+  }
+
+  document.addEventListener('click', event => {
+    const image = event.target.closest('.first-entry-photo, .capsule-photos img, .photo-grid img');
+    if (image) openLightbox(image);
+  });
+  document.getElementById('lightboxClose').addEventListener('click', hideLightbox);
+  lightboxPrev.addEventListener('click', () => stepLightbox(-1));
+  lightboxNext.addEventListener('click', () => stepLightbox(1));
+  lightbox.addEventListener('click', event => { if (event.target === lightbox) hideLightbox(); });
+  document.addEventListener('keydown', event => {
+    if (!lightbox.classList.contains('is-open')) return;
+    if (event.key === 'ArrowLeft') stepLightbox(-1);
+    else if (event.key === 'ArrowRight') stepLightbox(1);
   });
 </script>
 </body>

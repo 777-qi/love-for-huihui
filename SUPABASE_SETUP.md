@@ -28,3 +28,9 @@
 首次在原来保存过内容的浏览器中登录时，网页会自动把 IndexedDB 与 localStorage 中的旧内容上传到 Supabase。数据以原有 ID 写入，多次重试不会创建重复记录。
 
 迁移成功后，刷新另一台手机或浏览器即可看到相同内容。
+
+## 4. 已部署过的项目：升级数据库结构
+
+网站新增功能时，`schema.sql` 可能会增加新的数据类型（例如「足迹地图」的城市回忆使用了新的 `cities` 类型）。
+
+如果 Supabase 项目是按旧版 `schema.sql` 初始化的，保存城市回忆时会报错。解决方法：打开 Supabase 的 SQL Editor，重新完整运行一遍最新的 [`supabase/schema.sql`](supabase/schema.sql) 即可。脚本可以安全地重复执行，不会影响已有数据。

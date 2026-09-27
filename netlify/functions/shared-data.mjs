@@ -34,6 +34,15 @@ function redactDailyRows(rows) {
   });
 }
 
+// 文本长度兜底：正常记录远小于这些上限，超限基本是异常请求
+const MAX_TEXT_LENGTH = 6000;
+function validateRecordSize(payload) {
+  const oversized = Object.entries(payload || {})
+    .find(([, value]) => typeof value === 'string' && value.length > MAX_TEXT_LENGTH);
+  if (oversized) throw new Error('记录内容过长');
+  if (JSON.stringify(payload || {}).length > 120000) throw new Error('记录内容过长');
+}
+
 async function removePhotos(payload) {
   const paths = Array.isArray(payload?.photos)
     ? payload.photos.map(storagePathFromPhoto).filter(Boolean)
@@ -66,6 +75,7 @@ export async function handler(event) {
       const id = validateId(record?.id);
       const payload = { ...record };
       delete payload.id;
+      validateRecordSize(payload);
       await supabase('/rest/v1/love_memories?on_conflict=kind,id', {
         method: 'POST',
         headers: {
@@ -99,7 +109,7 @@ export async function handler(event) {
 
     return json(405, { error: '请求方式不支持' });
   } catch (error) {
-    const status = /无效|不支持|不是有效/.test(error.message) ? 400 : 500;
+    const status = /无效|不支持|不是有效|过长/.test(error.message) ? 400 : 500;
     return json(status, { error: error.message });
   }
 }

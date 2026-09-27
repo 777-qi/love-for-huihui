@@ -1,0 +1,16 @@
+{
+  "name": "我们的旅行宇宙",
+  "short_name": "旅行宇宙",
+  "description": "只属于我们两个人的小宇宙：足迹、第一次、未来清单、时光胶囊和每天一个问题。",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#090713",
+  "theme_color": "#090713",
+  "lang": "zh-CN",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
