@@ -293,6 +293,16 @@
   .memory-card p { position: relative; z-index: 1; color: var(--muted); max-width: 560px; line-height: 1.8; }
   .card-footer { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: center; margin-top: 44px; }
   .city-count { color: var(--gold); }
+  .export-row {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    margin-top: 36px; padding-top: 22px; border-top: 1px solid var(--line);
+  }
+  .export-button {
+    padding: 10px 16px; border: 1px solid var(--line); border-radius: 11px;
+    color: var(--muted); background: rgba(21,17,33,.7); cursor: pointer; font-size: .8rem;
+    transition: color .2s ease, border-color .2s ease;
+  }
+  .export-button:hover { color: #fff; border-color: rgba(255,111,159,.4); }
   .open-arrow { font-size: 1.4rem; transition: transform .25s ease; }
   .memory-card:hover .open-arrow { transform: translateX(7px); }
   .memory-card.firsts-card::after { background: rgba(255,189,155,.1); }
@@ -305,6 +315,10 @@
   .main-screen .memory-card.firsts-card::after { background: rgba(255,174,117,.11); }
   .main-screen .memory-card p { color: var(--muted); }
   .main-screen .city-count { color: #ff8eb2; }
+  .main-screen .city-count.is-highlight {
+    color: #ffd58a; animation: highlightPulse 1.8s ease-in-out infinite;
+  }
+  @keyframes highlightPulse { 50% { opacity: .5; } }
   .memory-card.plans-card::after { background: rgba(92,203,190,.11); }
   .memory-card.plans-card .card-index { color: #7fe0d2; }
   .memory-card.capsule-card::after { background: rgba(142,112,255,.13); }
@@ -420,9 +434,14 @@
   }
   .date-wheel {
     position: absolute; inset: 0; border: 8px solid #2a2035; border-radius: 50%;
-    background: conic-gradient(#ff5d8c 0 45deg, #7958d3 45deg 90deg, #ff9c70 90deg 135deg, #4f91bc 135deg 180deg, #c5548d 180deg 225deg, #6b4daf 225deg 270deg, #dc7e66 270deg 315deg, #3b789d 315deg);
+    background: #241c33;
     box-shadow: 0 28px 80px rgba(0,0,0,.38), inset 0 0 0 2px rgba(255,255,255,.12);
     transition: transform 3.6s cubic-bezier(.15,.7,.08,1);
+  }
+  .wheel-label {
+    position: absolute; left: 50%; top: 50%; color: rgba(255,255,255,.94);
+    font-size: .66rem; letter-spacing: .02em; white-space: nowrap;
+    text-shadow: 0 1px 5px rgba(0,0,0,.4); pointer-events: none;
   }
   .wheel-core {
     position: absolute; z-index: 3; left: 50%; top: 50%; display: grid; place-items: center;
@@ -626,13 +645,17 @@
   .dialog-head h2 { margin-top: 8px; font-size: clamp(2rem, 7vw, 3.4rem); }
   .modal-close { width: 38px; height: 38px; border-radius: 12px; font-size: 1.2rem; }
   .dialog-copy { padding: 14px 26px 22px; color: var(--muted); line-height: 1.8; }
-  .photo-grid { display: grid; grid-template-columns: 1.45fr 1fr 1fr; gap: 10px; padding: 0 26px 26px; }
+  .dialog-actions { display: flex; align-items: center; gap: 8px; }
+  .photo-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; padding: 0 26px 26px; }
+  .photo-grid img {
+    width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 13px;
+    border: 1px solid rgba(255,255,255,.08); background: #0d0a15;
+  }
   .photo-placeholder {
     display: grid; place-items: center; min-height: 170px; padding: 16px;
     border: 1px dashed rgba(255,255,255,.16); border-radius: 16px;
     color: #958a9f; text-align: center; background: #100c19; font-size: .8rem;
   }
-  .photo-placeholder:first-child { min-height: 250px; grid-row: span 2; }
 
   @media (max-width: 720px) {
     .page-shell { width: min(100% - 24px, 1180px); }
@@ -652,8 +675,7 @@
       min-height: 40px; border: 1px solid var(--line); border-radius: 10px;
       color: #eadfe8; background: var(--panel); cursor: pointer; font-size: .78rem;
     }
-    .photo-grid { grid-template-columns: 1fr 1fr; }
-    .photo-placeholder:first-child { grid-column: 1 / -1; grid-row: auto; min-height: 210px; }
+    .photo-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
     .memory-grid { grid-template-columns: 1fr; }
     .home-love-hero { min-height: 760px; padding-top: 56px; }
     .love-counter { grid-template-columns: repeat(3, 1fr); width: min(430px, 100%); }
@@ -765,7 +787,7 @@
           <h3>去过的地方 · 足迹</h3>
           <p>把共同抵达的城市一一点亮。点击地图上的地点，打开属于那座城市的照片与故事。</p>
           <span class="card-footer">
-            <span class="city-count">已点亮 14 座城市</span>
+            <span class="city-count" id="footprintCityCount">已点亮 14 座城市</span>
             <span class="open-arrow">→</span>
           </span>
         </button>
@@ -816,6 +838,11 @@
         </button>
       </div>
     </section>
+
+    <section class="export-row" aria-label="备份与导出">
+      <button class="export-button" id="exportMemories" type="button">⬇ 导出全部回忆（备份）</button>
+      <p class="form-status" id="exportStatus" role="status"></p>
+    </section>
   </div>
 </main>
 
@@ -826,7 +853,7 @@
       <button class="back-button" id="backHome" type="button">← 返回主页</button>
       <div class="footprint-title">
         <h1>去过的地方 · 足迹</h1>
-        <p>点击发光的城市，打开那里的故事</p>
+        <p>点击发光的城市，打开那里的故事，也可以补上你们的照片</p>
       </div>
     </header>
 
@@ -839,7 +866,7 @@
         </svg>
         <div class="city-layer" id="cityLayer"></div>
       </div>
-      <div class="map-legend">● 已点亮 &nbsp; 14 个共同足迹</div>
+      <div class="map-legend" id="mapLegend">● 已点亮 &nbsp; 14 个共同足迹</div>
     </div>
     <div class="mobile-city-list" id="mobileCityList" aria-label="城市列表"></div>
   </div>
@@ -1000,7 +1027,10 @@
         <p class="city-order" id="cityOrder"></p>
         <h2 id="cityName"></h2>
       </div>
-      <button class="modal-close" id="closeModal" type="button" aria-label="关闭">×</button>
+      <div class="dialog-actions">
+        <button class="mini-button" id="editCityMemory" type="button">✏️ 编辑回忆</button>
+        <button class="modal-close" id="closeModal" type="button" aria-label="关闭">×</button>
+      </div>
     </header>
     <p class="dialog-copy" id="cityStory"></p>
     <div class="photo-grid" id="photoGrid"></div>
@@ -1088,6 +1118,32 @@
   </article>
 </div>
 
+<!-- 城市回忆编辑表单 -->
+<div class="first-form-modal" id="cityFormModal" role="dialog" aria-modal="true" aria-labelledby="cityFormTitle">
+  <article class="first-form-dialog">
+    <header class="first-form-head">
+      <div><p class="city-order">CITY MEMORY</p><h2 id="cityFormTitle">写下这座城市的回忆</h2></div>
+      <button class="modal-close" id="closeCityForm" type="button" aria-label="关闭">×</button>
+    </header>
+    <form class="first-form" id="cityForm">
+      <div class="form-field">
+        <label for="cityStoryInput">在那座城市发生的故事</label>
+        <textarea id="cityStoryInput" maxlength="1200" placeholder="当时去了哪里、吃了什么、遇到了什么有趣的事……留空则使用默认文案"></textarea>
+      </div>
+      <div class="form-field">
+        <label>添加照片（最多 8 张）</label>
+        <label class="image-picker">
+          <input id="cityPhotos" type="file" accept="image/*" multiple>
+          <span><strong>点击选择照片</strong>每张会自动压缩至 500KB 以内并上传到共享云端</span>
+        </label>
+        <div class="upload-preview" id="cityUploadPreview"></div>
+      </div>
+      <p class="form-status" id="cityFormStatus" role="alert"></p>
+      <button class="form-submit" id="saveCityMemory" type="submit">保存这座城市的回忆</button>
+    </form>
+  </article>
+</div>
+
 <script>
   // 密码与共享会话：密码只发送给同站点的 Netlify Function 校验
   const gate = document.getElementById('passwordGate');
@@ -1138,21 +1194,39 @@
     let result = {};
     try { result = await response.json(); } catch (_) {}
     if (!response.ok) {
-      if (response.status === 401) setCloudSession('');
+      if (response.status === 401) {
+        setCloudSession('');
+        relockPage('登录已过期，请重新输入密码');
+      }
       throw new Error(result.error || `云端请求失败（${response.status}）`);
     }
     return result;
   }
 
+  let gateHideTimer = 0;
+
   function unlockPage(animate = true) {
     document.body.classList.remove('locked');
     if (!gate) return;
+    window.clearTimeout(gateHideTimer);
     if (animate) {
       gate.classList.add('is-leaving');
-      window.setTimeout(() => gate.remove(), 430);
+      gateHideTimer = window.setTimeout(() => { gate.style.display = 'none'; }, 430);
     } else {
-      gate.remove();
+      gate.style.display = 'none';
     }
+  }
+
+  // 会话过期时把密码门重新请回来，而不是让页面停在报错状态
+  function relockPage(message) {
+    if (!gate) return;
+    window.clearTimeout(gateHideTimer);
+    gate.style.display = 'grid';
+    gate.classList.remove('is-leaving');
+    document.body.classList.add('locked');
+    passwordInput.value = '';
+    if (message) passwordError.textContent = message;
+    window.setTimeout(() => passwordInput.focus(), 80);
   }
 
   if (passwordForm) {
@@ -1835,25 +1909,47 @@
     document.body.style.overflow = '';
   }
 
+  function capsuleDaysLeft(unlockDate, today) {
+    const unlockMs = Date.parse(`${unlockDate}T00:00:00+08:00`);
+    const todayMs = Date.parse(`${today}T00:00:00+08:00`);
+    if (Number.isNaN(unlockMs) || Number.isNaN(todayMs)) return null;
+    return Math.max(1, Math.round((unlockMs - todayMs) / 86400000));
+  }
+
   async function renderCapsules() {
     try {
       capsulesCache = (await readMemoryStore('capsules')).sort((a, b) => b.createdAt - a.createdAt);
-      document.getElementById('capsuleCount').textContent = capsulesCache.length ? `已封存 ${capsulesCache.length} 颗胶囊` : '还没有埋下胶囊';
+      const today = shanghaiDateKey();
+      const openedToday = capsulesCache.filter(capsule => capsule.unlockDate === today).length;
+      const capsuleHomeCount = document.getElementById('capsuleCount');
+      if (openedToday) {
+        capsuleHomeCount.textContent = openedToday === 1 ? '有一颗胶囊今天可以打开了！' : `有 ${openedToday} 颗胶囊今天可以打开了！`;
+        capsuleHomeCount.classList.add('is-highlight');
+      } else {
+        capsuleHomeCount.textContent = capsulesCache.length ? `已封存 ${capsulesCache.length} 颗胶囊` : '还没有埋下胶囊';
+        capsuleHomeCount.classList.remove('is-highlight');
+      }
       if (!capsulesCache.length) {
         capsuleGrid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">还没有时光胶囊。<br>写一封只属于未来的信吧。</div>';
         return;
       }
-      const today = shanghaiDateKey();
       capsuleGrid.innerHTML = capsulesCache.map(capsule => {
         const unlocked = today >= capsule.unlockDate;
         const photos = unlocked && capsule.photos?.length
           ? `<div class="capsule-photos">${capsule.photos.map((photo, index) => `<img src="${photoSource(photo)}" alt="${escapeHtml(capsule.title)}的照片 ${index + 1}" loading="lazy">`).join('')}</div>` : '';
+        const daysLeft = unlocked ? 0 : capsuleDaysLeft(capsule.unlockDate, today);
+        const meta = unlocked
+          ? (capsule.unlockDate === today ? '✨ JUST OPENED · 今天解锁' : 'OPENED · 已到解锁日')
+          : 'SEALED · 封存中';
+        const lockText = unlocked
+          ? ''
+          : `🔒 将在 ${formatFirstDate(capsule.unlockDate)} 打开${daysLeft ? ` · 还有 ${daysLeft} 天` : ''}<br>再耐心等一等，未来正在靠近。`;
         return `<article class="capsule-item" data-capsule-id="${escapeHtml(capsule.id)}">
-          <p class="capsule-meta">${unlocked ? 'OPENED · 已到解锁日' : 'SEALED · 封存中'}</p>
+          <p class="capsule-meta">${meta}</p>
           <h2>${escapeHtml(capsule.title)}</h2>
           ${unlocked
             ? `<p class="capsule-letter">${escapeHtml(capsule.letter)}</p>${photos}`
-            : `<p class="capsule-lock">🔒 将在 ${formatFirstDate(capsule.unlockDate)} 打开<br>再耐心等一等，未来正在靠近。</p>`}
+            : `<p class="capsule-lock">${lockText}</p>`}
           <button class="mini-button capsule-delete delete-capsule" type="button" data-id="${escapeHtml(capsule.id)}">删除</button>
         </article>`;
       }).join('');
@@ -1934,35 +2030,45 @@
 
   let dailyAnswersCache = {};
 
+  // 服务端在双方都提交前不下发答案内容，只带 submitted 状态
   async function readDailyAnswers(key) {
     const records = await readMemoryStore('daily');
-    return records.filter(record => record.date === key).reduce((answers, record) => {
-      if (record.person && record.answer) answers[record.person] = record.answer;
+    return records.filter(record => record.date === key && record.person).reduce((answers, record) => {
+      answers[record.person] = {
+        answer: record.answer || '',
+        submitted: Boolean(record.submitted || record.answer)
+      };
       return answers;
     }, {});
   }
 
   function renderAnswerPanel(person, label, answers, bothAnswered) {
-    const answer = answers[person];
+    const entry = answers[person];
     if (bothAnswered) {
-      return `<div class="answer-person"><strong>${label}</strong><span>答案已揭晓</span></div><p class="revealed-answer">${escapeHtml(answer)}</p>`;
+      return `<div class="answer-person"><strong>${label}</strong><span>答案已揭晓</span></div><p class="revealed-answer">${escapeHtml(entry.answer)}</p>`;
     }
-    if (answer) {
+    if (entry && entry.submitted) {
       return `<div class="answer-person"><strong>${label}</strong><span>已提交</span></div><div class="sealed-answer">💌<br>你的答案已经封好<br>等待对方提交后一起揭晓</div>`;
     }
     return `<form class="daily-answer-form" data-person="${person}"><div class="answer-person"><strong>${label}</strong><span>独立作答中</span></div><textarea maxlength="600" required placeholder="写下你的真实答案……"></textarea><button class="answer-submit" type="submit">封存我的答案</button></form>`;
   }
 
   async function renderDailyQuestion() {
-    const question = currentDailyQuestion();
-    const answers = await readDailyAnswers(question.key);
-    dailyAnswersCache = answers;
-    const bothAnswered = Boolean(answers.tianqi && answers.huihui);
-    const date = new Date(`${question.key}T00:00:00+08:00`);
-    document.getElementById('questionDate').textContent = `${date.toLocaleDateString('zh-CN')} · TODAY'S QUESTION`;
-    document.getElementById('dailyQuestionText').textContent = question.text;
-    document.getElementById('tianqiAnswerPanel').innerHTML = renderAnswerPanel('tianqi', '天奇', answers, bothAnswered);
-    document.getElementById('huihuiAnswerPanel').innerHTML = renderAnswerPanel('huihui', '晖晖', answers, bothAnswered);
+    try {
+      const question = currentDailyQuestion();
+      const answers = await readDailyAnswers(question.key);
+      dailyAnswersCache = answers;
+      const bothAnswered = Boolean(answers.tianqi?.answer && answers.huihui?.answer);
+      const date = new Date(`${question.key}T00:00:00+08:00`);
+      document.getElementById('questionDate').textContent = `${date.toLocaleDateString('zh-CN')} · TODAY'S QUESTION`;
+      document.getElementById('dailyQuestionText').textContent = question.text;
+      document.getElementById('tianqiAnswerPanel').innerHTML = renderAnswerPanel('tianqi', '天奇', answers, bothAnswered);
+      document.getElementById('huihuiAnswerPanel').innerHTML = renderAnswerPanel('huihui', '晖晖', answers, bothAnswered);
+    } catch (error) {
+      document.getElementById('tianqiAnswerPanel').innerHTML = '';
+      document.getElementById('huihuiAnswerPanel').innerHTML = '';
+      showSyncStatus(`每日一问读取失败：${error.message}`, true);
+    }
   }
 
   dailyQuestionScreen.addEventListener('submit', async event => {
@@ -2000,8 +2106,10 @@
     { id: 'd8', category: 'restaurant', text: '重温第一次约会吃过的东西' }
   ];
   const wheelCategoryLabels = { restaurant: '想吃的店', activity: '约会活动', trip: '旅行计划' };
+  const wheelPalette = ['#ff5d8c', '#7958d3', '#ff9c70', '#4f91bc', '#c5548d', '#6b4daf', '#dc7e66', '#3b789d'];
   let wheelFilter = 'all';
   let wheelRotation = 0;
+  let wheelSpinning = false;
   let customWheelOptions = [];
 
   async function loadWheelOptions() {
@@ -2014,21 +2122,52 @@
     return wheelFilter === 'all' ? all : all.filter(option => option.category === wheelFilter);
   }
 
+  // 扇区与候选池一一对应，转盘不再只是装饰
+  function renderWheelVisual() {
+    const wheel = document.getElementById('dateWheel');
+    wheel.querySelectorAll('.wheel-label').forEach(label => label.remove());
+    const options = activeWheelOptions();
+    if (!options.length) {
+      wheel.style.background = '#241c33';
+      return;
+    }
+    const step = 360 / options.length;
+    const stops = options.map((option, index) => {
+      const color = wheelPalette[index % wheelPalette.length];
+      return `${color} ${(index * step).toFixed(3)}deg ${((index + 1) * step).toFixed(3)}deg`;
+    }).join(', ');
+    wheel.style.background = `conic-gradient(${stops})`;
+    if (options.length <= 12) {
+      const radius = wheel.clientWidth / 2 * .64;
+      options.forEach((option, index) => {
+        const angle = (index + .5) * step;
+        const label = document.createElement('span');
+        label.className = 'wheel-label';
+        label.textContent = option.text.length > 6 ? `${option.text.slice(0, 6)}…` : option.text;
+        label.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateY(-${radius.toFixed(1)}px) rotate(${-angle}deg)`;
+        wheel.appendChild(label);
+      });
+    }
+  }
+
   function renderWheelOptions() {
     document.querySelectorAll('#wheelFilters .filter-chip').forEach(button => button.classList.toggle('is-active', button.dataset.filter === wheelFilter));
     const options = activeWheelOptions();
     document.getElementById('wheelOptions').innerHTML = options.map(option =>
       `<span class="wheel-option"><span>${wheelCategoryLabels[option.category]} · ${escapeHtml(option.text)}</span>${option.id.startsWith('c') ? `<button type="button" class="delete-wheel-option" data-id="${escapeHtml(option.id)}" aria-label="删除">×</button>` : ''}</span>`
     ).join('');
+    if (!wheelSpinning) renderWheelVisual();
   }
 
   document.getElementById('wheelFilters').addEventListener('click', event => {
+    if (wheelSpinning) return;
     const button = event.target.closest('.filter-chip');
     if (!button) return;
     wheelFilter = button.dataset.filter;
     renderWheelOptions();
   });
   document.getElementById('wheelAddForm').addEventListener('submit', async event => {
+    if (wheelSpinning) { event.preventDefault(); return; }
     event.preventDefault();
     const input = document.getElementById('wheelOptionText');
     const option = { id: `c${Date.now()}`, category: document.getElementById('wheelCategory').value, text: input.value.trim(), createdAt: Date.now() };
@@ -2038,13 +2177,16 @@
     renderWheelOptions();
   });
   document.getElementById('wheelOptions').addEventListener('click', async event => {
+    if (wheelSpinning) return;
     const button = event.target.closest('.delete-wheel-option');
     if (!button) return;
     await deleteMemoryStore('wheel', button.dataset.id);
     customWheelOptions = customWheelOptions.filter(option => option.id !== button.dataset.id);
     renderWheelOptions();
   });
+  window.addEventListener('resize', () => { if (!wheelSpinning) renderWheelVisual(); });
   document.getElementById('spinWheel').addEventListener('click', () => {
+    if (wheelSpinning) return;
     const candidates = activeWheelOptions();
     if (!candidates.length) {
       document.getElementById('wheelResult').innerHTML = '<strong>候选池是空的</strong><span>先加入一个约会灵感吧</span>';
@@ -2054,14 +2196,23 @@
       ? crypto.getRandomValues(new Uint32Array(1))[0] % candidates.length
       : Math.floor(Math.random() * candidates.length);
     const result = candidates[randomIndex];
-    wheelRotation += 1440 + Math.floor(Math.random() * 360);
+    // 让指针（正上方）最终落在第 randomIndex 个扇区的正中间
+    const step = 360 / candidates.length;
+    const targetMod = ((360 - (randomIndex + .5) * step) % 360 + 360) % 360;
+    const currentMod = ((wheelRotation % 360) + 360) % 360;
+    const spinExtra = 1440 + Math.floor(Math.random() * 360);
+    const correction = ((targetMod - currentMod - spinExtra) % 360 + 360) % 360;
+    wheelRotation += spinExtra + correction;
     document.getElementById('dateWheel').style.transform = `rotate(${wheelRotation}deg)`;
+    wheelSpinning = true;
     const spinButton = document.getElementById('spinWheel');
     spinButton.disabled = true;
     document.getElementById('wheelResult').innerHTML = '<strong>命运正在选择…</strong><span>心动答案马上揭晓</span>';
     window.setTimeout(() => {
       document.getElementById('wheelResult').innerHTML = `<strong>${escapeHtml(result.text)}</strong><span>${wheelCategoryLabels[result.category]} · 就决定是它啦</span>`;
       spinButton.disabled = false;
+      wheelSpinning = false;
+      renderWheelVisual();
     }, 3650);
   });
 
@@ -2124,18 +2275,54 @@
     try {
       showSyncStatus('正在同步两个人的共享内容…', false, true);
       await migrateLocalData();
-      await Promise.all([
+      const results = await Promise.allSettled([
         renderFirsts(),
         renderPlans(),
         renderCapsules(),
         renderDailyQuestion(),
-        loadWheelOptions()
+        loadWheelOptions(),
+        loadCities()
       ]);
-      showSyncStatus('云端内容已同步');
+      const failed = results.find(result => result.status === 'rejected');
+      if (failed) showSyncStatus(`部分内容同步失败：${failed.reason?.message || '未知错误'}`, true, true);
+      else showSyncStatus('云端内容已同步');
     } catch (error) {
       showSyncStatus(`同步失败：${error.message}`, true, true);
     }
   }
+
+  // 备份导出：把云端全部文字记录打包成 JSON 下载，防止单一云服务出问题丢失回忆
+  document.getElementById('exportMemories').addEventListener('click', async () => {
+    const status = document.getElementById('exportStatus');
+    const button = document.getElementById('exportMemories');
+    try {
+      button.disabled = true;
+      status.textContent = '正在打包云端回忆…';
+      const kinds = ['firsts', 'plans', 'capsules', 'daily', 'wheel', 'cities'];
+      const records = {};
+      for (const kind of kinds) {
+        records[kind] = await readMemoryStore(kind);
+      }
+      const payload = {
+        exportedAt: new Date().toISOString(),
+        site: 'love-for-huihui',
+        note: '照片保存在云端私有桶中，本文件包含全部文字与照片索引',
+        records
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `love-memories-${shanghaiDateKey()}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+      status.textContent = '已导出到下载文件夹 ✓';
+    } catch (error) {
+      status.textContent = `导出失败：${error.message}`;
+    } finally {
+      button.disabled = false;
+    }
+  });
 
   const cityLayer = document.getElementById('cityLayer');
   const mobileCityList = document.getElementById('mobileCityList');
@@ -2147,10 +2334,33 @@
   const photoGrid = document.getElementById('photoGrid');
   const closeModal = document.getElementById('closeModal');
 
+  // 城市回忆：故事与照片与“我们的第一次”一样保存在共享云端
+  const cityFormModal = document.getElementById('cityFormModal');
+  const cityForm = document.getElementById('cityForm');
+  const cityStoryInput = document.getElementById('cityStoryInput');
+  const cityPhotos = document.getElementById('cityPhotos');
+  const cityUploadPreview = document.getElementById('cityUploadPreview');
+  const cityFormStatus = document.getElementById('cityFormStatus');
+  const saveCityMemory = document.getElementById('saveCityMemory');
+  let citiesCache = [];
+  let selectedCityPhotos = [];
+  let activeCity = null;
+
+  async function loadCities() {
+    citiesCache = await readMemoryStore('cities');
+  }
+
+  function cityRecord(city) {
+    return citiesCache.find(record => record.id === city.name);
+  }
+
   routeLine.setAttribute('points', cities.map(city => {
     const point = mapPoint(city);
     return `${point.x.toFixed(2)},${point.y.toFixed(2)}`;
   }).join(' '));
+
+  document.getElementById('footprintCityCount').textContent = `已点亮 ${cities.length} 座城市`;
+  document.getElementById('mapLegend').textContent = `● 已点亮 \u00A0 ${cities.length} 个共同足迹`;
 
   cities.forEach((city, index) => {
     const point = mapPoint(city);
@@ -2175,12 +2385,19 @@
   });
 
   function openCity(city, index) {
-    cityOrder.textContent = `FOOTPRINT ${String(index + 1).padStart(2, '0')} / 14`;
+    activeCity = city;
+    const record = cityRecord(city);
+    cityOrder.textContent = `FOOTPRINT ${String(index + 1).padStart(2, '0')} / ${cities.length}`;
     cityName.textContent = city.name;
-    cityStory.textContent = city.story;
-    photoGrid.innerHTML = Array.from({ length: 3 }, (_, photoIndex) =>
-      `<div class="photo-placeholder">${city.name}照片 ${photoIndex + 1}<br>等待加入我们的真实照片</div>`
-    ).join('');
+    cityStory.textContent = record?.story || city.story;
+    const photos = (record?.photos || []).filter(Boolean);
+    photoGrid.innerHTML = photos.length
+      ? photos.map((photo, photoIndex) =>
+          `<img src="${photoSource(photo)}" alt="${escapeHtml(city.name)}的照片 ${photoIndex + 1}" loading="lazy">`
+        ).join('')
+      : Array.from({ length: 3 }, (_, photoIndex) =>
+          `<div class="photo-placeholder">${city.name}照片 ${photoIndex + 1}<br>点击“编辑回忆”，补上你们的照片和故事</div>`
+        ).join('');
     cityModal.classList.add('is-open');
     document.body.style.overflow = 'hidden';
     closeModal.focus();
@@ -2190,12 +2407,94 @@
     cityModal.classList.remove('is-open');
     document.body.style.overflow = '';
   }
+
+  function renderCityPreview() {
+    cityUploadPreview.innerHTML = selectedCityPhotos.map((photo, index) =>
+      `<div class="upload-preview-item"><img src="${photoSource(photo)}" alt="${escapeHtml(activeCity?.name || '城市')}照片 ${index + 1}"><button class="remove-preview" type="button" data-index="${index}" aria-label="移除照片">×</button></div>`
+    ).join('');
+  }
+
+  function showCityForm() {
+    if (!activeCity) return;
+    const record = cityRecord(activeCity);
+    document.getElementById('cityFormTitle').textContent = `写下「${activeCity.name}」的回忆`;
+    cityStoryInput.value = record?.story || '';
+    selectedCityPhotos = (record?.photos || []).filter(Boolean);
+    cityFormStatus.textContent = '';
+    renderCityPreview();
+    cityFormModal.classList.add('is-open');
+    window.setTimeout(() => cityStoryInput.focus(), 80);
+  }
+
+  // 城市弹窗仍开着，所以这里不恢复页面滚动
+  function hideCityForm() {
+    cityFormModal.classList.remove('is-open');
+  }
+
+  document.getElementById('editCityMemory').addEventListener('click', showCityForm);
+  document.getElementById('closeCityForm').addEventListener('click', hideCityForm);
+  cityFormModal.addEventListener('click', event => { if (event.target === cityFormModal) hideCityForm(); });
+  cityUploadPreview.addEventListener('click', event => {
+    const button = event.target.closest('.remove-preview');
+    if (!button) return;
+    selectedCityPhotos.splice(Number(button.dataset.index), 1);
+    renderCityPreview();
+  });
+  cityPhotos.addEventListener('change', async () => {
+    const files = [...cityPhotos.files].filter(file => file.type.startsWith('image/'));
+    const availableSlots = 8 - selectedCityPhotos.length;
+    if (files.length > availableSlots) cityFormStatus.textContent = '每座城市最多保存 8 张照片。';
+    saveCityMemory.disabled = true;
+    try {
+      const compressed = await Promise.all(files.slice(0, availableSlots).map(compressPhoto));
+      selectedCityPhotos.push(...compressed);
+      renderCityPreview();
+      if (files.length <= availableSlots) cityFormStatus.textContent = `已选择 ${selectedCityPhotos.length} 张照片，每张均已压缩至 500KB 以内。`;
+    } catch (error) {
+      cityFormStatus.textContent = error.message;
+    } finally {
+      saveCityMemory.disabled = false;
+      cityPhotos.value = '';
+    }
+  });
+  cityForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!activeCity) return;
+    saveCityMemory.disabled = true;
+    cityFormStatus.textContent = '正在保存这座城市的回忆…';
+    try {
+      const existing = cityRecord(activeCity);
+      const record = {
+        id: activeCity.name,
+        name: activeCity.name,
+        story: cityStoryInput.value.trim(),
+        photos: selectedCityPhotos,
+        createdAt: existing?.createdAt || Date.now(),
+        updatedAt: Date.now()
+      };
+      await putMemoryStore('cities', record);
+      await loadCities();
+      hideCityForm();
+      const index = cities.findIndex(city => city.name === activeCity.name);
+      if (index >= 0) openCity(cities[index], index);
+      showSyncStatus(`「${activeCity.name}」的回忆已保存`);
+    } catch (error) {
+      cityFormStatus.textContent = `保存失败：${error.message}`;
+    } finally {
+      saveCityMemory.disabled = false;
+    }
+  });
+
   closeModal.addEventListener('click', hideCity);
   cityModal.addEventListener('click', event => { if (event.target === cityModal) hideCity(); });
-  document.addEventListener('keydown', event => { if (event.key === 'Escape') hideCity(); });
-  document.addEventListener('keydown', event => { if (event.key === 'Escape') hideFirstForm(); });
-  document.addEventListener('keydown', event => { if (event.key === 'Escape') hidePlanForm(); });
-  document.addEventListener('keydown', event => { if (event.key === 'Escape') hideCapsuleForm(); });
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Escape') return;
+    hideCityForm();
+    hideCity();
+    hideFirstForm();
+    hidePlanForm();
+    hideCapsuleForm();
+  });
 </script>
 </body>
 </html>

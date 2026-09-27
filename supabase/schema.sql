@@ -1,11 +1,16 @@
 create table if not exists public.love_memories (
-  kind text not null check (kind in ('firsts', 'plans', 'capsules', 'daily', 'wheel')),
+  kind text not null check (kind in ('firsts', 'plans', 'capsules', 'daily', 'wheel', 'cities')),
   id text not null,
   payload jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now(),
   primary key (kind, id)
 );
+
+-- 已有项目重复执行本文件时，把旧的 kind 约束升级为包含 cities
+alter table public.love_memories drop constraint if exists love_memories_kind_check;
+alter table public.love_memories add constraint love_memories_kind_check
+  check (kind in ('firsts', 'plans', 'capsules', 'daily', 'wheel', 'cities'));
 
 alter table public.love_memories enable row level security;
 revoke all on table public.love_memories from anon, authenticated;

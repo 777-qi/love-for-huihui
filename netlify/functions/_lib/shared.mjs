@@ -1,6 +1,6 @@
 import { createHmac, timingSafeEqual } from 'node:crypto';
 
-const allowedKinds = new Set(['firsts', 'plans', 'capsules', 'daily', 'wheel']);
+const allowedKinds = new Set(['firsts', 'plans', 'capsules', 'daily', 'wheel', 'cities']);
 
 export function json(statusCode, body) {
   return {

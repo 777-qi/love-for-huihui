@@ -15,6 +15,25 @@ function queryValue(event, name) {
   return event.queryStringParameters?.[name] || '';
 }
 
+// 每日一问：双方都提交前，不向浏览器下发任何一方的答案内容，
+// 只保留“已提交”状态供前端展示封存面板。
+function redactDailyRows(rows) {
+  const answeredByDate = new Map();
+  rows.forEach(row => {
+    const payload = row.payload || {};
+    if (!payload.date || !payload.person || !payload.answer) return;
+    if (!answeredByDate.has(payload.date)) answeredByDate.set(payload.date, new Set());
+    answeredByDate.get(payload.date).add(payload.person);
+  });
+  const isRevealed = date =>
+    ['tianqi', 'huihui'].every(person => answeredByDate.get(date)?.has(person));
+  return rows.map(row => {
+    const payload = row.payload || {};
+    if (payload.date && isRevealed(payload.date)) return payload;
+    return { ...payload, answer: '', submitted: Boolean(payload.answer) };
+  });
+}
+
 async function removePhotos(payload) {
   const paths = Array.isArray(payload?.photos)
     ? payload.photos.map(storagePathFromPhoto).filter(Boolean)
@@ -36,7 +55,8 @@ export async function handler(event) {
       const rows = await supabase(`/rest/v1/love_memories?kind=eq.${encodeURIComponent(kind)}&select=id,payload,created_at&order=created_at.desc`, {
         headers: { accept: 'application/json' }
       });
-      const records = await Promise.all(rows.map(row => withSignedPhotos({ ...row.payload, id: row.id })));
+      const payloads = kind === 'daily' ? redactDailyRows(rows) : rows.map(row => row.payload);
+      const records = await Promise.all(rows.map((row, index) => withSignedPhotos({ ...payloads[index], id: row.id })));
       return json(200, { records });
     }
 
