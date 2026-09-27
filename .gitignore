@@ -1,2 +1,7 @@
 # Local Netlify folder
 .netlify
+# Local backup of the pre-update version
+backup-original/
+
+# Local dev server data
+.dev-data/
