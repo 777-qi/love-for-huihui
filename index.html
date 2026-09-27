@@ -286,6 +286,8 @@
     border-radius: 999px; color: #ffd58a; background: rgba(255,63,130,.12);
     font-size: .85rem; letter-spacing: .06em;
   }
+  .milestone-line { margin-top: 10px; color: #c9a9c0; font-size: .82rem; letter-spacing: .05em; }
+  .milestone-line.is-today { color: #ffd58a; }
   .home-sections { padding-top: 14px; }
   .eyebrow { color: var(--pink); font-size: .76rem; letter-spacing: .28em; margin-bottom: 16px; }
   .section-head { display: flex; align-items: end; justify-content: space-between; margin-bottom: 18px; }
@@ -406,6 +408,12 @@
   .capsule-item::after {
     content: ""; position: absolute; width: 230px; height: 230px; right: -80px; top: -95px;
     border-radius: 50%; background: rgba(142,112,255,.12);
+  }
+  .capsule-item.is-just-opened { animation: capsulePop .7s ease; }
+  @keyframes capsulePop {
+    0% { transform: scale(.94); opacity: .3; }
+    60% { transform: scale(1.015); }
+    100% { transform: scale(1); opacity: 1; }
   }
   .capsule-meta { position: relative; z-index: 1; color: #b7a2ff; font-size: .72rem; letter-spacing: .15em; }
   .capsule-item h2 { position: relative; z-index: 1; margin-top: 25px; font-size: 1.65rem; }
@@ -834,6 +842,7 @@
         <div class="counter-unit"><strong class="counter-value" id="togetherSeconds">0</strong><span class="counter-label">SECS · 秒</span></div>
       </div>
       <p class="since-date">自 2024 年 2 月 28 日起，每一秒都算数</p>
+      <p class="milestone-line" id="milestoneLine"></p>
     </section>
 
     <section class="home-sections" aria-labelledby="memoryTitle">
@@ -1233,13 +1242,13 @@
   }
 
   function getCloudSession() {
-    try { return sessionStorage.getItem(CLOUD_SESSION_KEY) || ''; } catch (_) { return ''; }
+    try { return localStorage.getItem(CLOUD_SESSION_KEY) || ''; } catch (_) { return ''; }
   }
 
   function setCloudSession(token) {
     try {
-      if (token) sessionStorage.setItem(CLOUD_SESSION_KEY, token);
-      else sessionStorage.removeItem(CLOUD_SESSION_KEY);
+      if (token) localStorage.setItem(CLOUD_SESSION_KEY, token);
+      else localStorage.removeItem(CLOUD_SESSION_KEY);
     } catch (_) {}
   }
 
@@ -1402,13 +1411,39 @@
   updateTogetherCounter();
   window.setInterval(updateTogetherCounter, 1000);
 
-  // 每月28日是我们的纪念日，主页出现小横幅
-  if (shanghaiNowAsUtcDate().getUTCDate() === 28) {
+  // 每月28日是我们的纪念日，主页出现小横幅；周年日有专属文案
+  (function renderAnniversaryBanner() {
+    const now = shanghaiNowAsUtcDate();
+    const isAnniversaryDay = now.getUTCDate() === 28;
+    if (!isAnniversaryDay) return;
     const banner = document.createElement('p');
     banner.className = 'anniversary-banner';
-    banner.textContent = '💕 今天是我们每个月的纪念日';
+    const yearsTogether = now.getUTCFullYear() - 2024;
+    if (now.getUTCMonth() + 1 === 2 && yearsTogether > 0) {
+      banner.textContent = `💕 今天是我们在一起 ${yearsTogether} 周年纪念日！`;
+    } else {
+      banner.textContent = '💕 今天是我们每个月的纪念日';
+    }
     document.querySelector('.couple-subtitle').after(banner);
-  }
+  })();
+
+  // 里程碑：下一个每 100 天的小日子
+  (function renderMilestone() {
+    const line = document.getElementById('milestoneLine');
+    if (!line) return;
+    const now = shanghaiNowAsUtcDate();
+    const startMs = Date.UTC(2024, 1, 28);
+    const daysTogether = Math.floor((now.getTime() - startMs) / 86400000);
+    if (daysTogether < 0) return;
+    if (daysTogether > 0 && daysTogether % 100 === 0) {
+      line.textContent = `🎉 今天是在一起第 ${daysTogether} 天！`;
+      line.classList.add('is-today');
+      return;
+    }
+    const nextMilestone = (Math.floor(daysTogether / 100) + 1) * 100;
+    const daysLeft = nextMilestone - daysTogether;
+    line.textContent = `距离在一起 ${nextMilestone} 天，还有 ${daysLeft} 天`;
+  })();
 
   const cities = [
     { name: '荆州', lon: 112.24, lat: 30.33, lx: 0, ly: -2, story: '古城的风与共同走过的街道，都值得留下一页。关于荆州的照片和故事，会在这里慢慢补齐。' },
@@ -1882,6 +1917,7 @@
     thing: { icon: '✓', label: '想完成的事' }
   };
   let plansCache = [];
+  let editingPlan = null;
 
   function planItemHtml(plan, completed = false) {
     const meta = planCategoryMeta[plan.category] || planCategoryMeta.thing;
@@ -1892,7 +1928,8 @@
       <span class="plan-icon" aria-hidden="true">${meta.icon}</span>
       <div><h3>${escapeHtml(plan.title)}</h3><p>${meta.label} · ${timing}${plan.note ? ` · ${escapeHtml(plan.note)}` : ''}</p></div>
       <div class="plan-actions">
-        ${completed ? '' : `<button class="mini-button complete complete-plan" type="button" data-id="${escapeHtml(plan.id)}">完成</button>`}
+        ${completed ? '' : `<button class="mini-button complete complete-plan" type="button" data-id="${escapeHtml(plan.id)}">完成</button>
+        <button class="mini-button edit-plan" type="button" data-id="${escapeHtml(plan.id)}">编辑</button>`}
         <button class="mini-button delete-plan" type="button" data-id="${escapeHtml(plan.id)}">删除</button>
       </div>
     </article>`;
@@ -1913,8 +1950,20 @@
     }
   }
 
-  function showPlanForm() {
+  function showPlanForm(plan = null) {
+    editingPlan = plan;
     planForm.reset();
+    if (plan) {
+      document.getElementById('planFormTitle').textContent = '编辑这个愿望';
+      planForm.querySelector('.form-submit').textContent = '保存修改';
+      planCategory.value = plan.category || 'thing';
+      planTitle.value = plan.title || '';
+      planTargetDate.value = plan.targetDate || '';
+      planNote.value = plan.note || '';
+    } else {
+      document.getElementById('planFormTitle').textContent = '添加一个未来愿望';
+      planForm.querySelector('.form-submit').textContent = '加入我们的未来';
+    }
     document.getElementById('planFormStatus').textContent = '';
     planFormModal.classList.add('is-open');
     document.body.style.overflow = 'hidden';
@@ -1931,21 +1980,37 @@
   planFormModal.addEventListener('click', event => { if (event.target === planFormModal) hidePlanForm(); });
   planForm.addEventListener('submit', async event => {
     event.preventDefault();
-    const plan = {
-      id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
-      category: planCategory.value,
-      title: planTitle.value.trim(),
-      targetDate: planTargetDate.value,
-      note: planNote.value.trim(),
-      completed: false,
-      createdAt: Date.now()
-    };
-    await putMemoryStore('plans', plan);
-    hidePlanForm();
-    await renderPlans();
+    const submitButton = planForm.querySelector('.form-submit');
+    submitButton.disabled = true;
+    try {
+      const plan = {
+        id: editingPlan?.id || (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`),
+        category: planCategory.value,
+        title: planTitle.value.trim(),
+        targetDate: planTargetDate.value,
+        note: planNote.value.trim(),
+        completed: editingPlan?.completed || false,
+        completedAt: editingPlan?.completedAt,
+        createdAt: editingPlan?.createdAt || Date.now()
+      };
+      await putMemoryStore('plans', plan);
+      hidePlanForm();
+      await renderPlans();
+      showSyncStatus(editingPlan ? '愿望已更新' : '新的愿望已加入 ✓');
+    } catch (error) {
+      document.getElementById('planFormStatus').textContent = `保存失败：${error.message}`;
+    } finally {
+      submitButton.disabled = false;
+    }
   });
 
   async function handlePlanListClick(event) {
+    const editButton = event.target.closest('.edit-plan');
+    if (editButton) {
+      const plan = plansCache.find(item => item.id === editButton.dataset.id);
+      if (plan) showPlanForm(plan);
+      return;
+    }
     const completeButton = event.target.closest('.complete-plan');
     const deleteButton = event.target.closest('.delete-plan');
     if (!completeButton && !deleteButton) return;
@@ -2047,7 +2112,7 @@
         const lockText = unlocked
           ? ''
           : `🔒 将在 ${formatFirstDate(capsule.unlockDate)} 打开${daysLeft ? ` · 还有 ${daysLeft} 天` : ''}<br>再耐心等一等，未来正在靠近。`;
-        return `<article class="capsule-item" data-capsule-id="${escapeHtml(capsule.id)}">
+        return `<article class="capsule-item${unlocked && capsule.unlockDate === today ? ' is-just-opened' : ''}" data-capsule-id="${escapeHtml(capsule.id)}">
           <p class="capsule-meta">${meta}</p>
           <h2>${escapeHtml(capsule.title)}</h2>
           ${unlocked
@@ -2123,12 +2188,42 @@
     '如果要把一句话留给十年后的我们，你会写什么？',
     '我们一起做过的哪件傻事，现在想起来最好笑？',
     '你希望下一张合照是在什么地方拍下的？',
-    '最近我做的哪件小事，让你感到被爱？'
+    '最近我做的哪件小事，让你感到被爱？',
+    '如果给你一天完全听我的安排，你猜我会带你去干嘛？',
+    '你最近一次偷偷看我是什么时候？当时在想什么？',
+    '哪一首歌会让你想起我？为什么？',
+    '如果我们要养一只宠物，你觉得咱俩谁先投降去铲屎？',
+    '你最喜欢我身上的哪一个“缺点”？',
+    '最近有什么想吃很久了但一直没吃到的东西？',
+    '如果我们的故事被写成书，你最想给哪一章起什么标题？',
+    '你觉得自己哪个瞬间最有魅力？我确认一下我有没有看到过。',
+    '我们之间谁的脾气更好？举一个具体例子作证据。',
+    '如果下辈子还能遇见，你想在什么场景认出我？',
+    '最近有没有什么压力，是你还没告诉我的？',
+    '你手机里哪张我们的合照你最舍不得删？',
+    '如果我们可以瞬移去看一场演出，你想看什么？',
+    '你希望我们八十岁的时候还在做哪件现在做的事？',
+    '哪一次旅行让你印象最深？最难忘的是哪一个瞬间？',
+    '如果让你替我选一件冬天的衣服，你会选什么风格？',
+    '最近学会的一件小事，想讲给我听吗？',
+    '你觉得我们家未来的客厅会是什么颜色？',
+    '哪个瞬间让你确定“就是这个人了”？',
+    '如果想给我一个惊喜，你最想策划什么样的小事？',
+    '你最近做的哪个梦里有我？',
+    '我们下一次见面，你最想先做的第一件事是什么？',
+    '你觉得我什么表情最可爱？',
+    '如果一起开一家小店，你想卖什么？',
+    '你最近有哪一刻特别为我骄傲？',
+    '如果给现在的我们打一个标签，你会写什么？',
+    '你最想重温我们的哪一天？为什么是那天？',
+    '今天想对我说的最后一句话是什么？'
   ];
+  // 早期版本题库只有 12 道：往期回顾里旧记录的题目按 12 取模还原
+  const LEGACY_DAILY_MODULUS = 12;
 
-  function questionForDate(key) {
+  function questionForDate(key, modulus = dailyQuestions.length) {
     const dayNumber = Math.floor(Date.parse(`${key}T00:00:00Z`) / 86400000);
-    return dailyQuestions[dayNumber % dailyQuestions.length];
+    return dailyQuestions[dayNumber % modulus];
   }
 
   function currentDailyQuestion() {
@@ -2137,6 +2232,7 @@
   }
 
   let dailyAnswersCache = {};
+  let currentQuestionText = '';
 
   // 服务端在双方都提交前不下发答案内容，只带 submitted 状态
   function dailyAnswersFromRecords(records, key) {
@@ -2167,24 +2263,26 @@
     const byDate = new Map();
     records.forEach(record => {
       if (!record.date || !record.person || !record.answer) return;
-      if (!byDate.has(record.date)) byDate.set(record.date, {});
-      byDate.get(record.date)[record.person] = record.answer;
+      if (!byDate.has(record.date)) byDate.set(record.date, { pair: {}, question: '' });
+      const entry = byDate.get(record.date);
+      entry.pair[record.person] = record.answer;
+      if (record.question && !entry.question) entry.question = record.question;
     });
     const past = [...byDate.entries()]
-      .filter(([date, pair]) => date !== today && pair.tianqi && pair.huihui)
+      .filter(([date, entry]) => date !== today && entry.pair.tianqi && entry.pair.huihui)
       .sort((a, b) => b[0].localeCompare(a[0]))
       .slice(0, 20);
     if (!past.length) {
       container.innerHTML = '';
       return;
     }
-    container.innerHTML = `<h2 class="history-title">往期回答 · 最近 ${past.length} 天</h2>` + past.map(([date, pair]) => `
+    container.innerHTML = `<h2 class="history-title">往期回答 · 最近 ${past.length} 天</h2>` + past.map(([date, entry]) => `
       <article class="history-item">
         <p class="history-date">${date.slice(0, 4)} 年 ${Number(date.slice(5, 7))} 月 ${Number(date.slice(8, 10))} 日</p>
-        <h3>${escapeHtml(questionForDate(date))}</h3>
+        <h3>${escapeHtml(entry.question || questionForDate(date, LEGACY_DAILY_MODULUS))}</h3>
         <div class="history-answers">
-          <div class="history-answer"><strong>天奇</strong><p>${escapeHtml(pair.tianqi)}</p></div>
-          <div class="history-answer"><strong>晖晖</strong><p>${escapeHtml(pair.huihui)}</p></div>
+          <div class="history-answer"><strong>天奇</strong><p>${escapeHtml(entry.pair.tianqi)}</p></div>
+          <div class="history-answer"><strong>晖晖</strong><p>${escapeHtml(entry.pair.huihui)}</p></div>
         </div>
       </article>`).join('');
   }
@@ -2195,10 +2293,13 @@
       const records = await readMemoryStore('daily');
       const answers = dailyAnswersFromRecords(records, question.key);
       dailyAnswersCache = answers;
+      // 今天若已有带题目的旧记录，沿用已存的题目，避免换题库后对不上
+      const storedQuestion = records.find(record => record.date === question.key && record.question)?.question;
+      currentQuestionText = storedQuestion || question.text;
       const bothAnswered = Boolean(answers.tianqi?.answer && answers.huihui?.answer);
       const date = new Date(`${question.key}T00:00:00+08:00`);
       document.getElementById('questionDate').textContent = `${date.toLocaleDateString('zh-CN')} · TODAY'S QUESTION`;
-      document.getElementById('dailyQuestionText').textContent = question.text;
+      document.getElementById('dailyQuestionText').textContent = currentQuestionText;
       document.getElementById('tianqiAnswerPanel').innerHTML = renderAnswerPanel('tianqi', '天奇', answers, bothAnswered);
       document.getElementById('huihuiAnswerPanel').innerHTML = renderAnswerPanel('huihui', '晖晖', answers, bothAnswered);
       renderDailyHistory(records);
@@ -2220,6 +2321,7 @@
       id: `${question.key}:${person}`,
       date: question.key,
       person,
+      question: currentQuestionText,
       answer,
       createdAt: Date.now()
     });
@@ -2695,6 +2797,25 @@
     if (!lightbox.classList.contains('is-open')) return;
     if (event.key === 'ArrowLeft') stepLightbox(-1);
     else if (event.key === 'ArrowRight') stepLightbox(1);
+  });
+
+  // 焦点圈闭：弹窗打开时 Tab 不会跑到弹窗后面
+  document.addEventListener('keydown', event => {
+    if (event.key !== 'Tab') return;
+    const modal = document.querySelector('.first-form-modal.is-open, .city-modal.is-open, .lightbox.is-open');
+    if (!modal) return;
+    const focusables = [...modal.querySelectorAll('button, input, textarea, select')]
+      .filter(element => !element.hidden && (!element.checkVisibility || element.checkVisibility()));
+    if (!focusables.length) return;
+    const first = focusables[0];
+    const last = focusables[focusables.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && (document.activeElement === last || !modal.contains(document.activeElement))) {
+      event.preventDefault();
+      first.focus();
+    }
   });
 </script>
 </body>
