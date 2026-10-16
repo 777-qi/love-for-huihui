@@ -445,6 +445,7 @@
   .sealed-answer { display: grid; place-items: center; min-height: 186px; color: var(--muted); text-align: center; line-height: 1.8; }
   .revealed-answer { min-height: 186px; color: #f0e5ec; line-height: 1.8; white-space: pre-wrap; }
   .question-reset { margin-top: 18px; border: 0; color: #8f8297; background: transparent; cursor: pointer; font-size: .72rem; }
+  .qa-prompt { margin-top: 16px; color: var(--muted); font-size: .95rem; }
 
   /* 每日一问往期回顾 */
   .daily-history { margin-top: 30px; display: grid; gap: 14px; }
@@ -801,7 +802,6 @@
 </div>
 
 <div class="ambient" aria-hidden="true"></div>
-<div class="sync-status" id="syncStatus" role="status" aria-live="polite"></div>
 
 <!-- 初始探索页 -->
 <section class="screen intro-screen" id="introScreen" aria-label="点亮我们的足迹">
@@ -889,8 +889,8 @@
         </button>
         <button class="memory-card question-card" id="openDailyQuestion" type="button">
           <span class="card-index">05 / DAILY QUESTION</span>
-          <h3>每日一问</h3>
-          <p>天奇和晖晖分别写下答案。只有两个人都提交后，今天的答案才会一起揭晓。</p>
+          <h3>今日话题</h3>
+          <p>每天一张话题卡，四十个让我们更懂彼此的问题，答案当面说给对方听。</p>
           <span class="card-footer">
             <span class="city-count">今天也更懂彼此一点</span>
             <span class="open-arrow">→</span>
@@ -908,11 +908,8 @@
       </div>
     </section>
 
-    <section class="export-row" aria-label="备份与导出">
-      <button class="export-button" id="exportMemories" type="button">⬇ 导出全部回忆（备份）</button>
-      <p class="form-status" id="exportStatus" role="status"></p>
-    </section>
   </div>
+</main>  </div>
 </main>
 
 <!-- 足迹地图页 -->
@@ -922,7 +919,7 @@
       <button class="back-button" id="backHome" type="button">← 返回主页</button>
       <div class="footprint-title">
         <h1>去过的地方 · 足迹</h1>
-        <p>点击发光的城市，打开那里的故事，也可以补上你们的照片</p>
+        <p>点击发光的城市，打开那里的故事</p>
       </div>
     </header>
 
@@ -958,10 +955,8 @@
         <h1>把很多很多第一次，<br>写进我们的时间里。</h1>
         <p>记录发生的日期、当时的故事和珍贵照片。回忆会按照时间自动排列，慢慢长成属于我们的纪念册。</p>
       </div>
-      <button class="add-first-button" id="addFirst" type="button">＋ 记录一个第一次</button>
     </section>
 
-    <p class="firsts-note">☁ 记录与照片会安全同步到云端，双方在任意设备登录后都能看到。</p>
     <div class="firsts-timeline" id="firstsTimeline"></div>
   </div>
 </section>
@@ -979,9 +974,7 @@
         <h1>先把愿望写下来，<br>然后一起去实现。</h1>
         <p>想去的地方、想吃的店、想完成的事都可以放在这里。点击“完成”后，它会自动进入右侧的回忆区。</p>
       </div>
-      <button class="feature-action" id="addPlan" type="button">＋ 添加一个愿望</button>
     </section>
-    <p class="local-note">☁ 清单实时保存在共享云端，两个人看到的是同一份计划。</p>
     <div class="collection-grid">
       <section class="collection-panel">
         <header class="collection-head"><h2>等待实现</h2><span id="pendingPlanCount">0 件</span></header>
@@ -1008,39 +1001,33 @@
         <h1>把今天的心意，<br>交给未来某天开启。</h1>
         <p>写一封信、放入照片，再设置解锁日期。日期到来之前，信件和照片会一直被温柔地封存。</p>
       </div>
-      <button class="feature-action" id="addCapsule" type="button">＋ 埋下一颗胶囊</button>
     </section>
-    <p class="local-note">🔒 解锁以北京时间的日期为准，胶囊会保存在双方共享的云端空间。</p>
     <div class="capsule-grid" id="capsuleGrid"></div>
   </div>
 </section>
 
 <!-- 每日一问 -->
-<section class="screen feature-screen" id="dailyQuestionScreen" aria-label="每日一问">
+<section class="screen feature-screen" id="dailyQuestionScreen" aria-label="今日话题">
   <div class="page-shell">
     <header class="footprint-topbar">
       <button class="back-button" id="backHomeFromQuestion" type="button">← 返回主页</button>
-      <div class="footprint-title"><h1>每日一问</h1><p>先独立回答，再一起揭晓</p></div>
+      <div class="footprint-title"><h1>今日话题</h1><p>一张话题卡，聊出更多我们</p></div>
     </header>
     <section class="feature-intro">
       <div class="feature-intro-copy">
-        <p class="eyebrow">ONE QUESTION A DAY</p>
+        <p class="eyebrow">ONE TOPIC A DAY</p>
         <h1>每天一个问题，<br>慢慢读懂彼此。</h1>
-        <p>两个人分别提交自己的答案。在双方都完成之前，看不到对方写了什么。</p>
+        <p>答案不写在网站上——留着见面时，看着对方的眼睛说。</p>
       </div>
     </section>
-    <p class="local-note">👫 双方答案目前保存在同一台设备中；跨手机同步需要下一步接入在线数据库。</p>
     <section class="daily-question-box">
       <p class="question-date" id="questionDate"></p>
       <h2 id="dailyQuestionText"></h2>
-      <div class="answer-grid">
-        <div class="answer-panel" id="tianqiAnswerPanel"></div>
-        <div class="answer-panel" id="huihuiAnswerPanel"></div>
-      </div>
-      <button class="question-reset" id="resetDailyQuestion" type="button">重新填写今天的答案</button>
+      <p class="qa-prompt">今晚见面时，把答案说给对方听吧 💬</p>
     </section>
-    <div class="daily-history" id="dailyHistory" aria-label="往期回答"></div>
+    <div class="daily-history" id="dailyHistory" aria-label="话题卡"></div>
   </div>
+</section>  </div>
 </section>
 
 <!-- 约会转盘 -->
@@ -1074,15 +1061,6 @@
           <button class="filter-chip" type="button" data-filter="activity">约会活动</button>
           <button class="filter-chip" type="button" data-filter="trip">旅行计划</button>
         </div>
-        <form class="wheel-add-form" id="wheelAddForm">
-          <select id="wheelCategory" aria-label="分类">
-            <option value="restaurant">想吃的店</option>
-            <option value="activity">约会活动</option>
-            <option value="trip">旅行计划</option>
-          </select>
-          <input id="wheelOptionText" maxlength="40" required placeholder="例如：去吃一家没试过的火锅店">
-          <button type="submit">加入</button>
-        </form>
         <div class="wheel-options" id="wheelOptions"></div>
       </section>
     </div>
@@ -1106,254 +1084,175 @@
         <p class="city-order" id="cityOrder"></p>
         <h2 id="cityName"></h2>
       </div>
-      <div class="dialog-actions">
-        <button class="mini-button" id="editCityMemory" type="button">✏️ 编辑回忆</button>
-        <button class="modal-close" id="closeModal" type="button" aria-label="关闭">×</button>
-      </div>
+      <button class="modal-close" id="closeModal" type="button" aria-label="关闭">×</button>
     </header>
     <p class="dialog-copy" id="cityStory"></p>
     <div class="photo-grid" id="photoGrid"></div>
   </article>
 </div>
 
-<!-- 新增“第一次”表单 -->
-<div class="first-form-modal" id="firstFormModal" role="dialog" aria-modal="true" aria-labelledby="firstFormTitle">
-  <article class="first-form-dialog">
-    <header class="first-form-head">
-      <div>
-        <p class="city-order">A NEW FIRST</p>
-        <h2 id="firstFormTitle">记录一个第一次</h2>
-      </div>
-      <button class="modal-close" id="closeFirstForm" type="button" aria-label="关闭">×</button>
-    </header>
-    <form class="first-form" id="firstForm">
-      <div class="form-field">
-        <label for="firstTitle">这是什么第一次？</label>
-        <input id="firstTitle" name="title" maxlength="50" required placeholder="例如：第一次一起看海">
-      </div>
-      <div class="form-field">
-        <label for="firstDate">发生日期</label>
-        <input id="firstDate" name="date" type="date" required>
-      </div>
-      <div class="form-field">
-        <label for="firstTime">具体时间（可选）</label>
-        <input id="firstTime" name="time" type="time">
-      </div>
-      <div class="form-field">
-        <label for="firstStory">当时的故事</label>
-        <textarea id="firstStory" name="story" maxlength="1200" placeholder="写下那天发生的事、当时的心情……"></textarea>
-      </div>
-      <div class="form-field">
-        <label>添加照片（最多 8 张）</label>
-        <label class="image-picker">
-          <input id="firstPhotos" type="file" accept="image/*" multiple>
-          <span><strong>点击选择照片</strong>每张会自动压缩至 500KB 以内并上传到共享云端</span>
-        </label>
-        <div class="upload-preview" id="uploadPreview"></div>
-      </div>
-      <p class="form-status" id="firstFormStatus" role="alert" aria-live="polite"></p>
-      <button class="form-submit" id="saveFirst" type="submit">保存这次回忆</button>
-    </form>
-  </article>
-</div>
-
-<!-- 新增未来清单表单 -->
-<div class="first-form-modal" id="planFormModal" role="dialog" aria-modal="true" aria-labelledby="planFormTitle">
-  <article class="first-form-dialog">
-    <header class="first-form-head">
-      <div><p class="city-order">A FUTURE WISH</p><h2 id="planFormTitle">添加一个未来愿望</h2></div>
-      <button class="modal-close" id="closePlanForm" type="button" aria-label="关闭">×</button>
-    </header>
-    <form class="first-form" id="planForm">
-      <div class="form-field"><label for="planCategory">愿望分类</label><select id="planCategory"><option value="place">想去的地方</option><option value="restaurant">想吃的店</option><option value="thing">想完成的事</option></select></div>
-      <div class="form-field"><label for="planTitle">愿望名称</label><input id="planTitle" maxlength="60" required placeholder="例如：一起去看一次极光"></div>
-      <div class="form-field"><label for="planTargetDate">希望完成的日期（可选）</label><input id="planTargetDate" type="date"></div>
-      <div class="form-field"><label for="planNote">想说的话（可选）</label><textarea id="planNote" maxlength="600" placeholder="为什么想一起完成这件事……"></textarea></div>
-      <p class="form-status" id="planFormStatus" role="alert"></p>
-      <button class="form-submit" type="submit">加入我们的未来</button>
-    </form>
-  </article>
-</div>
-
-<!-- 新增时光胶囊表单 -->
-<div class="first-form-modal" id="capsuleFormModal" role="dialog" aria-modal="true" aria-labelledby="capsuleFormTitle">
-  <article class="first-form-dialog">
-    <header class="first-form-head">
-      <div><p class="city-order">A LETTER TO US</p><h2 id="capsuleFormTitle">埋下一颗时光胶囊</h2></div>
-      <button class="modal-close" id="closeCapsuleForm" type="button" aria-label="关闭">×</button>
-    </header>
-    <form class="first-form" id="capsuleForm">
-      <div class="form-field"><label for="capsuleTitle">胶囊标题</label><input id="capsuleTitle" maxlength="60" required placeholder="例如：写给三周年的我们"></div>
-      <div class="form-field"><label for="capsuleFrom">这是谁写的</label><select id="capsuleFrom"><option value="天奇">天奇写给晖晖</option><option value="晖晖">晖晖写给天奇</option><option value="我们">我们一起写的</option></select></div>
-      <div class="form-field"><label for="capsuleUnlockDate">允许打开的日期</label><input id="capsuleUnlockDate" type="date" required></div>
-      <div class="form-field"><label for="capsuleLetter">写给未来的信</label><textarea id="capsuleLetter" maxlength="3000" required placeholder="未来的我们，你们现在过得好吗……"></textarea></div>
-      <div class="form-field">
-        <label>放入照片（最多 6 张）</label>
-        <label class="image-picker"><input id="capsulePhotos" type="file" accept="image/*" multiple><span><strong>点击选择照片</strong>每张会自动压缩至 500KB 以内并和信一起封存</span></label>
-        <div class="upload-preview" id="capsuleUploadPreview"></div>
-      </div>
-      <p class="form-status" id="capsuleFormStatus" role="alert"></p>
-      <button class="form-submit" id="saveCapsule" type="submit">封存到未来</button>
-    </form>
-  </article>
-</div>
-
-<!-- 城市回忆编辑表单 -->
-<div class="first-form-modal" id="cityFormModal" role="dialog" aria-modal="true" aria-labelledby="cityFormTitle">
-  <article class="first-form-dialog">
-    <header class="first-form-head">
-      <div><p class="city-order">CITY MEMORY</p><h2 id="cityFormTitle">写下这座城市的回忆</h2></div>
-      <button class="modal-close" id="closeCityForm" type="button" aria-label="关闭">×</button>
-    </header>
-    <form class="first-form" id="cityForm">
-      <div class="form-field">
-        <label for="cityStoryInput">在那座城市发生的故事</label>
-        <textarea id="cityStoryInput" maxlength="1200" placeholder="当时去了哪里、吃了什么、遇到了什么有趣的事……留空则使用默认文案"></textarea>
-      </div>
-      <div class="form-field">
-        <label>添加照片（最多 8 张）</label>
-        <label class="image-picker">
-          <input id="cityPhotos" type="file" accept="image/*" multiple>
-          <span><strong>点击选择照片</strong>每张会自动压缩至 500KB 以内并上传到共享云端</span>
-        </label>
-        <div class="upload-preview" id="cityUploadPreview"></div>
-      </div>
-      <p class="form-status" id="cityFormStatus" role="alert"></p>
-      <button class="form-submit" id="saveCityMemory" type="submit">保存这座城市的回忆</button>
-    </form>
-  </article>
-</div>
-
 <script>
-  // 密码与共享会话：密码只发送给同站点的 Netlify Function 校验
+  // ==================================================================
+  // ✏️ 我们的内容 —— 所有栏目的文字都在这个 SITE 对象里改，保存刷新即可
+  // 照片零维护约定：把照片放进 images/ 对应文件夹，自动显示
+  //   城市 → images/cities/beijing-1.jpg（拼音-序号，每城最多 8 张）
+  //   第一次 → images/firsts/f1-1.jpg（id-序号）
+  //   胶囊 → images/capsules/c1-1.jpg（解锁日才可见）
+  // ==================================================================
+  const SITE = {
+    me: '天奇',
+    you: '晖晖',
+    since: { year: 2024, month: 2, day: 28 }, // 在一起的日子
+
+    // 进入密码（当前：20240228）。换密码：跑下面这行，把输出替换进来
+    // node -e "console.log(require('crypto').createHash('sha256').update('新密码').digest('hex'))"
+    passwordHash: '60774cfed4301189ba8cca4a6a9807b6e9f9d8108ea9d1d93105253179eb6595',
+
+    // 足迹城市（key 用于对应照片文件夹名；photos: 0 表示暂无照片）
+    cities: [
+      { name: '荆州', key: 'jingzhou', lon: 112.24, lat: 30.33, lx: 0, ly: -2, photos: 0, story: '古城的风与共同走过的街道，都值得留下一页。' },
+      { name: '珠海', key: 'zhuhai', lon: 113.58, lat: 22.27, lx: -30, ly: 22, photos: 0, story: '海风、晚霞和并肩散步的时刻，是珠海留给我们的温柔记忆。' },
+      { name: '广州', key: 'guangzhou', lon: 113.26, lat: 23.13, lx: -28, ly: -4, photos: 0, story: '热闹的街巷、好吃的东西，还有在人群里始终牵着的手。' },
+      { name: '深圳', key: 'shenzhen', lon: 114.06, lat: 22.54, lx: 31, ly: 10, photos: 0, story: '这座熟悉的城市承载着日常，也见证着我们一次又一次出发。' },
+      { name: '廊坊', key: 'langfang', lon: 116.68, lat: 39.52, ox: -1.2, oy: 2.5, lx: -40, ly: 14, photos: 0, story: '旅途中每一座看似安静的城市，都因为两个人同行而有了独特意义。' },
+      { name: '石家庄', key: 'shijiazhuang', lon: 114.51, lat: 38.04, lx: -33, ly: 12, photos: 0, story: '在这座城市停留的片段，都成了共同记忆的一部分。' },
+      { name: '北京', key: 'beijing', lon: 116.40, lat: 39.90, ox: -1.2, oy: -1.7, lx: 0, ly: -6, photos: 0, story: '从古老城墙到璀璨夜景，北京的辽阔里也藏着只属于我们的细节。' },
+      { name: '天津', key: 'tianjin', lon: 117.20, lat: 39.13, ox: 1.8, oy: .8, lx: 28, ly: 3, photos: 0, story: '海河边的风、街巷里的烟火气，都成为共同记忆的一部分。' },
+      { name: '济南', key: 'jinan', lon: 117.00, lat: 36.65, lx: 12, ly: 12, photos: 0, story: '泉水与老城的节奏，让这段旅程有了温柔而从容的底色。' },
+      { name: '苏州', key: 'suzhou', lon: 120.58, lat: 31.30, lx: -20, ly: -2, photos: 0, story: '小桥、流水与园林，把我们一起走过的时光装进了江南画卷。' },
+      { name: '成都', key: 'chengdu', lon: 104.07, lat: 30.67, lx: -18, ly: -2, photos: 0, story: '慢一点的生活、热辣的味道，还有一起消磨的悠闲时光。' },
+      { name: '重庆', key: 'chongqing', lon: 106.55, lat: 29.56, lx: 15, ly: 8, photos: 0, story: '山城的高低起伏和夜色，让这趟共同抵达的旅程格外鲜明。' },
+      { name: '上海', key: 'shanghai', lon: 121.47, lat: 31.23, lx: 22, ly: 8, photos: 0, story: '灯火、街景和匆匆人潮之中，我们拥有自己的步调和方向。' },
+      { name: '喀什', key: 'kashi', lon: 75.99, lat: 39.47, lx: 0, ly: -2, photos: 0, story: '从熟悉的日常走到遥远的西域，距离让这次共同抵达更加珍贵。' }
+    ],
+
+    // 我们的第一次（按时间正/倒序都会自动排；photos: 0 = 暂无照片）
+    firsts: [
+      { id: 'f1', date: '2024-02-28', title: '在一起的第一天', photos: 0, story: '从这一天起，我们成了我们。\n往后的每一个第一次，都想认真收在这里——这一页，留给以后的我们慢慢写满。' }
+    ],
+
+    // 未来清单（done: true 会自动搬进「已经成为回忆」）
+    plans: [
+      { category: 'place', title: '一起去看一次极光', note: '芬兰或者漠河，都好。', done: false },
+      { category: 'place', title: '再去一次海边看日落', note: '', done: false },
+      { category: 'restaurant', title: '把收藏夹里存了很久的那家店吃掉', note: '', done: false },
+      { category: 'thing', title: '一起跨一个年', note: '从 12 月 31 日到 1 月 1 日，一秒都不错过。', done: false },
+      { category: 'thing', title: '一起拍一组正式的合照', note: '', done: false },
+      { category: 'place', title: '第一次一起出门旅行', note: '从荆州到喀什，地图正在被我们点亮。', done: true, doneAt: '' }
+    ],
+
+    // 时光胶囊（unlockDate 之前只显示倒计时；letter 到期才显示，记得提前写好）
+    capsules: [
+      { id: 'c1', from: '天奇 & 晖晖', title: '写给第 1000 天的我们', unlockDate: '2026-11-24', photos: 0, letter: '今天是在一起的第 1000 天。\n一千天前我们牵起手，一千天里我们把十四座城市走成了地图上的光。\n愿我们永远像现在这样：有说不完的话，有想去的地方，有彼此。' },
+      { id: 'c2', from: '天奇 & 晖晖', title: '写给三周年的我们', unlockDate: '2027-02-28', photos: 0, letter: '三周年快乐。\n这封信写下的时候，距离这一天还很远；而你读到它的时候，它已经到了。\n谢谢你把日子过成了值得纪念的样子。下一个三年，继续麻烦你啦。' }
+    ],
+
+    // 话题卡：每天轮换一张「今天的话题」，下面是完整话题库
+    topics: [
+      '最近哪一个瞬间，让你突然觉得“有你真好”？',
+      '如果明天可以立刻出发，你最想和我去哪里？',
+      '你觉得我们最像哪一种小动物组合？为什么？',
+      '最近有什么小事，是你希望我能更懂你的？',
+      '如果把我们的一天拍成电影，你会给它取什么名字？',
+      '你最想和我一起养成哪一个长期习惯？',
+      '第一次见到我时，你印象最深的细节是什么？',
+      '你心里最理想的一次普通约会是什么样？',
+      '如果要把一句话留给十年后的我们，你会写什么？',
+      '我们一起做过的哪件傻事，现在想起来最好笑？',
+      '你希望下一张合照是在什么地方拍下的？',
+      '最近我做的哪件小事，让你感到被爱？',
+      '如果给你一天完全听我的安排，你猜我会带你去干嘛？',
+      '你最近一次偷偷看我是什么时候？当时在想什么？',
+      '哪一首歌会让你想起我？为什么？',
+      '如果我们要养一只宠物，你觉得咱俩谁先投降去铲屎？',
+      '你最喜欢我身上的哪一个“缺点”？',
+      '最近有什么想吃很久了但一直没吃到的东西？',
+      '如果我们的故事被写成书，你最想给哪一章起什么标题？',
+      '你觉得自己哪个瞬间最有魅力？我确认一下我有没有看到过。',
+      '我们之间谁的脾气更好？举一个具体例子作证据。',
+      '如果下辈子还能遇见，你想在什么场景认出我？',
+      '最近有没有什么压力，是你还没告诉我的？',
+      '你手机里哪张我们的合照你最舍不得删？',
+      '如果我们可以瞬移去看一场演出，你想看什么？',
+      '你希望我们八十岁的时候还在做哪件现在做的事？',
+      '哪一次旅行让你印象最深？最难忘的是哪一个瞬间？',
+      '如果让你替我选一件冬天的衣服，你会选什么风格？',
+      '最近学会的一件小事，想讲给我听吗？',
+      '你觉得我们家未来的客厅会是什么颜色？',
+      '哪个瞬间让你确定“就是这个人了”？',
+      '如果想给我一个惊喜，你最想策划什么样的小事？',
+      '你最近做的哪个梦里有我？',
+      '我们下一次见面，你最想先做的第一件事是什么？',
+      '你觉得我什么表情最可爱？',
+      '如果一起开一家小店，你想卖什么？',
+      '你最近有哪一刻特别为我骄傲？',
+      '如果给现在的我们打一个标签，你会写什么？',
+      '你最想重温我们的哪一天？为什么是那天？',
+      '今天想对我说的最后一句话是什么？'
+    ],
+
+    // 约会转盘候选池（随时增删）
+    wheel: {
+      restaurant: ['去吃一家没试过的火锅店', '寻找附近评分最高的甜品店', '重温第一次约会吃过的东西', '把收藏夹里存了很久的那家店吃掉', '深夜一起去吃一顿烧烤', '挑一家有窗景的餐厅慢慢吃'],
+      activity: ['一起看一场电影', '去公园散步并拍十张照片', '一起做一顿没做过的菜', '逛一次美术馆或博物馆', '找一个晚上一起桌游或拼图', '一起骑车去没去过的街区'],
+      trip: ['周末去一座没去过的城市', '坐地铁到一个陌生终点站', '去看一次日出', '去海边住一晚', '逛一次夜市从头吃到尾']
+    }
+  };
+
+  // ================== 以下为实现，一般不用动 ==================
+
+  // 密码门：本地校验（SHA-256），7 天内免重复输入
   const gate = document.getElementById('passwordGate');
   const passwordForm = document.getElementById('passwordForm');
   const passwordInput = document.getElementById('passwordInput');
   const passwordError = document.getElementById('passwordError');
-  const syncStatus = document.getElementById('syncStatus');
-  const CLOUD_SESSION_KEY = 'loveCloudSession';
-  const CLOUD_API_ORIGIN = window.location.hostname === '777-qi.github.io'
-    ? 'https://mtqzyh520.netlify.app'
-    : '';
-  let syncStatusTimer = 0;
+  const UNLOCK_KEY = 'loveUnlockedUntil';
 
-  function cloudApiUrl(path) {
-    return `${CLOUD_API_ORIGIN}${path}`;
+  async function digestHex(text) {
+    const buffer = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+    return [...new Uint8Array(buffer)].map(byte => byte.toString(16).padStart(2, '0')).join('');
   }
-
-  function getCloudSession() {
-    try { return localStorage.getItem(CLOUD_SESSION_KEY) || ''; } catch (_) { return ''; }
-  }
-
-  function setCloudSession(token) {
-    try {
-      if (token) localStorage.setItem(CLOUD_SESSION_KEY, token);
-      else localStorage.removeItem(CLOUD_SESSION_KEY);
-    } catch (_) {}
-  }
-
-  function showSyncStatus(message, isError = false, persistent = false) {
-    window.clearTimeout(syncStatusTimer);
-    syncStatus.textContent = message;
-    syncStatus.classList.toggle('is-error', isError);
-    syncStatus.classList.add('is-visible');
-    if (!persistent) syncStatusTimer = window.setTimeout(() => syncStatus.classList.remove('is-visible'), 3200);
-  }
-
-  async function cloudRequest(path, options = {}) {
-    const token = getCloudSession();
-    if (!token) throw new Error('请先输入密码解锁共享空间');
-    const response = await fetch(cloudApiUrl(path), {
-      ...options,
-      headers: {
-        authorization: `Bearer ${token}`,
-        ...(options.body ? { 'content-type': 'application/json' } : {}),
-        ...(options.headers || {})
-      }
-    });
-    let result = {};
-    try { result = await response.json(); } catch (_) {}
-    if (!response.ok) {
-      if (response.status === 401) {
-        setCloudSession('');
-        relockPage('登录已过期，请重新输入密码');
-      }
-      throw new Error(result.error || `云端请求失败（${response.status}）`);
-    }
-    return result;
-  }
-
-  let gateHideTimer = 0;
 
   function unlockPage(animate = true) {
     document.body.classList.remove('locked');
     if (!gate) return;
-    window.clearTimeout(gateHideTimer);
     if (animate) {
       gate.classList.add('is-leaving');
-      gateHideTimer = window.setTimeout(() => { gate.style.display = 'none'; }, 430);
+      window.setTimeout(() => { gate.style.display = 'none'; }, 430);
     } else {
       gate.style.display = 'none';
     }
   }
 
-  // 会话过期时把密码门重新请回来，而不是让页面停在报错状态
-  function relockPage(message) {
-    if (!gate) return;
-    window.clearTimeout(gateHideTimer);
-    gate.style.display = 'grid';
-    gate.classList.remove('is-leaving');
-    document.body.classList.add('locked');
-    passwordInput.value = '';
-    if (message) passwordError.textContent = message;
-    window.setTimeout(() => passwordInput.focus(), 80);
+  function isUnlocked() {
+    try { return Number(localStorage.getItem(UNLOCK_KEY)) > Date.now(); } catch (_) { return false; }
   }
 
-  if (passwordForm) {
-    passwordForm.addEventListener('submit', async event => {
-      event.preventDefault();
-      const submitButton = passwordForm.querySelector('button[type="submit"]');
-      submitButton.disabled = true;
-      passwordError.textContent = '正在连接我们的共享空间…';
-      try {
-        const response = await fetch(cloudApiUrl('/api/login'), {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({ password: passwordInput.value })
-        });
-        const result = await response.json();
-        if (!response.ok) throw new Error(result.error || '暂时无法登录共享空间');
-        setCloudSession(result.token);
-        unlockPage(true);
-        await initializeSharedFeatures();
-      } catch (error) {
-        passwordError.textContent = error.message;
-        passwordInput.value = '';
-        passwordInput.focus();
-        passwordForm.classList.remove('shake');
-        void passwordForm.offsetWidth;
-        passwordForm.classList.add('shake');
-      } finally {
-        submitButton.disabled = false;
-      }
-    });
-  }
+  if (isUnlocked()) unlockPage(false);
 
-  async function restoreCloudSession() {
-    if (!getCloudSession()) return;
+  passwordForm.addEventListener('submit', async event => {
+    event.preventDefault();
+    const submitButton = passwordForm.querySelector('button[type="submit"]');
+    submitButton.disabled = true;
+    passwordError.textContent = '';
     try {
-      await cloudRequest('/api/login');
-      unlockPage(false);
-      await initializeSharedFeatures();
+      const hash = await digestHex(passwordInput.value);
+      if (hash !== SITE.passwordHash) throw new Error('密码不对哦，再想想这个特别的日子 💕');
+      try { localStorage.setItem(UNLOCK_KEY, String(Date.now() + 7 * 86400000)); } catch (_) {}
+      unlockPage(true);
     } catch (error) {
-      setCloudSession('');
       passwordError.textContent = error.message;
+      passwordInput.value = '';
+      passwordInput.focus();
+      passwordForm.classList.remove('shake');
+      void passwordForm.offsetWidth;
+      passwordForm.classList.add('shake');
+    } finally {
+      submitButton.disabled = false;
     }
-  }
+  });
 
-  window.addEventListener('DOMContentLoaded', restoreCloudSession);
-
-  // 在一起计时：统一按北京时间计算，年月使用真实日历跨度
+  // 在一起计时：按北京时间，年月用真实日历跨度
   const togetherFields = {
     years: document.getElementById('togetherYears'),
     months: document.getElementById('togetherMonths'),
@@ -1362,7 +1261,6 @@
     minutes: document.getElementById('togetherMinutes'),
     seconds: document.getElementById('togetherSeconds')
   };
-  const togetherStart = { year: 2024, month: 2, day: 28, hour: 0, minute: 0, second: 0 };
   const shanghaiClock = new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Asia/Shanghai', year: 'numeric', month: '2-digit', day: '2-digit',
     hour: '2-digit', minute: '2-digit', second: '2-digit', hourCycle: 'h23'
@@ -1375,24 +1273,23 @@
     return new Date(Date.UTC(parts.year, parts.month - 1, parts.day, parts.hour, parts.minute, parts.second));
   }
 
+  function shanghaiDateKey() {
+    return shanghaiNowAsUtcDate().toISOString().slice(0, 10);
+  }
+
   function updateTogetherCounter() {
     const now = shanghaiNowAsUtcDate();
     const start = new Date(Date.UTC(
-      togetherStart.year, togetherStart.month - 1, togetherStart.day,
-      togetherStart.hour, togetherStart.minute, togetherStart.second
+      SITE.since.year, SITE.since.month - 1, SITE.since.day, 0, 0, 0
     ));
     if (now < start) return;
-
     let totalMonths = (now.getUTCFullYear() - start.getUTCFullYear()) * 12
       + now.getUTCMonth() - start.getUTCMonth();
-    let cursor = new Date(Date.UTC(2024, 1 + totalMonths, 28, 0, 0, 0));
+    let cursor = new Date(Date.UTC(SITE.since.year, SITE.since.month - 1 + totalMonths, SITE.since.day));
     if (cursor > now) {
       totalMonths -= 1;
-      cursor = new Date(Date.UTC(2024, 1 + totalMonths, 28, 0, 0, 0));
+      cursor = new Date(Date.UTC(SITE.since.year, SITE.since.month - 1 + totalMonths, SITE.since.day));
     }
-
-    const years = Math.floor(totalMonths / 12);
-    const months = totalMonths % 12;
     let remainder = now - cursor;
     const days = Math.floor(remainder / 86400000);
     remainder %= 86400000;
@@ -1400,9 +1297,8 @@
     remainder %= 3600000;
     const minutes = Math.floor(remainder / 60000);
     const seconds = Math.floor((remainder % 60000) / 1000);
-
-    togetherFields.years.textContent = years;
-    togetherFields.months.textContent = months;
+    togetherFields.years.textContent = Math.floor(totalMonths / 12);
+    togetherFields.months.textContent = totalMonths % 12;
     togetherFields.days.textContent = days;
     togetherFields.hours.textContent = hours;
     togetherFields.minutes.textContent = minutes;
@@ -1411,28 +1307,26 @@
   updateTogetherCounter();
   window.setInterval(updateTogetherCounter, 1000);
 
-  // 每月28日是我们的纪念日，主页出现小横幅；周年日有专属文案
+  // 每月纪念日横幅 + 每 100 天里程碑
   (function renderAnniversaryBanner() {
     const now = shanghaiNowAsUtcDate();
-    const isAnniversaryDay = now.getUTCDate() === 28;
-    if (!isAnniversaryDay) return;
+    if (now.getUTCDate() !== SITE.since.day) return;
     const banner = document.createElement('p');
     banner.className = 'anniversary-banner';
-    const yearsTogether = now.getUTCFullYear() - 2024;
-    if (now.getUTCMonth() + 1 === 2 && yearsTogether > 0) {
-      banner.textContent = `💕 今天是我们在一起 ${yearsTogether} 周年纪念日！`;
+    const years = now.getUTCFullYear() - SITE.since.year;
+    if (now.getUTCMonth() + 1 === SITE.since.month && years > 0) {
+      banner.textContent = `💕 今天是我们在一起 ${years} 周年纪念日！`;
     } else {
       banner.textContent = '💕 今天是我们每个月的纪念日';
     }
     document.querySelector('.couple-subtitle').after(banner);
   })();
 
-  // 里程碑：下一个每 100 天的小日子
   (function renderMilestone() {
     const line = document.getElementById('milestoneLine');
     if (!line) return;
     const now = shanghaiNowAsUtcDate();
-    const startMs = Date.UTC(2024, 1, 28);
+    const startMs = Date.UTC(SITE.since.year, SITE.since.month - 1, SITE.since.day);
     const daysTogether = Math.floor((now.getTime() - startMs) / 86400000);
     if (daysTogether < 0) return;
     if (daysTogether > 0 && daysTogether % 100 === 0) {
@@ -1441,50 +1335,55 @@
       return;
     }
     const nextMilestone = (Math.floor(daysTogether / 100) + 1) * 100;
-    const daysLeft = nextMilestone - daysTogether;
-    line.textContent = `距离在一起 ${nextMilestone} 天，还有 ${daysLeft} 天`;
+    line.textContent = `距离在一起 ${nextMilestone} 天，还有 ${nextMilestone - daysTogether} 天`;
   })();
 
-  const cities = [
-    { name: '荆州', lon: 112.24, lat: 30.33, lx: 0, ly: -2, story: '古城的风与共同走过的街道，都值得留下一页。关于荆州的照片和故事，会在这里慢慢补齐。' },
-    { name: '珠海', lon: 113.58, lat: 22.27, lx: -30, ly: 22, story: '海风、晚霞和并肩散步的时刻，是珠海留给我们的温柔记忆。' },
-    { name: '广州', lon: 113.26, lat: 23.13, lx: -28, ly: -4, story: '热闹的街巷、好吃的东西，还有在人群里始终牵着的手。' },
-    { name: '深圳', lon: 114.06, lat: 22.54, lx: 31, ly: 10, story: '这座熟悉的城市承载着日常，也见证着我们一次又一次出发。' },
-    { name: '廊坊', lon: 116.68, lat: 39.52, ox: -1.2, oy: 2.5, lx: -40, ly: 14, story: '旅途中每一座看似安静的城市，都因为两个人同行而有了独特意义。' },
-    { name: '石家庄', lon: 114.51, lat: 38.04, lx: -33, ly: 12, story: '在这座城市停留的片段，等待着照片把当时的温度重新带回来。' },
-    { name: '北京', lon: 116.40, lat: 39.90, ox: -1.2, oy: -1.7, lx: 0, ly: -6, story: '从古老城墙到璀璨夜景，北京的辽阔里也藏着只属于我们的细节。' },
-    { name: '天津', lon: 117.20, lat: 39.13, ox: 1.8, oy: .8, lx: 28, ly: 3, story: '海河边的风、街巷里的烟火气，都成为共同记忆的一部分。' },
-    { name: '济南', lon: 117.00, lat: 36.65, lx: 12, ly: 12, story: '泉水与老城的节奏，让这段旅程有了温柔而从容的底色。' },
-    { name: '苏州', lon: 120.58, lat: 31.30, lx: -20, ly: -2, story: '小桥、流水与园林，把我们一起走过的时光装进了江南画卷。' },
-    { name: '成都', lon: 104.07, lat: 30.67, lx: -18, ly: -2, story: '慢一点的生活、热辣的味道，还有一起消磨的悠闲时光。' },
-    { name: '重庆', lon: 106.55, lat: 29.56, lx: 15, ly: 8, story: '山城的高低起伏和夜色，让这趟共同抵达的旅程格外鲜明。' },
-    { name: '上海', lon: 121.47, lat: 31.23, lx: 22, ly: 8, story: '灯火、街景和匆匆人潮之中，我们拥有自己的步调和方向。' },
-    { name: '喀什', lon: 75.99, lat: 39.47, lx: 0, ly: -2, story: '从熟悉的日常走到遥远的西域，距离让这次共同抵达更加珍贵。' }
-  ];
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>'"]/g, character => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+    })[character]);
+  }
 
+  function formatFirstDate(dateValue) {
+    if (!dateValue) return '';
+    const parts = dateValue.split('-');
+    return `${parts[0]} 年 ${Number(parts[1])} 月 ${Number(parts[2])} 日`;
+  }
+
+  // 屏幕切换
+  const screens = [...document.querySelectorAll('.screen')];
+  function showScreen(target) {
+    screens.forEach(screen => screen.classList.toggle('is-active', screen === target));
+    target.scrollTop = 0;
+  }
+  const introScreen = document.getElementById('introScreen');
+  const mainScreen = document.getElementById('mainScreen');
+  const footprintScreen = document.getElementById('footprintScreen');
+  const firstsScreen = document.getElementById('firstsScreen');
+  const plansScreen = document.getElementById('plansScreen');
+  const capsulesScreen = document.getElementById('capsulesScreen');
+  const dailyQuestionScreen = document.getElementById('dailyQuestionScreen');
+  const dateWheelScreen = document.getElementById('dateWheelScreen');
+
+  // 初始探索页
   function mapPoint(city) {
     const x = ((city.lon - 73) / (135 - 73)) * 100 + (city.ox || 0);
     const y = ((54 - city.lat) / (54 - 18)) * 100 + (city.oy || 0);
     return { x, y };
   }
-
   function introPoint(city) {
     const point = mapPoint(city);
     return { x: 10 + point.x * .8, y: 10 + point.y * .8 };
   }
-
   const introMap = document.getElementById('introMap');
   const introCopy = document.getElementById('introCopy');
   const introSparks = document.getElementById('introSparks');
   const discoveryTrigger = document.getElementById('discoveryTrigger');
   let discovered = false;
   let introRevealTimers = [];
-
   function queueIntroReveal(callback, delay) {
-    const timer = window.setTimeout(callback, delay);
-    introRevealTimers.push(timer);
+    introRevealTimers.push(window.setTimeout(callback, delay));
   }
-
   function resetFootprintIntro() {
     introRevealTimers.forEach(timer => window.clearTimeout(timer));
     introRevealTimers = [];
@@ -1493,13 +1392,11 @@
     introCopy.classList.remove('is-visible');
     introSparks.replaceChildren();
   }
-
   discoveryTrigger.addEventListener('click', () => {
     if (discovered) return;
     discovered = true;
     introMap.classList.add('is-discovered');
-
-    const featured = [cities[13], cities[10], cities[11], cities[0], cities[3], cities[6], cities[9], cities[12]];
+    const featured = [SITE.cities[13], SITE.cities[10], SITE.cities[11], SITE.cities[0], SITE.cities[3], SITE.cities[6], SITE.cities[9], SITE.cities[12]];
     featured.forEach((city, index) => {
       const point = introPoint(city);
       const spark = document.createElement('span');
@@ -1510,27 +1407,11 @@
       introSparks.appendChild(spark);
       queueIntroReveal(() => spark.classList.add('is-visible'), 120 + index * 120);
     });
-
     queueIntroReveal(() => {
       introCopy.classList.add('is-visible');
       introMap.classList.add('copy-visible');
     }, 1250);
   });
-
-  const screens = [...document.querySelectorAll('.screen')];
-  function showScreen(target) {
-    screens.forEach(screen => screen.classList.toggle('is-active', screen === target));
-    target.scrollTop = 0;
-  }
-
-  const introScreen = document.getElementById('introScreen');
-  const mainScreen = document.getElementById('mainScreen');
-  const footprintScreen = document.getElementById('footprintScreen');
-  const firstsScreen = document.getElementById('firstsScreen');
-  const plansScreen = document.getElementById('plansScreen');
-  const capsulesScreen = document.getElementById('capsulesScreen');
-  const dailyQuestionScreen = document.getElementById('dailyQuestionScreen');
-  const dateWheelScreen = document.getElementById('dateWheelScreen');
 
   function showFootprintMap() {
     showScreen(footprintScreen);
@@ -1552,1018 +1433,13 @@
     resetFootprintIntro();
     showScreen(introScreen);
   });
-  document.getElementById('openFirsts').addEventListener('click', () => {
-    showScreen(firstsScreen);
-    renderFirsts();
-  });
-  document.getElementById('openPlans').addEventListener('click', () => {
-    showScreen(plansScreen);
-    renderPlans();
-  });
-  document.getElementById('openCapsules').addEventListener('click', () => {
-    showScreen(capsulesScreen);
-    renderCapsules();
-  });
-  document.getElementById('openDailyQuestion').addEventListener('click', () => {
-    showScreen(dailyQuestionScreen);
-    renderDailyQuestion();
-  });
-  document.getElementById('openDateWheel').addEventListener('click', () => {
-    showScreen(dateWheelScreen);
-    loadWheelOptions();
-  });
-
-  // “我们的第一次”：云端为主，IndexedDB 仅用于迁移旧记录
-  const firstsTimeline = document.getElementById('firstsTimeline');
-  const firstCount = document.getElementById('firstCount');
-  const firstFormModal = document.getElementById('firstFormModal');
-  const firstForm = document.getElementById('firstForm');
-  const firstTitle = document.getElementById('firstTitle');
-  const firstDate = document.getElementById('firstDate');
-  const firstTime = document.getElementById('firstTime');
-  const firstStory = document.getElementById('firstStory');
-  const firstPhotos = document.getElementById('firstPhotos');
-  const uploadPreview = document.getElementById('uploadPreview');
-  const firstFormStatus = document.getElementById('firstFormStatus');
-  const saveFirst = document.getElementById('saveFirst');
-  const closeFirstForm = document.getElementById('closeFirstForm');
-  let selectedFirstPhotos = [];
-  let firstsCache = [];
-  let editingEntry = null;
-
-  function openFirstsDatabase() {
-    return new Promise((resolve, reject) => {
-      if (!('indexedDB' in window)) {
-        reject(new Error('当前浏览器不支持本地回忆存储'));
-        return;
-      }
-      const request = indexedDB.open('huihui-tianqi-memories', 2);
-      request.onupgradeneeded = () => {
-        const database = request.result;
-        if (!database.objectStoreNames.contains('firsts')) {
-          database.createObjectStore('firsts', { keyPath: 'id' });
-        }
-        if (!database.objectStoreNames.contains('plans')) {
-          database.createObjectStore('plans', { keyPath: 'id' });
-        }
-        if (!database.objectStoreNames.contains('capsules')) {
-          database.createObjectStore('capsules', { keyPath: 'id' });
-        }
-      };
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error || new Error('无法打开本地回忆库'));
-    });
-  }
-
-  async function readLocalMemoryStore(storeName) {
-    const database = await openFirstsDatabase();
-    return new Promise((resolve, reject) => {
-      const transaction = database.transaction(storeName, 'readonly');
-      const request = transaction.objectStore(storeName).getAll();
-      request.onsuccess = () => resolve(request.result || []);
-      request.onerror = () => reject(request.error);
-      transaction.oncomplete = () => database.close();
-    });
-  }
-
-  async function uploadRecordPhotos(storeName, value) {
-    if (!Array.isArray(value.photos) || !value.photos.length) return value;
-    const photos = [];
-    for (let index = 0; index < value.photos.length; index += 1) {
-      const photo = value.photos[index];
-      if (photo && typeof photo === 'object' && photo.path) {
-        photos.push(photo.path);
-        continue;
-      }
-      if (typeof photo === 'string' && !photo.startsWith('data:')) {
-        photos.push(photo);
-        continue;
-      }
-      showSyncStatus(`正在上传照片 ${index + 1} / ${value.photos.length}…`, false, true);
-      const result = await cloudRequest('/api/photo', {
-        method: 'POST',
-        body: JSON.stringify({ kind: storeName, recordId: value.id, dataUrl: photo })
-      });
-      photos.push(result.path);
-    }
-    return { ...value, photos };
-  }
-
-  async function readMemoryStore(storeName) {
-    const result = await cloudRequest(`/api/data?kind=${encodeURIComponent(storeName)}`);
-    return result.records || [];
-  }
-
-  async function putMemoryStore(storeName, value) {
-    const record = await uploadRecordPhotos(storeName, value);
-    await cloudRequest('/api/data', {
-      method: 'POST',
-      body: JSON.stringify({ kind: storeName, record })
-    });
-  }
-
-  async function deleteMemoryStore(storeName, id) {
-    await cloudRequest(`/api/data?kind=${encodeURIComponent(storeName)}&id=${encodeURIComponent(id)}`, { method: 'DELETE' });
-  }
-
-  const readFirsts = () => readMemoryStore('firsts');
-  const putFirst = entry => putMemoryStore('firsts', entry);
-  const removeFirst = id => deleteMemoryStore('firsts', id);
-
-  function escapeHtml(value) {
-    return String(value || '').replace(/[&<>'"]/g, character => ({
-      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
-    })[character]);
-  }
-
-  function photoSource(photo) {
-    return escapeHtml(photo && typeof photo === 'object' ? photo.url : photo);
-  }
-
-  function formatFirstDate(dateValue) {
-    if (!dateValue) return '未填写日期';
-    const parts = dateValue.split('-');
-    return `${parts[0]} 年 ${Number(parts[1])} 月 ${Number(parts[2])} 日`;
-  }
-
-  async function renderFirsts() {
-    try {
-      firstsCache = (await readFirsts()).sort((a, b) =>
-        b.date.localeCompare(a.date) || b.createdAt - a.createdAt
-      );
-      firstCount.textContent = firstsCache.length ? `已收藏 ${firstsCache.length} 个第一次` : '等待第一篇回忆';
-      if (!firstsCache.length) {
-        firstsTimeline.innerHTML = '<div class="firsts-empty"><strong>这里还没有记录</strong>点击“记录一个第一次”，写下属于你们的第一篇回忆吧。</div>';
-        return;
-      }
-
-      firstsTimeline.innerHTML = firstsCache.map((entry, index) => {
-        const photos = (entry.photos || []).map((photo, photoIndex) =>
-          `<img class="first-entry-photo" src="${photoSource(photo)}" alt="${escapeHtml(entry.title)}的照片 ${photoIndex + 1}" loading="lazy">`
-        ).join('');
-        return `<article class="first-entry" data-entry-id="${escapeHtml(entry.id)}">
-          <header class="first-entry-head">
-            <div>
-              <p class="first-entry-date">FIRST ${String(firstsCache.length - index).padStart(2, '0')} · ${formatFirstDate(entry.date)}${entry.time ? ` · ${escapeHtml(entry.time)}` : ''}</p>
-              <h2>${escapeHtml(entry.title)}</h2>
-            </div>
-            <div class="first-entry-actions">
-              <button class="entry-action edit-first" type="button" data-id="${escapeHtml(entry.id)}">编辑</button>
-              <button class="entry-action delete-first" type="button" data-id="${escapeHtml(entry.id)}">删除</button>
-            </div>
-          </header>
-          ${entry.story ? `<p class="first-entry-story">${escapeHtml(entry.story)}</p>` : ''}
-          ${photos ? `<div class="first-entry-photos">${photos}</div>` : ''}
-        </article>`;
-      }).join('');
-    } catch (error) {
-      firstsTimeline.innerHTML = `<div class="firsts-empty"><strong>暂时无法读取记录</strong>${escapeHtml(error.message)}</div>`;
-    }
-  }
-
-  function showFirstForm(entry = null) {
-    editingEntry = entry;
-    firstForm.reset();
-    if (entry) {
-      document.getElementById('firstFormTitle').textContent = '编辑这个第一次';
-      saveFirst.textContent = '保存修改';
-      firstTitle.value = entry.title || '';
-      firstDate.value = entry.date || '';
-      firstTime.value = entry.time || '';
-      firstStory.value = entry.story || '';
-      selectedFirstPhotos = (entry.photos || []).filter(Boolean);
-    } else {
-      document.getElementById('firstFormTitle').textContent = '记录一个第一次';
-      saveFirst.textContent = '保存这次回忆';
-      firstDate.value = new Date().toISOString().slice(0, 10);
-      selectedFirstPhotos = [];
-    }
-    firstFormStatus.textContent = '';
-    renderUploadPreview();
-    firstFormModal.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-    window.setTimeout(() => firstTitle.focus(), 80);
-  }
-
-  function hideFirstForm() {
-    firstFormModal.classList.remove('is-open');
-    document.body.style.overflow = '';
-  }
-
-  function renderUploadPreview() {
-    uploadPreview.innerHTML = selectedFirstPhotos.map((photo, index) =>
-      `<div class="upload-preview-item"><img src="${photo}" alt="待上传照片 ${index + 1}"><button class="remove-preview" type="button" data-index="${index}" aria-label="移除照片">×</button></div>`
-    ).join('');
-  }
-
-  const PHOTO_MAX_BYTES = 500 * 1024;
-
-  function canvasToJpeg(canvas, quality) {
-    return new Promise((resolve, reject) => {
-      canvas.toBlob(blob => {
-        if (blob) resolve(blob);
-        else reject(new Error('当前浏览器无法压缩这张照片'));
-      }, 'image/jpeg', quality);
-    });
-  }
-
-  function blobToDataUrl(blob) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = () => reject(new Error('无法读取压缩后的照片'));
-      reader.onload = () => resolve(reader.result);
-      reader.readAsDataURL(blob);
-    });
-  }
-
-  function compressPhoto(file) {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onerror = () => reject(new Error(`无法读取 ${file.name}`));
-      reader.onload = () => {
-        const image = new Image();
-        image.onerror = () => reject(new Error(`${file.name} 不是有效图片`));
-        image.onload = async () => {
-          const maxSide = 1600;
-          let scale = Math.min(1, maxSide / Math.max(image.naturalWidth, image.naturalHeight));
-          const canvas = document.createElement('canvas');
-          let compressedBlob;
-
-          try {
-            for (let resizeAttempt = 0; resizeAttempt < 7; resizeAttempt += 1) {
-              canvas.width = Math.max(1, Math.round(image.naturalWidth * scale));
-              canvas.height = Math.max(1, Math.round(image.naturalHeight * scale));
-              const context = canvas.getContext('2d');
-              if (!context) throw new Error('当前浏览器无法处理这张照片');
-              context.fillStyle = '#0d0a15';
-              context.fillRect(0, 0, canvas.width, canvas.height);
-              context.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-              let low = .35;
-              let high = .88;
-              let bestBlob = null;
-              for (let qualityAttempt = 0; qualityAttempt < 7; qualityAttempt += 1) {
-                const quality = (low + high) / 2;
-                const blob = await canvasToJpeg(canvas, quality);
-                if (blob.size <= PHOTO_MAX_BYTES) {
-                  bestBlob = blob;
-                  low = quality;
-                } else {
-                  high = quality;
-                }
-              }
-
-              if (bestBlob) {
-                compressedBlob = bestBlob;
-                break;
-              }
-              scale *= .82;
-            }
-
-            if (!compressedBlob || compressedBlob.size > PHOTO_MAX_BYTES) {
-              throw new Error(`${file.name} 无法压缩到 500KB 以内，请换一张照片`);
-            }
-            resolve(await blobToDataUrl(compressedBlob));
-          } catch (error) {
-            reject(error);
-          }
-        };
-        image.src = reader.result;
-      };
-      reader.readAsDataURL(file);
-    });
-  }
-
-  document.getElementById('addFirst').addEventListener('click', showFirstForm);
-  closeFirstForm.addEventListener('click', hideFirstForm);
-  firstFormModal.addEventListener('click', event => { if (event.target === firstFormModal) hideFirstForm(); });
-  uploadPreview.addEventListener('click', event => {
-    const button = event.target.closest('.remove-preview');
-    if (!button) return;
-    selectedFirstPhotos.splice(Number(button.dataset.index), 1);
-    renderUploadPreview();
-  });
-
-  firstPhotos.addEventListener('change', async () => {
-    const files = [...firstPhotos.files].filter(file => file.type.startsWith('image/'));
-    const availableSlots = 8 - selectedFirstPhotos.length;
-    if (files.length > availableSlots) firstFormStatus.textContent = '每条回忆最多保存 8 张照片。';
-    saveFirst.disabled = true;
-    try {
-      const compressed = await Promise.all(files.slice(0, availableSlots).map(compressPhoto));
-      selectedFirstPhotos.push(...compressed);
-      renderUploadPreview();
-      if (files.length <= availableSlots) firstFormStatus.textContent = `已选择 ${selectedFirstPhotos.length} 张照片，每张均已压缩至 500KB 以内。`;
-    } catch (error) {
-      firstFormStatus.textContent = error.message;
-    } finally {
-      saveFirst.disabled = false;
-      firstPhotos.value = '';
-    }
-  });
-
-  firstForm.addEventListener('submit', async event => {
-    event.preventDefault();
-    saveFirst.disabled = true;
-    firstFormStatus.textContent = editingEntry ? '正在保存修改…' : '正在保存回忆…';
-    const entry = {
-      id: editingEntry?.id || (window.crypto && crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random().toString(16).slice(2)}`),
-      title: firstTitle.value.trim(),
-      date: firstDate.value,
-      time: firstTime.value,
-      story: firstStory.value.trim(),
-      photos: selectedFirstPhotos,
-      createdAt: editingEntry?.createdAt || Date.now()
-    };
-    try {
-      await putFirst(entry);
-      hideFirstForm();
-      await renderFirsts();
-      showSyncStatus(editingEntry ? '回忆已更新' : '新的第一次已收藏 ✓');
-    } catch (error) {
-      firstFormStatus.textContent = `保存失败：${error.message}`;
-    } finally {
-      saveFirst.disabled = false;
-    }
-  });
-
-  firstsTimeline.addEventListener('click', async event => {
-    const editButton = event.target.closest('.edit-first');
-    if (editButton) {
-      const entry = firstsCache.find(item => item.id === editButton.dataset.id);
-      if (entry) showFirstForm(entry);
-      return;
-    }
-    const button = event.target.closest('.delete-first');
-    if (!button) return;
-    const entry = firstsCache.find(item => item.id === button.dataset.id);
-    if (!entry || !window.confirm(`确定删除“${entry.title}”这条回忆吗？`)) return;
-    await removeFirst(entry.id);
-    await renderFirsts();
-  });
-
-  // 未来清单：完成后自动移动到回忆区
-  const planFormModal = document.getElementById('planFormModal');
-  const planForm = document.getElementById('planForm');
-  const planCategory = document.getElementById('planCategory');
-  const planTitle = document.getElementById('planTitle');
-  const planTargetDate = document.getElementById('planTargetDate');
-  const planNote = document.getElementById('planNote');
-  const pendingPlanList = document.getElementById('pendingPlanList');
-  const completedPlanList = document.getElementById('completedPlanList');
-  const planCategoryMeta = {
-    place: { icon: '⌖', label: '想去的地方' },
-    restaurant: { icon: '♨', label: '想吃的店' },
-    thing: { icon: '✓', label: '想完成的事' }
-  };
-  let plansCache = [];
-  let editingPlan = null;
-
-  function planItemHtml(plan, completed = false) {
-    const meta = planCategoryMeta[plan.category] || planCategoryMeta.thing;
-    const timing = completed
-      ? `完成于 ${new Date(plan.completedAt).toLocaleDateString('zh-CN')}`
-      : (plan.targetDate ? `期待日期：${formatFirstDate(plan.targetDate)}` : '等我们选一个好日子');
-    return `<article class="plan-item ${completed ? 'memory-plan' : ''}" data-plan-id="${escapeHtml(plan.id)}">
-      <span class="plan-icon" aria-hidden="true">${meta.icon}</span>
-      <div><h3>${escapeHtml(plan.title)}</h3><p>${meta.label} · ${timing}${plan.note ? ` · ${escapeHtml(plan.note)}` : ''}</p></div>
-      <div class="plan-actions">
-        ${completed ? '' : `<button class="mini-button complete complete-plan" type="button" data-id="${escapeHtml(plan.id)}">完成</button>
-        <button class="mini-button edit-plan" type="button" data-id="${escapeHtml(plan.id)}">编辑</button>`}
-        <button class="mini-button delete-plan" type="button" data-id="${escapeHtml(plan.id)}">删除</button>
-      </div>
-    </article>`;
-  }
-
-  async function renderPlans() {
-    try {
-      plansCache = (await readMemoryStore('plans')).sort((a, b) => b.createdAt - a.createdAt);
-      const pending = plansCache.filter(plan => !plan.completed);
-      const completed = plansCache.filter(plan => plan.completed).sort((a, b) => b.completedAt - a.completedAt);
-      document.getElementById('pendingPlanCount').textContent = `${pending.length} 件`;
-      document.getElementById('completedPlanCount').textContent = `${completed.length} 件`;
-      document.getElementById('planCount').textContent = pending.length ? `${pending.length} 个愿望等待实现` : (completed.length ? `已实现 ${completed.length} 个愿望` : '等待第一个愿望');
-      pendingPlanList.innerHTML = pending.length ? pending.map(plan => planItemHtml(plan)).join('') : '<div class="empty-state">还没有等待实现的愿望。<br>把下一次心动计划写下来吧。</div>';
-      completedPlanList.innerHTML = completed.length ? completed.map(plan => planItemHtml(plan, true)).join('') : '<div class="empty-state">完成的愿望会自动来到这里，<br>变成一份共同回忆。</div>';
-    } catch (error) {
-      pendingPlanList.innerHTML = `<div class="empty-state">暂时无法读取清单：${escapeHtml(error.message)}</div>`;
-    }
-  }
-
-  function showPlanForm(plan = null) {
-    editingPlan = plan;
-    planForm.reset();
-    if (plan) {
-      document.getElementById('planFormTitle').textContent = '编辑这个愿望';
-      planForm.querySelector('.form-submit').textContent = '保存修改';
-      planCategory.value = plan.category || 'thing';
-      planTitle.value = plan.title || '';
-      planTargetDate.value = plan.targetDate || '';
-      planNote.value = plan.note || '';
-    } else {
-      document.getElementById('planFormTitle').textContent = '添加一个未来愿望';
-      planForm.querySelector('.form-submit').textContent = '加入我们的未来';
-    }
-    document.getElementById('planFormStatus').textContent = '';
-    planFormModal.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-    window.setTimeout(() => planTitle.focus(), 80);
-  }
-
-  function hidePlanForm() {
-    planFormModal.classList.remove('is-open');
-    document.body.style.overflow = '';
-  }
-
-  document.getElementById('addPlan').addEventListener('click', showPlanForm);
-  document.getElementById('closePlanForm').addEventListener('click', hidePlanForm);
-  planFormModal.addEventListener('click', event => { if (event.target === planFormModal) hidePlanForm(); });
-  planForm.addEventListener('submit', async event => {
-    event.preventDefault();
-    const submitButton = planForm.querySelector('.form-submit');
-    submitButton.disabled = true;
-    try {
-      const plan = {
-        id: editingPlan?.id || (crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`),
-        category: planCategory.value,
-        title: planTitle.value.trim(),
-        targetDate: planTargetDate.value,
-        note: planNote.value.trim(),
-        completed: editingPlan?.completed || false,
-        completedAt: editingPlan?.completedAt,
-        createdAt: editingPlan?.createdAt || Date.now()
-      };
-      await putMemoryStore('plans', plan);
-      hidePlanForm();
-      await renderPlans();
-      showSyncStatus(editingPlan ? '愿望已更新' : '新的愿望已加入 ✓');
-    } catch (error) {
-      document.getElementById('planFormStatus').textContent = `保存失败：${error.message}`;
-    } finally {
-      submitButton.disabled = false;
-    }
-  });
-
-  async function handlePlanListClick(event) {
-    const editButton = event.target.closest('.edit-plan');
-    if (editButton) {
-      const plan = plansCache.find(item => item.id === editButton.dataset.id);
-      if (plan) showPlanForm(plan);
-      return;
-    }
-    const completeButton = event.target.closest('.complete-plan');
-    const deleteButton = event.target.closest('.delete-plan');
-    if (!completeButton && !deleteButton) return;
-    const id = (completeButton || deleteButton).dataset.id;
-    const plan = plansCache.find(item => item.id === id);
-    if (!plan) return;
-    if (completeButton) {
-      plan.completed = true;
-      plan.completedAt = Date.now();
-      await putMemoryStore('plans', plan);
-    } else if (window.confirm(`确定删除“${plan.title}”吗？`)) {
-      await deleteMemoryStore('plans', id);
-    } else return;
-    await renderPlans();
-  }
-  pendingPlanList.addEventListener('click', handlePlanListClick);
-  completedPlanList.addEventListener('click', handlePlanListClick);
-
-  // 时光胶囊：到达约定日期后才显示信和照片
-  const capsuleFormModal = document.getElementById('capsuleFormModal');
-  const capsuleForm = document.getElementById('capsuleForm');
-  const capsuleTitle = document.getElementById('capsuleTitle');
-  const capsuleFrom = document.getElementById('capsuleFrom');
-  const capsuleUnlockDate = document.getElementById('capsuleUnlockDate');
-  const capsuleLetter = document.getElementById('capsuleLetter');
-  const capsulePhotos = document.getElementById('capsulePhotos');
-  const capsuleUploadPreview = document.getElementById('capsuleUploadPreview');
-  const capsuleFormStatus = document.getElementById('capsuleFormStatus');
-  const capsuleGrid = document.getElementById('capsuleGrid');
-  let selectedCapsulePhotos = [];
-  let capsulesCache = [];
-
-  function shanghaiDateKey() {
-    return shanghaiNowAsUtcDate().toISOString().slice(0, 10);
-  }
-
-  function tomorrowDateKey() {
-    const date = shanghaiNowAsUtcDate();
-    date.setUTCDate(date.getUTCDate() + 1);
-    return date.toISOString().slice(0, 10);
-  }
-
-  function renderCapsulePreview() {
-    capsuleUploadPreview.innerHTML = selectedCapsulePhotos.map((photo, index) =>
-      `<div class="upload-preview-item"><img src="${photo}" alt="胶囊照片 ${index + 1}"><button class="remove-preview" type="button" data-index="${index}" aria-label="移除照片">×</button></div>`
-    ).join('');
-  }
-
-  function showCapsuleForm() {
-    capsuleForm.reset();
-    selectedCapsulePhotos = [];
-    capsuleUnlockDate.min = tomorrowDateKey();
-    capsuleUnlockDate.value = tomorrowDateKey();
-    capsuleFormStatus.textContent = '';
-    renderCapsulePreview();
-    capsuleFormModal.classList.add('is-open');
-    document.body.style.overflow = 'hidden';
-    window.setTimeout(() => capsuleTitle.focus(), 80);
-  }
-
-  function hideCapsuleForm() {
-    capsuleFormModal.classList.remove('is-open');
-    document.body.style.overflow = '';
-  }
-
-  function capsuleDaysLeft(unlockDate, today) {
-    const unlockMs = Date.parse(`${unlockDate}T00:00:00+08:00`);
-    const todayMs = Date.parse(`${today}T00:00:00+08:00`);
-    if (Number.isNaN(unlockMs) || Number.isNaN(todayMs)) return null;
-    return Math.max(1, Math.round((unlockMs - todayMs) / 86400000));
-  }
-
-  async function renderCapsules() {
-    try {
-      capsulesCache = (await readMemoryStore('capsules')).sort((a, b) => b.createdAt - a.createdAt);
-      const today = shanghaiDateKey();
-      const openedToday = capsulesCache.filter(capsule => capsule.unlockDate === today).length;
-      const capsuleHomeCount = document.getElementById('capsuleCount');
-      if (openedToday) {
-        capsuleHomeCount.textContent = openedToday === 1 ? '有一颗胶囊今天可以打开了！' : `有 ${openedToday} 颗胶囊今天可以打开了！`;
-        capsuleHomeCount.classList.add('is-highlight');
-      } else {
-        capsuleHomeCount.textContent = capsulesCache.length ? `已封存 ${capsulesCache.length} 颗胶囊` : '还没有埋下胶囊';
-        capsuleHomeCount.classList.remove('is-highlight');
-      }
-      if (!capsulesCache.length) {
-        capsuleGrid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">还没有时光胶囊。<br>写一封只属于未来的信吧。</div>';
-        return;
-      }
-      capsuleGrid.innerHTML = capsulesCache.map(capsule => {
-        const unlocked = today >= capsule.unlockDate;
-        const photos = unlocked && capsule.photos?.length
-          ? `<div class="capsule-photos">${capsule.photos.map((photo, index) => `<img src="${photoSource(photo)}" alt="${escapeHtml(capsule.title)}的照片 ${index + 1}" loading="lazy">`).join('')}</div>` : '';
-        const daysLeft = unlocked ? 0 : capsuleDaysLeft(capsule.unlockDate, today);
-        const fromText = capsule.from ? `来自${capsule.from}` : '来自我们';
-        const meta = `${fromText} · ${unlocked
-          ? (capsule.unlockDate === today ? '✨ JUST OPENED · 今天解锁' : 'OPENED · 已到解锁日')
-          : 'SEALED · 封存中'}`;
-        const lockText = unlocked
-          ? ''
-          : `🔒 将在 ${formatFirstDate(capsule.unlockDate)} 打开${daysLeft ? ` · 还有 ${daysLeft} 天` : ''}<br>再耐心等一等，未来正在靠近。`;
-        return `<article class="capsule-item${unlocked && capsule.unlockDate === today ? ' is-just-opened' : ''}" data-capsule-id="${escapeHtml(capsule.id)}">
-          <p class="capsule-meta">${meta}</p>
-          <h2>${escapeHtml(capsule.title)}</h2>
-          ${unlocked
-            ? `<p class="capsule-letter">${escapeHtml(capsule.letter)}</p>${photos}`
-            : `<p class="capsule-lock">${lockText}</p>`}
-          <button class="mini-button capsule-delete delete-capsule" type="button" data-id="${escapeHtml(capsule.id)}">删除</button>
-        </article>`;
-      }).join('');
-    } catch (error) {
-      capsuleGrid.innerHTML = `<div class="empty-state">暂时无法读取胶囊：${escapeHtml(error.message)}</div>`;
-    }
-  }
-
-  document.getElementById('addCapsule').addEventListener('click', showCapsuleForm);
-  document.getElementById('closeCapsuleForm').addEventListener('click', hideCapsuleForm);
-  capsuleFormModal.addEventListener('click', event => { if (event.target === capsuleFormModal) hideCapsuleForm(); });
-  capsuleUploadPreview.addEventListener('click', event => {
-    const button = event.target.closest('.remove-preview');
-    if (!button) return;
-    selectedCapsulePhotos.splice(Number(button.dataset.index), 1);
-    renderCapsulePreview();
-  });
-  capsulePhotos.addEventListener('change', async () => {
-    const files = [...capsulePhotos.files].filter(file => file.type.startsWith('image/'));
-    const availableSlots = 6 - selectedCapsulePhotos.length;
-    document.getElementById('saveCapsule').disabled = true;
-    try {
-      const compressed = await Promise.all(files.slice(0, availableSlots).map(compressPhoto));
-      selectedCapsulePhotos.push(...compressed);
-      renderCapsulePreview();
-      capsuleFormStatus.textContent = `已放入 ${selectedCapsulePhotos.length} 张照片，每张均已压缩至 500KB 以内。`;
-    } catch (error) {
-      capsuleFormStatus.textContent = error.message;
-    } finally {
-      document.getElementById('saveCapsule').disabled = false;
-      capsulePhotos.value = '';
-    }
-  });
-  capsuleForm.addEventListener('submit', async event => {
-    event.preventDefault();
-    if (capsuleUnlockDate.value <= shanghaiDateKey()) {
-      capsuleFormStatus.textContent = '时光胶囊需要设置为未来的日期。';
-      return;
-    }
-    await putMemoryStore('capsules', {
-      id: crypto.randomUUID ? crypto.randomUUID() : `${Date.now()}-${Math.random()}`,
-      title: capsuleTitle.value.trim(), from: capsuleFrom.value,
-      unlockDate: capsuleUnlockDate.value,
-      letter: capsuleLetter.value.trim(), photos: selectedCapsulePhotos, createdAt: Date.now()
-    });
-    hideCapsuleForm();
-    await renderCapsules();
-  });
-  capsuleGrid.addEventListener('click', async event => {
-    const button = event.target.closest('.delete-capsule');
-    if (!button) return;
-    const capsule = capsulesCache.find(item => item.id === button.dataset.id);
-    if (!capsule || !window.confirm(`确定删除“${capsule.title}”这颗胶囊吗？`)) return;
-    await deleteMemoryStore('capsules', capsule.id);
-    await renderCapsules();
-  });
-
-  // 每日一问：两个人都提交后才同时展示答案
-  const dailyQuestions = [
-    '最近哪一个瞬间，让你突然觉得“有你真好”？',
-    '如果明天可以立刻出发，你最想和我去哪里？',
-    '你觉得我们最像哪一种小动物组合？为什么？',
-    '最近有什么小事，是你希望我能更懂你的？',
-    '如果把我们的一天拍成电影，你会给它取什么名字？',
-    '你最想和我一起养成哪一个长期习惯？',
-    '第一次见到我时，你印象最深的细节是什么？',
-    '你心里最理想的一次普通约会是什么样？',
-    '如果要把一句话留给十年后的我们，你会写什么？',
-    '我们一起做过的哪件傻事，现在想起来最好笑？',
-    '你希望下一张合照是在什么地方拍下的？',
-    '最近我做的哪件小事，让你感到被爱？',
-    '如果给你一天完全听我的安排，你猜我会带你去干嘛？',
-    '你最近一次偷偷看我是什么时候？当时在想什么？',
-    '哪一首歌会让你想起我？为什么？',
-    '如果我们要养一只宠物，你觉得咱俩谁先投降去铲屎？',
-    '你最喜欢我身上的哪一个“缺点”？',
-    '最近有什么想吃很久了但一直没吃到的东西？',
-    '如果我们的故事被写成书，你最想给哪一章起什么标题？',
-    '你觉得自己哪个瞬间最有魅力？我确认一下我有没有看到过。',
-    '我们之间谁的脾气更好？举一个具体例子作证据。',
-    '如果下辈子还能遇见，你想在什么场景认出我？',
-    '最近有没有什么压力，是你还没告诉我的？',
-    '你手机里哪张我们的合照你最舍不得删？',
-    '如果我们可以瞬移去看一场演出，你想看什么？',
-    '你希望我们八十岁的时候还在做哪件现在做的事？',
-    '哪一次旅行让你印象最深？最难忘的是哪一个瞬间？',
-    '如果让你替我选一件冬天的衣服，你会选什么风格？',
-    '最近学会的一件小事，想讲给我听吗？',
-    '你觉得我们家未来的客厅会是什么颜色？',
-    '哪个瞬间让你确定“就是这个人了”？',
-    '如果想给我一个惊喜，你最想策划什么样的小事？',
-    '你最近做的哪个梦里有我？',
-    '我们下一次见面，你最想先做的第一件事是什么？',
-    '你觉得我什么表情最可爱？',
-    '如果一起开一家小店，你想卖什么？',
-    '你最近有哪一刻特别为我骄傲？',
-    '如果给现在的我们打一个标签，你会写什么？',
-    '你最想重温我们的哪一天？为什么是那天？',
-    '今天想对我说的最后一句话是什么？'
-  ];
-  // 早期版本题库只有 12 道：往期回顾里旧记录的题目按 12 取模还原
-  const LEGACY_DAILY_MODULUS = 12;
-
-  function questionForDate(key, modulus = dailyQuestions.length) {
-    const dayNumber = Math.floor(Date.parse(`${key}T00:00:00Z`) / 86400000);
-    return dailyQuestions[dayNumber % modulus];
-  }
-
-  function currentDailyQuestion() {
-    const key = shanghaiDateKey();
-    return { key, text: questionForDate(key) };
-  }
-
-  let dailyAnswersCache = {};
-  let currentQuestionText = '';
-
-  // 服务端在双方都提交前不下发答案内容，只带 submitted 状态
-  function dailyAnswersFromRecords(records, key) {
-    return records.filter(record => record.date === key && record.person).reduce((answers, record) => {
-      answers[record.person] = {
-        answer: record.answer || '',
-        submitted: Boolean(record.submitted || record.answer)
-      };
-      return answers;
-    }, {});
-  }
-
-  function renderAnswerPanel(person, label, answers, bothAnswered) {
-    const entry = answers[person];
-    if (bothAnswered) {
-      return `<div class="answer-person"><strong>${label}</strong><span>答案已揭晓</span></div><p class="revealed-answer">${escapeHtml(entry.answer)}</p>`;
-    }
-    if (entry && entry.submitted) {
-      return `<div class="answer-person"><strong>${label}</strong><span>已提交</span></div><div class="sealed-answer">💌<br>你的答案已经封好<br>等待对方提交后一起揭晓</div>`;
-    }
-    return `<form class="daily-answer-form" data-person="${person}"><div class="answer-person"><strong>${label}</strong><span>独立作答中</span></div><textarea maxlength="600" required placeholder="写下你的真实答案……"></textarea><button class="answer-submit" type="submit">封存我的答案</button></form>`;
-  }
-
-  function renderDailyHistory(records) {
-    const container = document.getElementById('dailyHistory');
-    if (!container) return;
-    const today = shanghaiDateKey();
-    const byDate = new Map();
-    records.forEach(record => {
-      if (!record.date || !record.person || !record.answer) return;
-      if (!byDate.has(record.date)) byDate.set(record.date, { pair: {}, question: '' });
-      const entry = byDate.get(record.date);
-      entry.pair[record.person] = record.answer;
-      if (record.question && !entry.question) entry.question = record.question;
-    });
-    const past = [...byDate.entries()]
-      .filter(([date, entry]) => date !== today && entry.pair.tianqi && entry.pair.huihui)
-      .sort((a, b) => b[0].localeCompare(a[0]))
-      .slice(0, 20);
-    if (!past.length) {
-      container.innerHTML = '';
-      return;
-    }
-    container.innerHTML = `<h2 class="history-title">往期回答 · 最近 ${past.length} 天</h2>` + past.map(([date, entry]) => `
-      <article class="history-item">
-        <p class="history-date">${date.slice(0, 4)} 年 ${Number(date.slice(5, 7))} 月 ${Number(date.slice(8, 10))} 日</p>
-        <h3>${escapeHtml(entry.question || questionForDate(date, LEGACY_DAILY_MODULUS))}</h3>
-        <div class="history-answers">
-          <div class="history-answer"><strong>天奇</strong><p>${escapeHtml(entry.pair.tianqi)}</p></div>
-          <div class="history-answer"><strong>晖晖</strong><p>${escapeHtml(entry.pair.huihui)}</p></div>
-        </div>
-      </article>`).join('');
-  }
-
-  async function renderDailyQuestion() {
-    try {
-      const question = currentDailyQuestion();
-      const records = await readMemoryStore('daily');
-      const answers = dailyAnswersFromRecords(records, question.key);
-      dailyAnswersCache = answers;
-      // 今天若已有带题目的旧记录，沿用已存的题目，避免换题库后对不上
-      const storedQuestion = records.find(record => record.date === question.key && record.question)?.question;
-      currentQuestionText = storedQuestion || question.text;
-      const bothAnswered = Boolean(answers.tianqi?.answer && answers.huihui?.answer);
-      const date = new Date(`${question.key}T00:00:00+08:00`);
-      document.getElementById('questionDate').textContent = `${date.toLocaleDateString('zh-CN')} · TODAY'S QUESTION`;
-      document.getElementById('dailyQuestionText').textContent = currentQuestionText;
-      document.getElementById('tianqiAnswerPanel').innerHTML = renderAnswerPanel('tianqi', '天奇', answers, bothAnswered);
-      document.getElementById('huihuiAnswerPanel').innerHTML = renderAnswerPanel('huihui', '晖晖', answers, bothAnswered);
-      renderDailyHistory(records);
-    } catch (error) {
-      document.getElementById('tianqiAnswerPanel').innerHTML = '';
-      document.getElementById('huihuiAnswerPanel').innerHTML = '';
-      showSyncStatus(`每日一问读取失败：${error.message}`, true);
-    }
-  }
-
-  dailyQuestionScreen.addEventListener('submit', async event => {
-    const form = event.target.closest('.daily-answer-form');
-    if (!form) return;
-    event.preventDefault();
-    const question = currentDailyQuestion();
-    const person = form.dataset.person;
-    const answer = form.querySelector('textarea').value.trim();
-    await putMemoryStore('daily', {
-      id: `${question.key}:${person}`,
-      date: question.key,
-      person,
-      question: currentQuestionText,
-      answer,
-      createdAt: Date.now()
-    });
-    await renderDailyQuestion();
-  });
-  document.getElementById('resetDailyQuestion').addEventListener('click', async () => {
-    if (!window.confirm('确定清空今天两个人的答案，重新填写吗？')) return;
-    const key = currentDailyQuestion().key;
-    await Promise.all(['tianqi', 'huihui'].map(person => deleteMemoryStore('daily', `${key}:${person}`)));
-    await renderDailyQuestion();
-  });
-
-  // 约会转盘：可筛选分类并加入自定义候选项
-  const wheelDefaults = [
-    { id: 'd1', category: 'restaurant', text: '去吃一家没试过的火锅店' },
-    { id: 'd2', category: 'restaurant', text: '寻找附近评分最高的甜品店' },
-    { id: 'd3', category: 'activity', text: '一起看一场电影' },
-    { id: 'd4', category: 'activity', text: '去公园散步并拍十张照片' },
-    { id: 'd5', category: 'activity', text: '一起做一顿没做过的菜' },
-    { id: 'd6', category: 'trip', text: '周末去一座没去过的城市' },
-    { id: 'd7', category: 'trip', text: '坐地铁到一个陌生终点站' },
-    { id: 'd8', category: 'restaurant', text: '重温第一次约会吃过的东西' }
-  ];
-  const wheelCategoryLabels = { restaurant: '想吃的店', activity: '约会活动', trip: '旅行计划' };
-  const wheelPalette = ['#ff5d8c', '#7958d3', '#ff9c70', '#4f91bc', '#c5548d', '#6b4daf', '#dc7e66', '#3b789d'];
-  let wheelFilter = 'all';
-  let wheelRotation = 0;
-  let wheelSpinning = false;
-  let customWheelOptions = [];
-
-  async function loadWheelOptions() {
-    customWheelOptions = await readMemoryStore('wheel');
-    renderWheelOptions();
-  }
-
-  function activeWheelOptions() {
-    const all = [...wheelDefaults, ...customWheelOptions];
-    return wheelFilter === 'all' ? all : all.filter(option => option.category === wheelFilter);
-  }
-
-  // 扇区与候选池一一对应，转盘不再只是装饰
-  function renderWheelVisual() {
-    const wheel = document.getElementById('dateWheel');
-    wheel.querySelectorAll('.wheel-label').forEach(label => label.remove());
-    const options = activeWheelOptions();
-    if (!options.length) {
-      wheel.style.background = '#241c33';
-      return;
-    }
-    const step = 360 / options.length;
-    const stops = options.map((option, index) => {
-      const color = wheelPalette[index % wheelPalette.length];
-      return `${color} ${(index * step).toFixed(3)}deg ${((index + 1) * step).toFixed(3)}deg`;
-    }).join(', ');
-    wheel.style.background = `conic-gradient(${stops})`;
-    if (options.length <= 12) {
-      const radius = wheel.clientWidth / 2 * .64;
-      options.forEach((option, index) => {
-        const angle = (index + .5) * step;
-        const label = document.createElement('span');
-        label.className = 'wheel-label';
-        label.textContent = option.text.length > 6 ? `${option.text.slice(0, 6)}…` : option.text;
-        label.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateY(-${radius.toFixed(1)}px) rotate(${-angle}deg)`;
-        wheel.appendChild(label);
-      });
-    }
-  }
-
-  function renderWheelOptions() {
-    document.querySelectorAll('#wheelFilters .filter-chip').forEach(button => button.classList.toggle('is-active', button.dataset.filter === wheelFilter));
-    const options = activeWheelOptions();
-    document.getElementById('wheelOptions').innerHTML = options.map(option =>
-      `<span class="wheel-option"><span>${wheelCategoryLabels[option.category]} · ${escapeHtml(option.text)}</span>${option.id.startsWith('c') ? `<button type="button" class="delete-wheel-option" data-id="${escapeHtml(option.id)}" aria-label="删除">×</button>` : ''}</span>`
-    ).join('');
-    if (!wheelSpinning) renderWheelVisual();
-  }
-
-  document.getElementById('wheelFilters').addEventListener('click', event => {
-    if (wheelSpinning) return;
-    const button = event.target.closest('.filter-chip');
-    if (!button) return;
-    wheelFilter = button.dataset.filter;
-    renderWheelOptions();
-  });
-  document.getElementById('wheelAddForm').addEventListener('submit', async event => {
-    if (wheelSpinning) { event.preventDefault(); return; }
-    event.preventDefault();
-    const input = document.getElementById('wheelOptionText');
-    const option = { id: `c${Date.now()}`, category: document.getElementById('wheelCategory').value, text: input.value.trim(), createdAt: Date.now() };
-    await putMemoryStore('wheel', option);
-    customWheelOptions.push(option);
-    input.value = '';
-    renderWheelOptions();
-  });
-  document.getElementById('wheelOptions').addEventListener('click', async event => {
-    if (wheelSpinning) return;
-    const button = event.target.closest('.delete-wheel-option');
-    if (!button) return;
-    await deleteMemoryStore('wheel', button.dataset.id);
-    customWheelOptions = customWheelOptions.filter(option => option.id !== button.dataset.id);
-    renderWheelOptions();
-  });
-  window.addEventListener('resize', () => { if (!wheelSpinning) renderWheelVisual(); });
-  document.getElementById('spinWheel').addEventListener('click', () => {
-    if (wheelSpinning) return;
-    const candidates = activeWheelOptions();
-    if (!candidates.length) {
-      document.getElementById('wheelResult').innerHTML = '<strong>候选池是空的</strong><span>先加入一个约会灵感吧</span>';
-      return;
-    }
-    const randomIndex = window.crypto?.getRandomValues
-      ? crypto.getRandomValues(new Uint32Array(1))[0] % candidates.length
-      : Math.floor(Math.random() * candidates.length);
-    const result = candidates[randomIndex];
-    // 让指针（正上方）最终落在第 randomIndex 个扇区的正中间
-    const step = 360 / candidates.length;
-    const targetMod = ((360 - (randomIndex + .5) * step) % 360 + 360) % 360;
-    const currentMod = ((wheelRotation % 360) + 360) % 360;
-    const spinExtra = 1440 + Math.floor(Math.random() * 360);
-    const correction = ((targetMod - currentMod - spinExtra) % 360 + 360) % 360;
-    wheelRotation += spinExtra + correction;
-    document.getElementById('dateWheel').style.transform = `rotate(${wheelRotation}deg)`;
-    wheelSpinning = true;
-    const spinButton = document.getElementById('spinWheel');
-    spinButton.disabled = true;
-    document.getElementById('wheelResult').innerHTML = '<strong>命运正在选择…</strong><span>心动答案马上揭晓</span>';
-    window.setTimeout(() => {
-      document.getElementById('wheelResult').innerHTML = `<strong>${escapeHtml(result.text)}</strong><span>${wheelCategoryLabels[result.category]} · 就决定是它啦</span>`;
-      spinButton.disabled = false;
-      wheelSpinning = false;
-      renderWheelVisual();
-    }, 3650);
-  });
-
-  async function migrateLocalData() {
-    const completeKey = 'love-cloud-migration-v1';
-    const progressKey = 'love-cloud-migration-progress-v1';
-    if (localStorage.getItem(completeKey) === 'yes') return 0;
-
-    const migrationItems = [];
-    for (const storeName of ['firsts', 'plans', 'capsules']) {
-      try {
-        const records = await readLocalMemoryStore(storeName);
-        records.forEach(record => migrationItems.push({ storeName, record }));
-      } catch (_) {}
-    }
-
-    for (let index = 0; index < localStorage.length; index += 1) {
-      const key = localStorage.key(index);
-      if (!key?.startsWith('love-daily-')) continue;
-      const date = key.slice('love-daily-'.length);
-      try {
-        const answers = JSON.parse(localStorage.getItem(key)) || {};
-        Object.entries(answers).forEach(([person, answer]) => {
-          if (answer) migrationItems.push({
-            storeName: 'daily',
-            record: { id: `${date}:${person}`, date, person, answer, createdAt: Date.parse(`${date}T00:00:00+08:00`) }
-          });
-        });
-      } catch (_) {}
-    }
-
-    try {
-      const options = JSON.parse(localStorage.getItem('love-wheel-options')) || [];
-      options.forEach(option => migrationItems.push({
-        storeName: 'wheel',
-        record: { ...option, createdAt: Number(String(option.id).replace(/^c/, '')) || Date.now() }
-      }));
-    } catch (_) {}
-
-    let completedItems = [];
-    try { completedItems = JSON.parse(localStorage.getItem(progressKey)) || []; } catch (_) {}
-    const completed = new Set(completedItems);
-    let migrated = 0;
-    for (const item of migrationItems) {
-      const migrationId = `${item.storeName}:${item.record.id}`;
-      if (completed.has(migrationId)) continue;
-      showSyncStatus(`正在迁移本机旧数据 ${migrated + 1} / ${migrationItems.length}…`, false, true);
-      await putMemoryStore(item.storeName, item.record);
-      completed.add(migrationId);
-      migrated += 1;
-      localStorage.setItem(progressKey, JSON.stringify([...completed]));
-    }
-    localStorage.setItem(completeKey, 'yes');
-    localStorage.removeItem(progressKey);
-    if (migrationItems.length) showSyncStatus(`已将 ${migrationItems.length} 条本机内容同步到云端`);
-    return migrated;
-  }
-
-  async function initializeSharedFeatures() {
-    try {
-      showSyncStatus('正在同步两个人的共享内容…', false, true);
-      await migrateLocalData();
-      const results = await Promise.allSettled([
-        renderFirsts(),
-        renderPlans(),
-        renderCapsules(),
-        renderDailyQuestion(),
-        loadWheelOptions(),
-        loadCities()
-      ]);
-      const failed = results.find(result => result.status === 'rejected');
-      if (failed) showSyncStatus(`部分内容同步失败：${failed.reason?.message || '未知错误'}`, true, true);
-      else showSyncStatus('云端内容已同步');
-    } catch (error) {
-      showSyncStatus(`同步失败：${error.message}`, true, true);
-    }
-  }
-
-  // 备份导出：把云端全部文字记录打包成 JSON 下载，防止单一云服务出问题丢失回忆
-  document.getElementById('exportMemories').addEventListener('click', async () => {
-    const status = document.getElementById('exportStatus');
-    const button = document.getElementById('exportMemories');
-    try {
-      button.disabled = true;
-      status.textContent = '正在打包云端回忆…';
-      const kinds = ['firsts', 'plans', 'capsules', 'daily', 'wheel', 'cities'];
-      const records = {};
-      for (const kind of kinds) {
-        records[kind] = await readMemoryStore(kind);
-      }
-      const payload = {
-        exportedAt: new Date().toISOString(),
-        site: 'love-for-huihui',
-        note: '照片保存在云端私有桶中，本文件包含全部文字与照片索引',
-        records
-      };
-      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = `love-memories-${shanghaiDateKey()}.json`;
-      link.click();
-      URL.revokeObjectURL(url);
-      status.textContent = '已导出到下载文件夹 ✓';
-    } catch (error) {
-      status.textContent = `导出失败：${error.message}`;
-    } finally {
-      button.disabled = false;
-    }
-  });
-
+  document.getElementById('openFirsts').addEventListener('click', () => { showScreen(firstsScreen); renderFirsts(); });
+  document.getElementById('openPlans').addEventListener('click', () => { showScreen(plansScreen); renderPlans(); });
+  document.getElementById('openCapsules').addEventListener('click', () => { showScreen(capsulesScreen); renderCapsules(); });
+  document.getElementById('openDailyQuestion').addEventListener('click', () => { showScreen(dailyQuestionScreen); renderTopics(); });
+  document.getElementById('openDateWheel').addEventListener('click', () => { showScreen(dateWheelScreen); renderWheelOptions(); });
+
+  // 足迹地图
   const cityLayer = document.getElementById('cityLayer');
   const mobileCityList = document.getElementById('mobileCityList');
   const routeLine = document.getElementById('routeLine');
@@ -2574,35 +1450,15 @@
   const photoGrid = document.getElementById('photoGrid');
   const closeModal = document.getElementById('closeModal');
 
-  // 城市回忆：故事与照片与“我们的第一次”一样保存在共享云端
-  const cityFormModal = document.getElementById('cityFormModal');
-  const cityForm = document.getElementById('cityForm');
-  const cityStoryInput = document.getElementById('cityStoryInput');
-  const cityPhotos = document.getElementById('cityPhotos');
-  const cityUploadPreview = document.getElementById('cityUploadPreview');
-  const cityFormStatus = document.getElementById('cityFormStatus');
-  const saveCityMemory = document.getElementById('saveCityMemory');
-  let citiesCache = [];
-  let selectedCityPhotos = [];
-  let activeCity = null;
-
-  async function loadCities() {
-    citiesCache = await readMemoryStore('cities');
-  }
-
-  function cityRecord(city) {
-    return citiesCache.find(record => record.id === city.name);
-  }
-
-  routeLine.setAttribute('points', cities.map(city => {
+  routeLine.setAttribute('points', SITE.cities.map(city => {
     const point = mapPoint(city);
     return `${point.x.toFixed(2)},${point.y.toFixed(2)}`;
   }).join(' '));
 
-  document.getElementById('footprintCityCount').textContent = `已点亮 ${cities.length} 座城市`;
-  document.getElementById('mapLegend').textContent = `● 已点亮 \u00A0 ${cities.length} 个共同足迹`;
+  document.getElementById('footprintCityCount').textContent = `已点亮 ${SITE.cities.length} 座城市`;
+  document.getElementById('mapLegend').textContent = `● 已点亮 \u00A0 ${SITE.cities.length} 个共同足迹`;
 
-  cities.forEach((city, index) => {
+  SITE.cities.forEach((city, index) => {
     const point = mapPoint(city);
     const marker = document.createElement('button');
     marker.type = 'button';
@@ -2625,18 +1481,16 @@
   });
 
   function openCity(city, index) {
-    activeCity = city;
-    const record = cityRecord(city);
-    cityOrder.textContent = `FOOTPRINT ${String(index + 1).padStart(2, '0')} / ${cities.length}`;
+    cityOrder.textContent = `FOOTPRINT ${String(index + 1).padStart(2, '0')} / ${SITE.cities.length}`;
     cityName.textContent = city.name;
-    cityStory.textContent = record?.story || city.story;
-    const photos = (record?.photos || []).filter(Boolean);
-    photoGrid.innerHTML = photos.length
-      ? photos.map((photo, photoIndex) =>
-          `<img src="${photoSource(photo)}" alt="${escapeHtml(city.name)}的照片 ${photoIndex + 1}" loading="lazy">`
+    cityStory.textContent = city.story;
+    const count = city.photos || 0;
+    photoGrid.innerHTML = count
+      ? Array.from({ length: count }, (_, photoIndex) =>
+          `<img src="images/cities/${city.key}-${photoIndex + 1}.jpg" alt="${escapeHtml(city.name)}的照片 ${photoIndex + 1}" loading="lazy" onerror="this.remove()">`
         ).join('')
       : Array.from({ length: 3 }, (_, photoIndex) =>
-          `<div class="photo-placeholder">${city.name}照片 ${photoIndex + 1}<br>点击“编辑回忆”，补上你们的照片和故事</div>`
+          `<div class="photo-placeholder">${escapeHtml(city.name)} · 照片位 ${photoIndex + 1}<br>把照片放进 images/cities/ 就会亮起来</div>`
         ).join('');
     cityModal.classList.add('is-open');
     document.body.style.overflow = 'hidden';
@@ -2645,99 +1499,209 @@
 
   function hideCity() {
     cityModal.classList.remove('is-open');
-    document.body.style.overflow = '';
+    if (!document.querySelector('.lightbox.is-open')) document.body.style.overflow = '';
   }
-
-  function renderCityPreview() {
-    cityUploadPreview.innerHTML = selectedCityPhotos.map((photo, index) =>
-      `<div class="upload-preview-item"><img src="${photoSource(photo)}" alt="${escapeHtml(activeCity?.name || '城市')}照片 ${index + 1}"><button class="remove-preview" type="button" data-index="${index}" aria-label="移除照片">×</button></div>`
-    ).join('');
-  }
-
-  function showCityForm() {
-    if (!activeCity) return;
-    const record = cityRecord(activeCity);
-    document.getElementById('cityFormTitle').textContent = `写下「${activeCity.name}」的回忆`;
-    cityStoryInput.value = record?.story || '';
-    selectedCityPhotos = (record?.photos || []).filter(Boolean);
-    cityFormStatus.textContent = '';
-    renderCityPreview();
-    cityFormModal.classList.add('is-open');
-    window.setTimeout(() => cityStoryInput.focus(), 80);
-  }
-
-  // 城市弹窗仍开着，所以这里不恢复页面滚动
-  function hideCityForm() {
-    cityFormModal.classList.remove('is-open');
-  }
-
-  document.getElementById('editCityMemory').addEventListener('click', showCityForm);
-  document.getElementById('closeCityForm').addEventListener('click', hideCityForm);
-  cityFormModal.addEventListener('click', event => { if (event.target === cityFormModal) hideCityForm(); });
-  cityUploadPreview.addEventListener('click', event => {
-    const button = event.target.closest('.remove-preview');
-    if (!button) return;
-    selectedCityPhotos.splice(Number(button.dataset.index), 1);
-    renderCityPreview();
-  });
-  cityPhotos.addEventListener('change', async () => {
-    const files = [...cityPhotos.files].filter(file => file.type.startsWith('image/'));
-    const availableSlots = 8 - selectedCityPhotos.length;
-    if (files.length > availableSlots) cityFormStatus.textContent = '每座城市最多保存 8 张照片。';
-    saveCityMemory.disabled = true;
-    try {
-      const compressed = await Promise.all(files.slice(0, availableSlots).map(compressPhoto));
-      selectedCityPhotos.push(...compressed);
-      renderCityPreview();
-      if (files.length <= availableSlots) cityFormStatus.textContent = `已选择 ${selectedCityPhotos.length} 张照片，每张均已压缩至 500KB 以内。`;
-    } catch (error) {
-      cityFormStatus.textContent = error.message;
-    } finally {
-      saveCityMemory.disabled = false;
-      cityPhotos.value = '';
-    }
-  });
-  cityForm.addEventListener('submit', async event => {
-    event.preventDefault();
-    if (!activeCity) return;
-    saveCityMemory.disabled = true;
-    cityFormStatus.textContent = '正在保存这座城市的回忆…';
-    try {
-      const existing = cityRecord(activeCity);
-      const record = {
-        id: activeCity.name,
-        name: activeCity.name,
-        story: cityStoryInput.value.trim(),
-        photos: selectedCityPhotos,
-        createdAt: existing?.createdAt || Date.now(),
-        updatedAt: Date.now()
-      };
-      await putMemoryStore('cities', record);
-      await loadCities();
-      hideCityForm();
-      const index = cities.findIndex(city => city.name === activeCity.name);
-      if (index >= 0) openCity(cities[index], index);
-      showSyncStatus(`「${activeCity.name}」的回忆已保存`);
-    } catch (error) {
-      cityFormStatus.textContent = `保存失败：${error.message}`;
-    } finally {
-      saveCityMemory.disabled = false;
-    }
-  });
-
   closeModal.addEventListener('click', hideCity);
   cityModal.addEventListener('click', event => { if (event.target === cityModal) hideCity(); });
-  document.addEventListener('keydown', event => {
-    if (event.key !== 'Escape') return;
-    if (lightbox.classList.contains('is-open')) { hideLightbox(); return; }
-    hideCityForm();
-    hideCity();
-    hideFirstForm();
-    hidePlanForm();
-    hideCapsuleForm();
+
+  // 我们的第一次
+  const firstsTimeline = document.getElementById('firstsTimeline');
+  function renderFirsts() {
+    const entries = [...SITE.firsts].sort((a, b) => b.date.localeCompare(a.date));
+    document.getElementById('firstCount').textContent = entries.length ? `已收藏 ${entries.length} 个第一次` : '等待第一篇回忆';
+    if (!entries.length) {
+      firstsTimeline.innerHTML = '<div class="firsts-empty"><strong>第一页还没写下</strong>打开 index.html 顶部的 SITE.firsts，把值得纪念的第一次加进去。</div>';
+      return;
+    }
+    firstsTimeline.innerHTML = entries.map((entry, index) => {
+      const photoCount = entry.photos || 0;
+      const photos = photoCount
+        ? `<div class="first-entry-photos">${Array.from({ length: photoCount }, (_, photoIndex) =>
+            `<img class="first-entry-photo" src="images/firsts/${entry.id}-${photoIndex + 1}.jpg" alt="${escapeHtml(entry.title)}的照片 ${photoIndex + 1}" loading="lazy" onerror="this.remove()">`
+          ).join('')}</div>` : '';
+      return `<article class="first-entry">
+        <header class="first-entry-head">
+          <div>
+            <p class="first-entry-date">FIRST ${String(entries.length - index).padStart(2, '0')} · ${formatFirstDate(entry.date)}</p>
+            <h2>${escapeHtml(entry.title)}</h2>
+          </div>
+        </header>
+        ${entry.story ? `<p class="first-entry-story">${escapeHtml(entry.story)}</p>` : ''}
+        ${photos}
+      </article>`;
+    }).join('');
+  }
+
+  // 未来清单
+  const planCategoryMeta = {
+    place: { icon: '⌖', label: '想去的地方' },
+    restaurant: { icon: '♨', label: '想吃的店' },
+    thing: { icon: '✓', label: '想完成的事' }
+  };
+  function planItemHtml(plan, completed = false) {
+    const meta = planCategoryMeta[plan.category] || planCategoryMeta.thing;
+    const timing = completed
+      ? (plan.doneAt ? `完成于 ${formatFirstDate(plan.doneAt)}` : '已经成为回忆')
+      : (plan.targetDate ? `期待日期：${formatFirstDate(plan.targetDate)}` : '等我们选一个好日子');
+    return `<article class="plan-item${completed ? ' memory-plan' : ''}">
+      <span class="plan-icon" aria-hidden="true">${meta.icon}</span>
+      <div><h3>${escapeHtml(plan.title)}</h3><p>${meta.label} · ${timing}${plan.note ? ` · ${escapeHtml(plan.note)}` : ''}</p></div>
+    </article>`;
+  }
+  function renderPlans() {
+    const pending = SITE.plans.filter(plan => !plan.done);
+    const completed = SITE.plans.filter(plan => plan.done);
+    document.getElementById('pendingPlanCount').textContent = `${pending.length} 件`;
+    document.getElementById('completedPlanCount').textContent = `${completed.length} 件`;
+    document.getElementById('planCount').textContent = pending.length ? `${pending.length} 个愿望等待实现` : (completed.length ? `已实现 ${completed.length} 个愿望` : '等待第一个愿望');
+    document.getElementById('pendingPlanList').innerHTML = pending.length ? pending.map(plan => planItemHtml(plan)).join('') : '<div class="empty-state">把下一次心动写进 SITE.plans，<br>它就会出现在这里。</div>';
+    document.getElementById('completedPlanList').innerHTML = completed.length ? completed.map(plan => planItemHtml(plan, true)).join('') : '<div class="empty-state">完成的愿望会自动来到这里，<br>变成一份共同回忆。</div>';
+  }
+
+  // 时光胶囊
+  const capsuleGrid = document.getElementById('capsuleGrid');
+  function capsuleDaysLeft(unlockDate, today) {
+    const unlockMs = Date.parse(`${unlockDate}T00:00:00+08:00`);
+    const todayMs = Date.parse(`${today}T00:00:00+08:00`);
+    if (Number.isNaN(unlockMs) || Number.isNaN(todayMs)) return null;
+    return Math.max(1, Math.round((unlockMs - todayMs) / 86400000));
+  }
+  function renderCapsules() {
+    const today = shanghaiDateKey();
+    const items = [...SITE.capsules].sort((a, b) => a.unlockDate.localeCompare(b.unlockDate));
+    const capsuleCount = document.getElementById('capsuleCount');
+    const openedToday = items.filter(capsule => capsule.unlockDate === today).length;
+    if (openedToday) {
+      capsuleCount.textContent = '有一颗胶囊今天可以打开了！';
+      capsuleCount.classList.add('is-highlight');
+    } else {
+      capsuleCount.textContent = items.length ? `已封存 ${items.length} 颗胶囊` : '还没有埋下胶囊';
+      capsuleCount.classList.remove('is-highlight');
+    }
+    if (!items.length) {
+      capsuleGrid.innerHTML = '<div class="empty-state" style="grid-column:1/-1">还没有时光胶囊。<br>在 SITE.capsules 里封一封给未来的信吧。</div>';
+      return;
+    }
+    capsuleGrid.innerHTML = items.map(capsule => {
+      const unlocked = today >= capsule.unlockDate;
+      const daysLeft = unlocked ? 0 : capsuleDaysLeft(capsule.unlockDate, today);
+      const meta = `${capsule.from ? `来自${capsule.from}` : '来自我们'} · ${unlocked
+        ? (capsule.unlockDate === today ? '✨ JUST OPENED · 今天解锁' : 'OPENED · 已到解锁日')
+        : 'SEALED · 封存中'}`;
+      const photos = unlocked && capsule.photos
+        ? `<div class="capsule-photos">${Array.from({ length: capsule.photos }, (_, photoIndex) =>
+            `<img src="images/capsules/${capsule.id}-${photoIndex + 1}.jpg" alt="${escapeHtml(capsule.title)}的照片 ${photoIndex + 1}" loading="lazy" onerror="this.remove()">`
+          ).join('')}</div>` : '';
+      return `<article class="capsule-item${unlocked && capsule.unlockDate === today ? ' is-just-opened' : ''}">
+        <p class="capsule-meta">${meta}</p>
+        <h2>${escapeHtml(capsule.title)}</h2>
+        ${unlocked
+          ? `<p class="capsule-letter">${escapeHtml(capsule.letter)}</p>${photos}`
+          : `<p class="capsule-lock">🔒 将在 ${formatFirstDate(capsule.unlockDate)} 打开 · 还有 ${daysLeft} 天<br>再耐心等一等，未来正在靠近。</p>`}
+      </article>`;
+    }).join('');
+  }
+
+  // 话题卡
+  function questionForDate(key) {
+    const dayNumber = Math.floor(Date.parse(`${key}T00:00:00Z`) / 86400000);
+    return SITE.topics[dayNumber % SITE.topics.length];
+  }
+  function renderTopics() {
+    const key = shanghaiDateKey();
+    const date = new Date(`${key}T00:00:00+08:00`);
+    document.getElementById('questionDate').textContent = `${date.toLocaleDateString('zh-CN')} · TODAY'S TOPIC`;
+    document.getElementById('dailyQuestionText').textContent = questionForDate(key);
+    document.getElementById('dailyHistory').innerHTML = `<h2 class="history-title">话题卡 · 挑一张，今晚聊聊</h2>` +
+      SITE.topics.slice(0, 12).map((topic, index) =>
+        `<article class="history-item"><p class="history-date">TOPIC ${String(index + 1).padStart(2, '0')}</p><h3>${escapeHtml(topic)}</h3></article>`
+      ).join('');
+  }
+
+  // 约会转盘
+  const wheelCategoryLabels = { restaurant: '想吃的店', activity: '约会活动', trip: '旅行计划' };
+  const wheelPalette = ['#ff5d8c', '#7958d3', '#ff9c70', '#4f91bc', '#c5548d', '#6b4daf', '#dc7e66', '#3b789d'];
+  let wheelFilter = 'all';
+  let wheelRotation = 0;
+  let wheelSpinning = false;
+
+  function wheelCandidates() {
+    const all = Object.entries(SITE.wheel).flatMap(([category, texts]) => texts.map(text => ({ category, text })));
+    return wheelFilter === 'all' ? all : all.filter(option => option.category === wheelFilter);
+  }
+  function renderWheelVisual() {
+    const wheel = document.getElementById('dateWheel');
+    wheel.querySelectorAll('.wheel-label').forEach(label => label.remove());
+    const options = wheelCandidates();
+    if (!options.length) {
+      wheel.style.background = '#241c33';
+      return;
+    }
+    const step = 360 / options.length;
+    const stops = options.map((option, index) => {
+      const color = wheelPalette[index % wheelPalette.length];
+      return `${color} ${(index * step).toFixed(3)}deg ${((index + 1) * step).toFixed(3)}deg`;
+    }).join(', ');
+    wheel.style.background = `conic-gradient(${stops})`;
+    if (options.length <= 12) {
+      const radius = wheel.clientWidth / 2 * .64;
+      options.forEach((option, index) => {
+        const angle = (index + .5) * step;
+        const label = document.createElement('span');
+        label.className = 'wheel-label';
+        label.textContent = option.text.length > 6 ? `${option.text.slice(0, 6)}…` : option.text;
+        label.style.transform = `translate(-50%, -50%) rotate(${angle}deg) translateY(-${radius.toFixed(1)}px) rotate(${-angle}deg)`;
+        wheel.appendChild(label);
+      });
+    }
+  }
+  function renderWheelOptions() {
+    document.querySelectorAll('#wheelFilters .filter-chip').forEach(button => button.classList.toggle('is-active', button.dataset.filter === wheelFilter));
+    const options = wheelCandidates();
+    document.getElementById('wheelOptions').innerHTML = options.map(option =>
+      `<span class="wheel-option"><span>${wheelCategoryLabels[option.category]} · ${escapeHtml(option.text)}</span></span>`
+    ).join('');
+    if (!wheelSpinning) renderWheelVisual();
+  }
+  document.getElementById('wheelFilters').addEventListener('click', event => {
+    if (wheelSpinning) return;
+    const button = event.target.closest('.filter-chip');
+    if (!button) return;
+    wheelFilter = button.dataset.filter;
+    renderWheelOptions();
+  });
+  window.addEventListener('resize', () => { if (!wheelSpinning) renderWheelVisual(); });
+  document.getElementById('spinWheel').addEventListener('click', () => {
+    if (wheelSpinning) return;
+    const candidates = wheelCandidates();
+    if (!candidates.length) {
+      document.getElementById('wheelResult').innerHTML = '<strong>候选池是空的</strong><span>去 SITE.wheel 里加几个灵感吧</span>';
+      return;
+    }
+    const randomIndex = window.crypto?.getRandomValues
+      ? crypto.getRandomValues(new Uint32Array(1))[0] % candidates.length
+      : Math.floor(Math.random() * candidates.length);
+    const result = candidates[randomIndex];
+    const step = 360 / candidates.length;
+    const targetMod = ((360 - (randomIndex + .5) * step) % 360 + 360) % 360;
+    const currentMod = ((wheelRotation % 360) + 360) % 360;
+    const spinExtra = 1440 + Math.floor(Math.random() * 360);
+    const correction = ((targetMod - currentMod - spinExtra) % 360 + 360) % 360;
+    wheelRotation += spinExtra + correction;
+    document.getElementById('dateWheel').style.transform = `rotate(${wheelRotation}deg)`;
+    wheelSpinning = true;
+    const spinButton = document.getElementById('spinWheel');
+    spinButton.disabled = true;
+    document.getElementById('wheelResult').innerHTML = '<strong>命运正在选择…</strong><span>心动答案马上揭晓</span>';
+    window.setTimeout(() => {
+      document.getElementById('wheelResult').innerHTML = `<strong>${escapeHtml(result.text)}</strong><span>${wheelCategoryLabels[result.category]} · 就决定是它啦</span>`;
+      spinButton.disabled = false;
+      wheelSpinning = false;
+      renderWheelVisual();
+    }, 3650);
   });
 
-  // 照片灯箱：点击任意照片全屏查看，可左右切换
+  // 照片灯箱
   const lightbox = document.getElementById('lightbox');
   const lightboxImage = document.getElementById('lightboxImage');
   const lightboxPrev = document.getElementById('lightboxPrev');
@@ -2757,10 +1721,10 @@
     lightboxPrev.hidden = !multiple;
     lightboxNext.hidden = !multiple;
   }
-
   function openLightbox(imageElement) {
     const gallery = imageElement.closest('.first-entry-photos, .capsule-photos, .photo-grid');
     lightboxPhotos = gallery ? [...gallery.querySelectorAll('img')] : [imageElement];
+    if (!lightboxPhotos.length) return;
     lightboxIndex = Math.max(0, lightboxPhotos.indexOf(imageElement));
     lightboxReturnFocus = imageElement;
     renderLightbox();
@@ -2768,23 +1732,20 @@
     document.body.style.overflow = 'hidden';
     document.getElementById('lightboxClose').focus();
   }
-
   function hideLightbox() {
     if (!lightbox.classList.contains('is-open')) return;
     lightbox.classList.remove('is-open');
-    if (!document.querySelector('.city-modal.is-open, .first-form-modal.is-open')) document.body.style.overflow = '';
+    if (!document.querySelector('.city-modal.is-open')) document.body.style.overflow = '';
     if (lightboxReturnFocus) {
       lightboxReturnFocus.focus();
       lightboxReturnFocus = null;
     }
   }
-
   function stepLightbox(delta) {
     if (!lightboxPhotos.length) return;
     lightboxIndex = (lightboxIndex + delta + lightboxPhotos.length) % lightboxPhotos.length;
     renderLightbox();
   }
-
   document.addEventListener('click', event => {
     const image = event.target.closest('.first-entry-photo, .capsule-photos img, .photo-grid img');
     if (image) openLightbox(image);
@@ -2793,30 +1754,41 @@
   lightboxPrev.addEventListener('click', () => stepLightbox(-1));
   lightboxNext.addEventListener('click', () => stepLightbox(1));
   lightbox.addEventListener('click', event => { if (event.target === lightbox) hideLightbox(); });
-  document.addEventListener('keydown', event => {
-    if (!lightbox.classList.contains('is-open')) return;
-    if (event.key === 'ArrowLeft') stepLightbox(-1);
-    else if (event.key === 'ArrowRight') stepLightbox(1);
-  });
 
-  // 焦点圈闭：弹窗打开时 Tab 不会跑到弹窗后面
+  // 加载时预渲染各栏目：主页角标即刻点亮，切换栏目零等待
+  renderFirsts();
+  renderPlans();
+  renderCapsules();
+  renderTopics();
+  renderWheelOptions();
+
+  // 键盘：Esc 关弹窗 / 灯箱，方向键切照片，Tab 圈闭在弹窗内
   document.addEventListener('keydown', event => {
-    if (event.key !== 'Tab') return;
-    const modal = document.querySelector('.first-form-modal.is-open, .city-modal.is-open, .lightbox.is-open');
-    if (!modal) return;
-    const focusables = [...modal.querySelectorAll('button, input, textarea, select')]
-      .filter(element => !element.hidden && (!element.checkVisibility || element.checkVisibility()));
-    if (!focusables.length) return;
-    const first = focusables[0];
-    const last = focusables[focusables.length - 1];
-    if (event.shiftKey && document.activeElement === first) {
-      event.preventDefault();
-      last.focus();
-    } else if (!event.shiftKey && (document.activeElement === last || !modal.contains(document.activeElement))) {
-      event.preventDefault();
-      first.focus();
+    if (event.key === 'Escape') {
+      if (lightbox.classList.contains('is-open')) { hideLightbox(); return; }
+      hideCity();
+    } else if (lightbox.classList.contains('is-open') && event.key === 'ArrowLeft') {
+      stepLightbox(-1);
+    } else if (lightbox.classList.contains('is-open') && event.key === 'ArrowRight') {
+      stepLightbox(1);
+    } else if (event.key === 'Tab') {
+      const modal = document.querySelector('.city-modal.is-open, .lightbox.is-open');
+      if (!modal) return;
+      const focusables = [...modal.querySelectorAll('button, input, textarea, select')]
+        .filter(element => !element.hidden && (!element.checkVisibility || element.checkVisibility()));
+      if (!focusables.length) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && (document.activeElement === last || !modal.contains(document.activeElement))) {
+        event.preventDefault();
+        first.focus();
+      }
     }
   });
-</script>
+
+  </script>
 </body>
 </html>

@@ -1,0 +1,2 @@
+「我们的第一次」照片放这里，命名：条目id-序号.jpg
+例如 f1-1.jpg f1-2.jpg（id 在 index.html 顶部 SITE.firsts 里）
